@@ -1,0 +1,58 @@
+<div class="block-header" *ngIf="eventDetail">
+    <h2 class="hidden-xs">{{ eventDetail.name }}</h2>
+    <h4 class="visible-xs">{{ eventDetail.name }}</h4>
+    <ul class="actions" *ngIf="currentUser.isOfficer || currentUser.isBoardMember">
+        <li class="dropdown" dropdown>
+            <a href="" dropdownToggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="true">
+                <i class="zmdi zmdi-wrench"></i>
+            </a>
+            <ul dropdownMenu class="dropdown-menu dropdown-menu-right">
+                <li>
+                    <a class="clickable" (click)="uploadBrackets()">Update brackets</a>
+                </li>
+                <li>
+                    <a class="clickable" [routerLink]="['/events', config.matchPlayId, 'matchplay', 'report']">Sign-up Report</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<div class="row" *ngIf="eventDetail">
+    <div class="col-md-8">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>Notes and Policies</h2>
+            </div>
+            <div class="card-body card-padding">
+                <p><strong>Registration open:</strong>
+                    {{ eventDetail.signupStart.format('dddd, MMMM Do, h:mm a') }} - {{ eventDetail.signupEnd.format('dddd, MMMM Do, h:mm a') }}
+                </p>
+                <div [markdown]="eventDetail.description"></div>
+                <div>
+                    <a [href]="application.url" target="_blank" class="btn btn-info event-button m-r-10">Offline Application</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h2>Brackets and Results</h2>
+            </div>
+            <div class="card-body card-padding">
+                <div>
+                    <a *ngIf="canRegister" [routerLink]="['register']" class="btn btn-success event-button m-r-10">Register Online</a>
+                    <p *ngIf="currentUser.member.matchplayParticipant"><strong>You are registered for this event. Good luck!</strong></p>
+                </div>
+                <div class="card-body card-padding" *ngIf="currentBrackets">
+                    <div class="list-group">
+                        <a class="list-group-item text-center" [href]="currentBrackets.url" target="_blank">{{currentBrackets.title}}<br>
+                            <small>Last updated {{currentBrackets.lastUpdate.format('MMM D, YYYY h:mm A')}}</small>
+                        </a>
+                    </div>
+                </div>
+                <upload (onClose)="uploadComplete($event)" [documentType]="documentType"></upload>
+            </div>
+        </div>
+    </div>
+</div>

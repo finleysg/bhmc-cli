@@ -1,0 +1,66 @@
+<div class="block-header">
+    <h2 class="hidden-xs">Majors</h2>
+    <h4 class="visible-xs">Majors</h4>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>Current Season</h2>
+            </div>
+            <div class="card-body card-padding">
+                <div class="list-group" *ngIf="currentYear">
+                    <a *ngFor="let doc of currentYear" class="list-group-item text-left"
+                       [href]="doc.url" target="_blank">{{doc.title}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>Past Seasons</h2>
+                <div class="archive-year">
+                    <select class="form-control" [(ngModel)]="selectedYear">
+                        <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body card-padding">
+                <div class="list-group" *ngIf="archives">
+                    <a *ngFor="let doc of archives | currentYear:selectedYear" class="list-group-item text-left"
+                       [href]="doc.url" target="_blank">{{doc.title}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card event-card">
+            <div class="card-body card-padding">
+                <div class="listview">
+                    <div class="lv-header">
+                        Our Reigning Champions
+                    </div>
+                    <div class="lv-body">
+                        <a class="lv-item" [href]="clubChampion.url" *ngIf="clubChampion" target="_blank">
+                            <div class="media">
+                                <div class="media-body">
+                                    <div class="lv-title">{{ clubChampion.title }}</div>
+                                    <img class="img-responsive" [src]="clubChampion.url" />
+                                </div>
+                            </div>
+                        </a>
+                        <a class="lv-item" [href]="seniorChampion.url" *ngIf="seniorChampion" target="_blank">
+                            <div class="media">
+                                <div class="media-body">
+                                    <div class="lv-title">{{ seniorChampion.title }}</div>
+                                    <img class="img-responsive" [src]="seniorChampion.url" />
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

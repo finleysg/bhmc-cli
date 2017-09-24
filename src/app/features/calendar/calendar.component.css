@@ -1,0 +1,177 @@
+.current-skin {
+  background-color: green;
+}
+
+#calendar {
+    width: 100%;
+}
+
+#calendar-wrap header {
+    height: 180px;
+    background-image: url('../../../assets/img/eight_west.jpg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+#calendar-wrap header .month-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    height: 50px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.36);
+    padding-top: 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+#calendar-wrap span {
+    margin: 20px;
+    cursor: pointer;
+}
+
+#calendar a {
+    color: white;
+    text-decoration: none;
+}
+
+#calendar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+#calendar li {
+    display: block;
+    float: left;
+    width: 14.342%;
+    padding: 5px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    margin-right: -1px;
+    margin-bottom: -1px;
+}
+
+#calendar ul.weekdays {
+    height: 40px;
+    /*background: #8e352e;*/
+}
+
+#calendar ul.weekdays li {
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 20px;
+    border: none !important;
+    padding: 10px 6px;
+    color: #fff;
+    font-size: 13px;
+}
+
+#calendar .days li {
+    height: 150px;
+    background-color: white;
+}
+
+#calendar .date {
+    text-align: center;
+    margin-bottom: 5px;
+    padding: 4px;
+    width: 20px;
+    float: right;
+}
+
+#calendar .event {
+    clear: both;
+    display: block;
+    font-size: 13px;
+    padding: 3px;
+    margin-bottom: 3px;
+    line-height: 14px;
+    color: white;
+    text-decoration: none;
+}
+#calendar .event:first-child {
+    margin-top: 30px;
+}
+
+#calendar .deadline {
+    background-color: red;
+}
+#calendar .league {
+    background-color: teal;
+}
+#calendar .weekend-major {
+    background-color: orange;
+}
+#calendar .member-meeting {
+    background-color: blue;
+}
+#calendar .board-meeting > div > a {
+    color: blue !important;
+}
+#calendar .board-meeting {
+    background-color: white;
+}
+#calendar .holiday-pro-shop {
+    background-color: green;
+}
+#calendar .state-tournament {
+    background-color: lightgreen;
+}
+#calendar .state-tournament > div > a {
+    color: darkgreen !important;
+}
+#calendar .other {
+    background-color: lightblue;
+}
+
+#calendar .event-desc {
+    color: #666;
+    margin: 3px 0 7px 0;
+    text-decoration: none;
+}
+
+#calendar .today {
+    background-color: lightgreen !important;
+}
+
+#calendar .other-month {
+    background-color: lightgray !important;
+    color: #666 !important;
+}
+
+a.month-nav {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+}
+/* ============================
+				Mobile Responsiveness
+   ============================*/
+@media (max-width: 768px) {
+    #calendar .weekdays, #calendar .other-month {
+        display: none;
+    }
+
+    #calendar li {
+        height: auto !important;
+        border: 1px solid #ededed;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: -1px;
+    }
+
+    #calendar .date {
+        float: none;
+        text-align: left;
+        width: 100%;
+    }
+}

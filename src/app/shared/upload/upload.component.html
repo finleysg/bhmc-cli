@@ -1,0 +1,30 @@
+<div>
+<div bsModal (onShown)="onShown()" #uploadModal="bs-modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bgm-blue">
+                <h4 class="modal-title">{{documentName}}</h4>
+                <span id="spinner-span" class="pull-right"></span>
+            </div>
+            <div class="modal-body">
+                <div class="input-group m-t-30">
+                    <label class="input-group-btn">
+                        <span class="btn btn-info">
+                            Browse&hellip; <input type="file" style="display: none;" (change)="fileSelected($event)">
+                        </span>
+                    </label>
+                    <span *ngIf="selectedFile" class="filename">{{selectedFile.name}} <i class="zmdi zmdi-close clickable" (click)="clearFile()"></i></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" type="button" (click)="cancelUpload()">Cancel</button>
+                <button class="btn btn-relative btn-icon-text btn-success"
+                        [disabled]="!selectedFile"
+                        (click)="uploadDocument()">
+                    <i class="zmdi zmdi-cloud-upload"></i> Upload
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

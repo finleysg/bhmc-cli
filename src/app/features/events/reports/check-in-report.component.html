@@ -1,0 +1,41 @@
+<div class="block-header">
+    <h2>Event Check-in Report</h2>
+    <ul class="actions">
+        <li>
+            <a href="#">
+                <i class="zmdi zmdi-print"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card" *ngFor="let table of tables">
+            <div class="card-header row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <h4>{{eventDetail.name}} | {{table.courseName}} Course | {{eventDetail.startDate.format('MMMM Do, YYYY')}}</h4><i bhmc-spinner="check-in"></i>
+                </div>
+            </div>
+            <div class="card-body card-padding">
+                <div class="row" *ngFor="let row of table.rows">
+                    <div class="col-sm-1">
+                        <div class="registration-hole">
+                            <span>{{ row.name }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2" *ngFor="let slot of row.slots">
+                        <div class="row registration-slot">
+                            <div class="col-sm-12 member-name">
+                                <span>{{slot.memberName}}</span>
+                            </div>
+                            <div class="col-sm-3 is-paid text-center" [class.selected]="slot.registration.isGrossSkinsFeePaid">GS</div>
+                            <div class="col-sm-3 is-paid text-center" [class.selected]="slot.registration.isNetSkinsFeePaid">NS</div>
+                            <div class="col-sm-3 is-paid text-center" [class.selected]="slot.registration.isGreensFeePaid">GF</div>
+                            <div class="col-sm-3 is-paid text-center" [class.selected]="slot.registration.isCartFeePaid">CT</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

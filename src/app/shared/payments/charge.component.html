@@ -1,0 +1,57 @@
+<div>
+    <div bsModal (onShown)="opened()" #chargeModal="bs-modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bgm-teal" *ngIf="charge">
+                    <h3 class="modal-title">{{charge.description}}</h3>
+                </div>
+                <div class="modal-body" *ngIf="charge">
+                    <div class="row m-t-30">
+                        <div class="col-sm-4">
+                            <strong>Id:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <span>{{charge.id}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Amount:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <span>{{charge.amount | currency:'USD':true}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Card:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <span>{{charge.card}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Created:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <span>{{charge.createDateFormatted}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Status:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <span>{{charge.status}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" *ngIf="charge">
+                    <a class="btn btn-relative btn-info" [href]="stripeUrl" target="_blank">View on Stripe</a>
+                    <a class="btn btn-default" type="button" (click)="close()">Close</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

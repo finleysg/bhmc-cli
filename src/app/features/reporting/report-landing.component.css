@@ -1,0 +1,16 @@
+p {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.btn-link {
+    color: #0a68b4;
+}
+
+.btn-link:hover, .btn-link:active, .btn-link:focus {
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    color: #0a0a0a;
+}

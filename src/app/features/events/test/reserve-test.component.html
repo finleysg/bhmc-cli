@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-md-3">
+        <div class="input-group m-b-20">
+            <label>Event Id:</label>
+            <input type="tel" class="form-control" name="eventId" [(ngModel)]="eventId"
+                   #eventId="ngModel" placeholder="Event Id">
+        </div>
+        <div class="input-group m-b-20" *ngIf="eventDetail">
+            <label>Row:</label>
+            <input type="text" class="form-control" name="rowName" [(ngModel)]="selectedRow"
+                   #rowName="ngModel" placeholder="Row Name">
+        </div>
+        <button class="btn btn-primary" (click)="load()">Load Event</button>
+        <button class="btn btn-warning" (click)="reserve()">Reserve</button>
+        <button class="btn btn-info" (click)="cancel()">Cancel</button>
+    </div>
+    <div class="col-md-3">
+        {{ group | json }}
+    </div>
+</div>

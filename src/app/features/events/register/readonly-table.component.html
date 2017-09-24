@@ -1,0 +1,19 @@
+<div class="pmb-block">
+    <div class="pmbb-body reserve-table" *ngIf="table.rows">
+        <div class="row" *ngFor="let row of table.rows">
+            <div class="col-md-1 col-xs-12">
+                <div class="registration-hole">
+                    <span>{{ row.name }}</span>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-12" *ngFor="let slot of row.slots">
+                <div class="registration-slot" [ngClass]="slotClass(slot)" *ngIf="row.name || slot.displayText !== 'Available'">
+                    {{slot.displayText}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pmbb-body reserve-table" *ngIf="table.rows && table.rows.length === 0">
+        <h5 class="text-danger text-center">No Registrations Yet</h5>
+    </div>
+</div>

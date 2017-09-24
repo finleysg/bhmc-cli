@@ -1,0 +1,53 @@
+.reserve-table {
+    margin: 15px 30px;
+}
+
+.registration-hole {
+    padding: 4px 12px 4px 4px;
+}
+
+.registration-hole span {
+    font-weight: bold;
+}
+
+.registration-hole button {
+    float: right;
+}
+
+.registration-slot {
+    border: solid 1px slategray;
+    text-align: center;
+    padding: 8px;
+    margin: 2px -10px;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 767px) {
+    .registration-hole button {
+        float: right;
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+}
+
+.east {
+    background: url(../../../../assets/img/east.png) no-repeat;
+    background-position: 50% 0;
+    background-size: contain;
+    color: transparent;
+    opacity: .3;
+}
+.west {
+    background: url(../../../../assets/img/west.png) no-repeat;
+    background-position: 50% 0;
+    background-size: contain;
+    color: transparent;
+    opacity: .6;
+}
+.north {
+    background: url(../../../../assets/img/north.png) no-repeat;
+    background-position: 50% 0;
+    background-size: contain;
+    color: transparent;
+    opacity: .3;
+}

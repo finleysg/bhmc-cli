@@ -1,0 +1,91 @@
+<div class="block-header" *ngIf="eventDetail">
+    <h2 class="hidden-xs">{{ eventDetail.name }}</h2>
+    <h4 class="visible-xs">{{ eventDetail.name }}</h4>
+</div>
+<div class="row" *ngIf="eventDetail">
+    <div class="col-md-6">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>Notes and Policies</h2>
+            </div>
+            <div class="card-body card-padding">
+                <p><strong>Registration open:</strong>
+                    {{ eventDetail.signupStart.format('dddd, MMMM Do, h:mm a') }} - {{ eventDetail.signupEnd.format('dddd, MMMM Do, h:mm a') }}
+                </p>
+                <div [markdown]="eventDetail.description"></div>
+                <div>
+                    <a [href]="application.url" target="_blank" class="btn btn-info event-button m-r-10">Offline Application</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xs-12" *ngIf="!currentUser.member.membershipIsCurrent">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>Online Registration</h2>
+            </div>
+            <div class="card-body card-padding">
+                <div class="row hidden-xs">
+                    <div class="col-sm-3 text-info">Member</div>
+                    <div class="col-sm-2 text-info">Season Fee</div>
+                    <div class="col-sm-2 text-info">*Patron Card</div>
+                    <div class="col-sm-2 text-info">Gold Tees</div>
+                    <div class="col-sm-3 text-info text-right"><strong>Total</strong></div>
+                </div>
+                <div class="row m-t-10" *ngFor="let reg of registrationGroup.registrations">
+                    <div class="col-sm-3 col-xs-12">
+                        <div class="input-group">
+                            <span class="read-only">
+                                {{ reg.memberName }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-xs-3">
+                        <div class="checkbox">
+                            <label class="visible-xs-inline">Season Fee</label>
+                            <input type="checkbox" [(ngModel)]="reg.isEventFeePaid" [disabled]="true"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-xs-3">
+                        <div class="checkbox">
+                            <label class="visible-xs-inline">*Patron Card</label>
+                            <input type="checkbox" [(ngModel)]="reg.isGreensFeePaid" (change)="updatePayment()"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-xs-3">
+                        <div class="checkbox">
+                            <label class="visible-xs-inline">Gold Tees</label>
+                            <input type="checkbox" [(ngModel)]="forwardTees" (change)="toggleNotes()"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-3 text-right">{{ reg.totalFees | currency:'USD':true }}</div>
+                </div>
+                <div class="row m-t-20">
+                    <div class="col-sm-10 col-xs-8 text-right">Transaction fee:</div>
+                    <div class="col-sm-2 col-xs-4 text-right">{{ registrationGroup.payment.transactionFee | currency:'USD':true }}</div>
+                </div>
+                <div class="row m-t-5">
+                    <div class="col-sm-10 col-xs-8 text-right"><h4>Amount due:</h4></div>
+                    <div class="col-sm-2 col-xs-4 text-right"><h4>{{ registrationGroup.payment.total | currency:'USD':true }}</h4></div>
+                </div>
+                <div class="row">
+                    <div class="pull-right">
+                        <button [disabled]="!registrationGroup.canRegister" class="btn btn-primary m-r-10 m-t-10" (click)="registerOnline()">Register Online</button>
+                        <payment [registrationGroup]="paymentGroup" [eventDetail]="eventDetail" (onClose)="paymentComplete($event)"></payment>
+                    </div>
+                </div>
+                <div class="row">
+                    <p class="text-info">* Seniors (62 and over) will need to purchase a patron card in person to get the senior rate.</p>
+                    <div class="form-group">
+                        <div class="controls ">
+                            <label>Notes / Special Requests</label>
+                            <textarea class="form-control fc-alt" rows="3"
+                                      name="notes" [(ngModel)]="registrationGroup.notes" #notes="ngModel">
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

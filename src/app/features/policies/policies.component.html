@@ -1,0 +1,13 @@
+<div class="block-header">
+    <h2>{{ policyName }}</h2>
+    <a class="btn btn-info btn-sm by-law-button" [href]="byLaws.url" target="_blank" *ngIf="byLaws && policyName === 'Policies & Procedures'">{{byLaws.title}}</a>
+    <a class="btn btn-info btn-sm by-law-button" [href]="statement.url" target="_blank" *ngIf="statement && policyName === 'Financial Information'">{{statement.title}}</a>
+</div>
+<div *ngFor="let p of policies" class="card event-card">
+    <div class="card-header">
+        <h2>{{ p.title }}</h2>
+    </div>
+    <div class="card-body card-padding">
+        <div [markdown]="p.description"></div>
+    </div>
+</div>

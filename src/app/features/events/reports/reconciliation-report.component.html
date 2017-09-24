@@ -1,0 +1,61 @@
+<div class="block-header">
+    <h2>Event Sign-up Report</h2>
+    <ul class="actions">
+        <li *ngIf="report">
+            <download-csv [csvData]="exportCsv()" [filename]="'ReconciliationExport.csv'"></download-csv>
+        </li>
+        <li>
+            <a href="#">
+                <i class="zmdi zmdi-print"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>{{eventDetail.name}}: {{eventDetail.startDate.format('MMMM Do, YYYY')}}</h2><i bhmc-spinner="recon"></i>
+            </div>
+            <div class="card-body card-padding">
+                <div class="table-responsive">
+                    <table class="table table-striped table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Group #</th>
+                            <th>Signed Up By</th>
+                            <th>Date Reserved</th>
+                            <th>Payment Code</th>
+                            <th class="text-right">Amount</th>
+                            <th>Member</th>
+                            <th>Charge Date</th>
+                            <th>Card</th>
+                            <th>Status</th>
+                            <th class="text-right">Charge Amount</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let row of report">
+                            <td>{{row.group.id}}</td>
+                            <td>{{row.group.registrant}}</td>
+                            <td>{{row.group.paymentConfirmationDateFormatted}}</td>
+                            <td *ngIf="!row.isCharge">{{row.group.paymentConfirmationCode}}</td>
+                            <td *ngIf="row.isCharge"><a href="{{row.link}}" target="_blank">{{row.group.paymentConfirmationCode}}</a></td>
+                            <td class="text-right">{{row.group.payment.total | currency:'USD':true}}</td>
+                            <td>{{row.charge ? row.charge.memberName : ''}}</td>
+                            <td>{{row.charge ? row.charge.createDateFormatted : ''}}</td>
+                            <td>{{row.charge ? row.charge.card : ''}}</td>
+                            <td>{{row.charge ? row.charge.status : ''}}</td>
+                            <td class="text-right">{{!row.charge ? '' : row.charge.amount | currency:'USD':true}}</td>
+                            <td>
+                                <strong [class.text-success]="row.reconCode==='OK'" [class.text-danger]="row.reconCode==='ERROR'">{{row.reconCode}}</strong>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

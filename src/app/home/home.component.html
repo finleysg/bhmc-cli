@@ -1,0 +1,217 @@
+<div class="block-header">
+    <h2>Men's Club Home</h2>
+</div>
+<div class="row" *ngIf="config">
+    <div class="col-md-6 col-sm-8">
+        <div class="card event-card">
+            <div class="card-body card-padding">
+                <div class="listview">
+                    <div class="lv-header">
+                        Announcements
+                    </div>
+                    <div class="lv-body">
+                        <!--<div class="lv-item" *ngIf="user && !user.isAuthenticated">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <img class="lv-img-sm" src="../../assets/img/QuestionMark.png" alt="Are you a returning member?">
+                                </div>
+                                <div class="media-body">
+                                    <div class="lv-title">Are You a Returning Member?</div>
+                                    <p>If so, then this must look a bit strange to you! Welcome to the new club website. Before you
+                                        can register for events in the upcoming season, we need to update your account. Click on the
+                                        link below to get more information.
+                                    </p>
+                                    <p>
+                                        <button class="btn btn-sm btn-info" (click)="getPassword()">Returning Members</button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div class="lv-item" *ngIf="user && !user.isAuthenticated && config.acceptNewMembers">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <img class="lv-img-sm" src="../../assets/img/RegisterNow.png" alt="Register now!">
+                                </div>
+                                <div class="media-body">
+                                    <div class="lv-title">Welcome to the Bunker Hills Men's Club</div>
+                                    <p>Feel free to look around and get to know us. Visit the
+                                        <a [routerLink]="['/about-us']">About Us</a> page or the
+                                        <a [routerLink]="['/policies', 'new-members']">New Member Info</a>
+                                        page to learn more about the club. If you like what you
+                                        see, register online to join us for the {{config.year}} golf season.
+                                    </p>
+                                    <p>
+                                        <button class="btn btn-sm btn-success" (click)="registerOnline()">Register Online</button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="lv-item" *ngIf="user && user.isAuthenticated && !user.member.membershipIsCurrent">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <img class="lv-img-sm" src="../../assets/img/RegisterNow.png" alt="Register now!">
+                                </div>
+                                <div class="media-body">
+                                    <div class="lv-title">Register for the {{config.year}} Golf Season</div>
+                                    <p>Registration is now open for the {{config.year}} golf season. Don't wait for the last minute!
+                                    Click the "Register" button below to register online or to download the application form.</p>
+                                    <p>
+                                        <button class="btn btn-sm btn-success" (click)="registerOnline()">Register</button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div class="lv-item" *ngFor="let a of announcements">
+                            <div class="media" *ngIf="a.isVisible(user.isAuthenticated)">
+                                <div class="media-body">
+                                    <div class="lv-announcement">{{a.title}}</div>
+                                    <div [markdown]="a.text"></div>
+                                    <div *ngIf="a.eventName">
+                                        <a class="btn btn-sm btn-success" [routerLink]="['/events', a.eventId, 'detail']">{{a.eventName}}</a>
+                                    </div>
+                                    <div *ngIf="a.documentName">
+                                        <a class="btn btn-sm btn-info" target="_blank" [href]="a.documentUrl">{{a.documentName}}</a>
+                                    </div>
+                                    <div *ngIf="a.externalUrlName">
+                                        <a class="btn btn-sm btn-link" target="_blank" [href]="a.externalUrl">{{a.externalUrlName}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-4">
+        <div class="card event-card">
+            <div class="card-body card-padding">
+                <div class="listview">
+                    <div class="lv-header">
+                        Quick Event Calendar
+                    </div>
+                    <div class="lv-body">
+                        <a class="lv-item" [routerLink]="['/events', event.id, 'detail']" *ngFor="let event of eventList">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <img *ngIf="event.eventType.toString()=='Holiday Pro-shop Event'" class="lv-img-sm" src="../../assets/img/TeedUp.png" alt="Holiday proshop event">
+                                    <img *ngIf="event.eventType.toString()=='Other'" class="lv-img-sm" src="../../assets/img/BallHole.png" alt="Other event">
+                                    <img *ngIf="event.eventType.toString()=='League'" class="lv-img-sm" src="../../assets/img/Swing.png" alt="League event">
+                                    <img *ngIf="event.eventType.toString()=='Weekend Major'" class="lv-img-sm" src="../../assets/img/RangeBucket.png" alt="Weekend major">
+                                    <img *ngIf="event.eventType.toString()=='Member Meeting'" class="lv-img-sm" src="../../assets/img/Iron.png" alt="Member meeting">
+                                </div>
+                                <div class="media-body">
+                                    <div [class.highlighted]="event.eventType.toString()=='Deadline'" class="lv-title">{{ event.name }}</div>
+                                    <small class="lv-small">{{ event.startDate.format('dddd, MMMM Do') }}</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card event-card">
+            <div class="card-body card-padding">
+                <div class="listview">
+                    <div class="lv-header">
+                        Quick Links
+                    </div>
+                    <div class="lv-body">
+                        <a class="lv-item" href="http://bookit.activegolf.com/book-bunker-hills-gc-tee-times/1114" target="_blank">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Make tee times at Bunker Hills">
+                                </div>
+                                <div class="media-body">
+                                    <div class="lv-title">Bunker Hills Tee Times</div>
+                                    <small class="lv-small">&nbsp;</small>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="lv-item" href="http://bunkerhillsgolf.com/" target="_blank">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Make tee times at Bunker Hills">
+                                </div>
+                                <div class="media-body">
+                                    <div class="lv-title">Bunker Hills Home</div>
+                                    <small class="lv-small"></small>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="lv-item" href="http://mpga.net.p.hostingprod.com/" target="_blank">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Make tee times at Bunker Hills">
+                                </div>
+                                <div class="media-body">
+                                    <div class="lv-title">Minnesota Public Golf Association</div>
+                                    <small class="lv-small"></small>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="lv-item" href="http://www.mngolf.org/home" target="_blank">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Make tee times at Bunker Hills">
+                                </div>
+                                <div class="media-body">
+                                    <div class="lv-title">Minnesota Golf Association</div>
+                                    <small class="lv-small"></small>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="lv-item" href="http://www.usga.org/rules/rules-and-decisions.html" target="_blank">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Make tee times at Bunker Hills">
+                                </div>
+                                <div class="media-body">
+                                    <div class="lv-title">Rules of Golf</div>
+                                    <small class="lv-small"></small>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="lv-item" href="https://www.ghin.com/default.aspx" target="_blank">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Make tee times at Bunker Hills">
+                                </div>
+                                <div class="media-body">
+                                    <div class="lv-title">Handicaps (GHIN)</div>
+                                    <small class="lv-small"></small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-4">
+        <div class="card event-card">
+            <div class="card-body card-padding">
+                <div class="listview">
+                    <div class="lv-header">
+                        Men's Club Sponsors
+                    </div>
+                    <div class="lv-body">
+                        <a class="lv-item" [href]="sponsor.website" target="_blank" *ngFor="let sponsor of sponsors">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <img *ngIf="sponsor.level === 'G'" class="lv-img-sm2" src="../../assets/img/gold.png" alt="Gold Sponsor">
+                                    <img *ngIf="sponsor.level === 'S'" class="lv-img-sm2" src="../../assets/img/silver.png" alt="Silver Sponsor">
+                                    <img *ngIf="sponsor.level === 'B'" class="lv-img-sm2" src="../../assets/img/bronze.png" alt="Bronze Sponsor">
+                                </div>
+                                <div class="media-body">
+                                    <div class="lv-title">{{ sponsor.name }}</div>
+                                    <img class="img-responsive" [src]="sponsor.imageUrl" />
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

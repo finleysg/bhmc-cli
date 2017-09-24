@@ -1,10 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
+import { LayoutService } from './core/services/layout.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  moduleId: module.id,
+  selector: 'body',
+  template: `<bhmc-layout>Loading...</bhmc-layout>`
 })
+
 export class AppComponent {
-  title = 'app';
+
+  name = 'Bunker Hills Men\'s Club';
+  @HostBinding('class.sw-toggled') swToggle: boolean;
+
+  constructor(private layoutService: LayoutService) {
+    layoutService.layoutToggle.subscribe(value => this.swToggle = value === 1);
+  }
 }

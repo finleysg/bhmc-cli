@@ -1,0 +1,74 @@
+<div class="input-group m-b-25">
+    <template #memberTemplate let-model="item" let-index="index">
+        <span>{{ model.name }}</span>
+    </template>
+    <span class="input-group-addon"><i class="zmdi zmdi-search"></i></span>
+    <input [(ngModel)]="selectedMemberName"
+           [typeahead]="members"
+           [typeaheadItemTemplate]="memberTemplate"
+           [typeaheadOptionField]="'name'"
+           [typeaheadOptionsLimit]="8"
+           (typeaheadOnSelect)="addPlayer($event)"
+           class="form-control input-sm" placeholder="Find a player...">
+</div>
+<div>
+    <h5>Players</h5>
+    <div class="player-list" *ngIf="registration.members.length === 0">
+        <div class="input-group">
+            <span class="read-only m-b-5">Add at least one player...</span>
+        </div>
+    </div>
+    <div class="player-list" *ngFor="let member of registration.members">
+        <div class="input-group">
+            <span *ngIf="registration.members.length === 0" class="read-only m-b-5">Add at least one player...</span>
+            <span class="read-only m-b-5">
+                <i (click)="removePlayer(member.id)" class="zmdi zmdi-close-circle c-red m-r-15 clickable"></i>{{ member.name }}
+            </span>
+        </div>
+    </div>
+    <h5>Payment Information</h5>
+<form [formGroup]="offlineForm" (ngSubmit)="register()" class="form-horizontal" novalidate>
+    <div class="form-group">
+        <label class="col-xs-3 control-label">Method:</label>
+        <div class="col-xs-9">
+            <label class="radio-inline">
+                <input type="radio" id="paymentMethodCash" formControlName="paymentMethod" value="check" checked="checked"> Check
+            </label>
+        </div>
+        <div class="col-xs-offset-3 col-xs-9">
+            <label class="radio-inline">
+                <input type="radio" id="paymentMethodCheck" formControlName="paymentMethod" value="cash"> Cash
+            </label>
+        </div>
+    </div>
+    <div class="form-group" [class.has-error]="fieldErrors.paymentNotes">
+        <label for="paymentNotes" class="col-xs-3 control-label">Check #:</label>
+        <div class="col-xs-9">
+            <input type="text" class="form-control" id="paymentNotes" formControlName="paymentNotes" required>
+            <div *ngIf="fieldErrors.paymentNotes">
+                <small class="text-danger">{{ fieldErrors.paymentNotes }}</small>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" [class.has-error]="fieldErrors.paymentAmount">
+        <label for="paymentAmount" class="col-xs-3 control-label">Amount:</label>
+        <div class="col-xs-9">
+            <input type="text" class="form-control" id="paymentAmount" formControlName="paymentAmount" required>
+            <div *ngIf="fieldErrors.paymentAmount">
+                <small class="text-danger">{{ fieldErrors.paymentAmount }}</small>
+            </div>
+        </div>
+    </div>
+    <!--<div class="form-group">
+        <label class="col-xs-3 control-label">Forward tees:</label>
+        <div class="col-xs-9">
+            <label class="checkbox-inline">
+                <input type="checkbox" id="forwardTees" formControlName="forwardTees"> Playing forward (gold) tees
+            </label>
+        </div>
+    </div>-->
+    <div>
+        <button [disabled]="offlineForm.invalid || loading" type="submit" class="btn btn-primary btn-sm m-t-10">Register</button>
+    </div>
+</form>
+</div>

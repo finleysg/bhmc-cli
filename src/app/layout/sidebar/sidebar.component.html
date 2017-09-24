@@ -1,0 +1,152 @@
+<aside id="sidebar" [class.toggled]="isOpen" *ngIf="user">
+    <div class="sidebar-inner mCustomScrollbar c-overflow">
+
+        <div class="profile-menu clickable" *ngIf="user.isAuthenticated">
+            <a toggle-submenu>
+                <div class="profile-pic">
+                    <img src="../../../assets/img/logo.png" alt="">
+                </div>
+                <div class="profile-info">
+                    {{ user.name }}
+                    <i class="zmdi zmdi-caret-down"></i>
+                </div>
+            </a>
+            <ul class="main-menu">
+                <li>
+                    <a [routerLink]="['/member/account']" (click)="close()">
+                        <i class="zmdi zmdi-account"></i>
+                        My Account
+                    </a>
+                </li>
+                <li>
+                    <a (click)="logout()">
+                        <i class="zmdi zmdi-time-restore"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="profile-menu" *ngIf="!user.isAuthenticated">
+            <a>
+                <div class="profile-pic">
+                    <img src="../../../assets/img/logo.png" alt="">
+                </div>
+                <div class="profile-info">
+                    {{ user.name }}
+                </div>
+            </a>
+        </div>
+
+        <ul class="main-menu">
+            <li [routerLinkActive]="['active']">
+                <a [routerLink]="['/home']" (click)="close()">
+                    <i class="zmdi zmdi-home"></i>
+                    Home
+                </a>
+            </li>
+            <li [routerLinkActive]="['active']">
+                <a [routerLink]="['calendar', currentMonth.year, currentMonth.month]" (click)="close()">
+                    <i class="zmdi zmdi-calendar"></i>
+                    Event Calendar
+                </a>
+            </li>
+            <li class="sub-menu clickable" [routerLinkActive]="['active']">
+                <a toggle-submenu><i class="zmdi zmdi-format-list-numbered"></i> Event Results</a>
+                <ul>
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['/results/league']" (click)="close()">
+                            Wednesday Nights
+                        </a>
+                    </li>
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['/results/majors']" (click)="close()">
+                            Weekend Majors
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu clickable" [routerLinkActive]="['active']">
+                <a toggle-submenu><i class="zmdi zmdi-check-all"></i> Club Policies</a>
+                <ul>
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['/policies/club']" (click)="close()">
+                            Policies & Procedures
+                        </a>
+                    </li>
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['/policies/rules']" (click)="close()">
+                            Local Rules
+                        </a>
+                    </li>
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['/policies/handicaps']" (click)="close()">
+                            Handicaps & Scoring
+                        </a>
+                    </li>
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['/policies/finances']" (click)="close()">
+                            Financial Information
+                        </a>
+                    </li>
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['/policies/new-members']" (click)="close()">
+                            New Member FAQs
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li [routerLinkActive]="['active']">
+                <a [routerLink]="['/events', config.matchPlayId, 'matchplay']" (click)="close()">
+                    <i class="zmdi zmdi-accounts-outline"></i>
+                    Match Play
+                </a>
+            </li>
+            <li [routerLinkActive]="['active']">
+                <a [routerLink]="['/season-points']" (click)="close()">
+                    <i class="zmdi zmdi-flag"></i>
+                    Season Long Points
+                </a>
+            </li>
+            <li [routerLinkActive]="['active']">
+                <a [routerLink]="['/dam-cup']" (click)="close()">
+                    <!--<i class="zmdi zmdi-local-cafe"></i>-->
+                    <i class="trophy"></i>
+                    The Dam Cup
+                </a>
+            </li>
+            <li [routerLinkActive]="['active']" *ngIf="user.isAuthenticated">
+                <a [routerLink]="['/directory']" (click)="close()">
+                    <i class="zmdi zmdi-accounts-list"></i>
+                    Member Directory
+                </a>
+            </li>
+            <li [routerLinkActive]="['active']">
+                <a [routerLink]="['/contact']" (click)="close()">
+                    <i class="zmdi zmdi-phone"></i>
+                    Contact Us
+                </a>
+            </li>
+            <li [routerLinkActive]="['active']">
+                <a [routerLink]="['/about-us']" (click)="close()">
+                    <i class="zmdi zmdi-help"></i>
+                    About Us
+                </a>
+            </li>
+            <li [routerLinkActive]="['active']" *ngIf="!user.isAuthenticated">
+                <a [routerLink]="['/member/login']" (click)="close()"> Login</a>
+            </li>
+            <li class="sub-menu clickable" [routerLinkActive]="['active']" *ngIf="user.isOfficer">
+                <a toggle-submenu><i class="zmdi zmdi-wrench"></i> Administration</a>
+                <ul>
+                    <li>
+                        <a href="{{adminUrl}}" target="_blank">Django (backend) Admin</a>
+                    </li>
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['/admin', 'reporting']" (click)="close()">Reports</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</aside>

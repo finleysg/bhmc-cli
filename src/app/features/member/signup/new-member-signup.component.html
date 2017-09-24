@@ -1,0 +1,193 @@
+<div class="block-header">
+    <h2>New Member Registration</h2>
+</div>
+<div class="row" *ngIf="eventDetail">
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>Notes and Policies</h2>
+            </div>
+            <div class="card-body card-padding">
+                <div [markdown]="eventDetail.description"></div>
+                <div>
+                    <a [href]="application.url" target="_blank" class="btn btn-info event-button m-r-10">Offline Application</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="card" *ngIf="config">
+            <div class="card-header">
+                <h2>{{config.year}} New Member Fees</h2>
+            </div>
+            <div class="card-body card-padding">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p>Make sure you have read the new member information and you are not a returning member.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-9">
+                        <p class="m-b-5">New member registration fee:</p>
+                    </div>
+                    <div class="col-xs-3 text-right">
+                        <p class="m-b-5">{{ paymentCalc.subtotal | currency:'USD':true }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-9">
+                        <p class="m-b-5">Credit card transaction fees (online only):</p>
+                    </div>
+                    <div class="col-xs-3 text-right">
+                        <p class="m-b-5">{{ paymentCalc.transactionFee | currency:'USD':true }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-9">
+                        <p class="m-b-5">Total registration amount:</p>
+                    </div>
+                    <div class="col-xs-3 text-right">
+                        <p class="m-b-5"><strong>{{ paymentCalc.total | currency:'USD':true }}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <h2>Online Registration</h2>
+                <small>* required information</small>
+            </div>
+            <div class="card-body card-padding">
+                <div class="row">
+                    <form [formGroup]="userForm" (ngSubmit)="createAccount()" class="form-horizontal" novalidate>
+                        <fieldset [disabled]="registered || loading">
+                            <legend>Personal Information</legend>
+                            <div class="form-group" [class.has-error]="fieldErrors.firstName">
+                                <label for="firstName" class="col-sm-3 control-label">*First name:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="firstName" formControlName="firstName" placeholder="First name" required>
+                                    <div *ngIf="fieldErrors.firstName">
+                                        <small class="text-danger">{{ fieldErrors.firstName }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" [class.has-error]="fieldErrors.lastName">
+                                <label for="lastName" class="col-sm-3 control-label">*Last name:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="lastName" formControlName="lastName" placeholder="Last name" required>
+                                    <div *ngIf="fieldErrors.lastName">
+                                        <small class="text-danger">{{ fieldErrors.lastName }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" [class.has-error]="fieldErrors.birthDate">
+                                <label for="birthDate" class="col-sm-3 control-label">*Birth date:</label>
+                                <div class="col-sm-9">
+                                    <input type="date" class="form-control" id="birthDate" formControlName="birthDate" required>
+                                    <div *ngIf="fieldErrors.birthDate">
+                                        <small class="text-danger">{{ fieldErrors.birthDate }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNumber" class="col-sm-3 control-label">Phone number:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber" placeholder="Phone number">
+                                </div>
+                            </div>
+                            <div class="form-group" [class.has-error]="fieldErrors.email">
+                                <label for="email" class="col-sm-3 control-label">*Email:</label>
+                                <div class="col-sm-9">
+                                    <input type="email" class="form-control" id="email" formControlName="email" placeholder="Email" required>
+                                    <div *ngIf="fieldErrors.email">
+                                        <small class="text-danger">{{ fieldErrors.email }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset [disabled]="registered || loading">
+                            <legend>Former Club Information</legend>
+                            <div class="form-group" [class.has-error]="fieldErrors.club">
+                                <label for="formerClubName" class="col-sm-3 control-label">Former club:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="formerClubName" formControlName="formerClubName" placeholder="Former club">
+                                    <div *ngIf="fieldErrors.club">
+                                        <small class="text-danger">{{ fieldErrors.club }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="formerClubNumber" class="col-sm-3 control-label">Club number:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="formerClubNumber" formControlName="formerClubNumber" placeholder="Club number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ghin" class="col-sm-3 control-label">GHIN:</label>
+                                <div class="col-sm-9">
+                                    <input type="tel" class="form-control" id="ghin" formControlName="ghin" placeholder="GHIN">
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset [disabled]="registered || loading">
+                            <legend>Tee Preference</legend>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Forward tees:</label>
+                                <div class="col-lg-9">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" id="forwardTees" formControlName="forwardTees"> I will play forward (gold) tees
+                                    </label>
+                                    <p class="help-block"><small>* Make sure you qualify for the rule of 78.</small></p>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset [disabled]="registered || loading">
+                            <legend>Log In Credentials</legend>
+                            <div class="form-group" [class.has-error]="fieldErrors.username">
+                                <label for="username" class="col-sm-3 control-label">*Log in name:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="username" formControlName="username" placeholder="Log in name" required>
+                                    <div *ngIf="fieldErrors.username">
+                                        <small class="text-danger">{{ fieldErrors.username }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" [class.has-error]="fieldErrors.password1">
+                                <label for="password1" class="col-sm-3 control-label">*Password:</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control" id="password1" formControlName="password1" placeholder="Password" required>
+                                    <div *ngIf="fieldErrors.password1">
+                                        <small class="text-danger">{{ fieldErrors.password1 }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" [class.has-error]="fieldErrors.passwords">
+                                <label for="password2" class="col-sm-3 control-label">*Confirm password:</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control" id="password2" formControlName="password2" placeholder="Confirm password" required>
+                                    <div *ngIf="fieldErrors.passwords">
+                                        <small class="text-danger">{{ fieldErrors.passwords }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div>
+                            <button [disabled]="userForm.invalid || registered || loading" type="submit" class="btn btn-primary btn-sm m-t-10 m-l-10 pull-right">Register</button>
+                            <payment [registrationGroup]="group" [eventDetail]="eventDetail" (onClose)="done($event)"></payment>
+                        </div>
+                    </form>
+                    <div class="m-t-30" *ngIf="registered">
+                        <h3 class="text-success">Registration Complete</h3>
+                        <p class="text-success"><strong>Thank you for registering with the Bunker Hills Men's Club! Welcome to the club;
+                            we hope you have a great year.</strong></p>
+                        <p>We have sent a confirmation email to the address you entered above. Make sure that you allow emails
+                            from bhmc.org to reach your inbox. If you have any trouble, feel free to contact a Board member.</p>
+                        <p>You can <a [routerLink]="['/member/login']">log in</a> now.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,5 @@
+.has-error .input-group-addon {
+    color: #f6675d;
+    border-color: transparent;
+    background-color: transparent;
+}

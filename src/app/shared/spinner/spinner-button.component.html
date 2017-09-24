@@ -1,0 +1,11 @@
+<button class="btn btn-relative btn-icon-text"
+       [class.btn-primary]="pending || sending"
+       [class.btn-success]="complete"
+       [class.btn-error]="failure"
+       [disabled]="disabled"
+       (click)="handleClick()">
+    <span class="m-l-20" *ngIf="sending">{{sendingText || buttonText}}</span>
+    <i *ngIf="pending" class="zmdi zmdi-mail-send"></i> <span *ngIf="pending">{{buttonText}}</span>
+    <i *ngIf="complete" class="zmdi zmdi-check"></i> <span *ngIf="complete">{{completeText || buttonText}}</span>
+    <i *ngIf="failure" class="zmdi zmdi-close"></i> <span *ngIf="failure">{{failureText || buttonText}}</span>
+</button>

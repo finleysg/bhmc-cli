@@ -1,0 +1,47 @@
+<div class="block-header">
+    <h2>Member Directory</h2>
+</div>
+<div class="row">
+    <div class="col-md-4 col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <h2>Search</h2>
+            </div>
+            <div class="card-body card-padding">
+                <p>
+                    The BHMGC maintains an active directory/listing of its members. This list contains names,
+                    phone numbers, and email addresses. It is the policy of our club that the directory is strictly
+                    limited for internal use related to BHMGC events and functions. It is not to be used externally,
+                    copied, or sold for non-BHMGC activities.
+                </p>
+                <p>
+                    Violation of this policy will result in disciplinary action determined by the BHMGC Board, up to
+                    and including expulsion.
+                </p>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Member name" [(ngModel)]="search.text"
+                           (keyup)="doFilter(search.text)"/>
+                    <span class="input-group-addon last"><i class="zmdi zmdi-search"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <h2>Results</h2>
+            </div>
+            <div class="card-body card-padding">
+                <p *ngFor="let m of results">
+                    <a (click)="toggleFriendship(m)" class="friend-star">
+                        <i class="zmdi zmdi-hc-lg m-r-10"
+                           [class.friend]="m.isFriend" [class.zmdi-star]="m.isFriend"
+                           [class.zmdi-star-outline]="!m.isFriend"></i>
+                    </a>
+                    <span>{{ m.name }}</span>
+                    <span class="m-l-20"><a [href]="'mailto:' + m.email">{{ m.email }}</a></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+.friend {
+    color: orange;
+}
+
+.friend-star {
+    cursor: pointer;
+    text-decoration: none;
+    color: silver;
+}

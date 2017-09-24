@@ -1,0 +1,22 @@
+<div class="pmb-block">
+    <div class="pmbb-body reserve-table">
+        <div class="row" *ngFor="let row of table.rows">
+            <div class="col-md-2 col-xs-12">
+                <div class="registration-hole">
+                    <span>{{ row.name }}</span>
+                    <button class="btn btn-sm btn-warning m-l-10" *ngIf="row.hasOpenings" (click)="register(row)" [disabled]="row.isDisabled">
+                        Register
+                    </button>
+                    <button class="btn btn-sm btn-success" *ngIf="row.hasOpenings" (click)="selectRow(row)">
+                        Select
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-12" *ngFor="let slot of row.slots">
+                <div class="registration-slot" [ngClass]="slotClass(slot)" (click)="selectSlot(row, slot)">
+                    {{slot.displayText}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

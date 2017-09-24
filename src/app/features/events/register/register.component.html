@@ -1,0 +1,137 @@
+<div class="block-header" *ngIf="eventDetail">
+    <h2 class="hidden-xs">{{ eventDetail.name }} ({{ eventDetail.startDate.format('dddd, MMMM Do') }})</h2>
+    <h4 class="visible-xs">{{ eventDetail.name }} ({{ eventDetail.startDate.format('MMM D') }})</h4>
+</div>
+<div class="row" *ngIf="registrationGroup">
+    <div class="col-lg-6 col-md-8 col-xs-12">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2 *ngIf="!isLeagueEvent">&nbsp;</h2>
+                <h2 *ngIf="isLeagueEvent">{{ registrationGroup.registrations[0].courseName.replace('League', '') }} {{ registrationGroup.startingHoleName }}</h2>
+                <div class="col-sm-4 col-xs-9 input-group find-partner" *ngIf="eventDetail.groupSize > 1">
+                    <template #memberTemplate let-model="item" let-index="index">
+                        <span>{{ model.name }}</span>
+                    </template>
+                    <span class="input-group-addon"><i class="zmdi zmdi-search"></i></span>
+                    <input [(ngModel)]="selectedMemberName"
+                           [typeahead]="members"
+                           [typeaheadItemTemplate]="memberTemplate"
+                           [typeaheadOptionField]="'name'"
+                           [typeaheadOptionsLimit]="8"
+                           (typeaheadOnSelect)="selectMember($event)"
+                           class="form-control input-sm" placeholder="Find partners...">
+                </div>
+            </div>
+            <div class="card-body card-padding">
+                <div class="row hidden-xs">
+                    <div class="col-md-4 col-sm-4 text-info">Member</div>
+                    <div class="col-md-1 col-sm-1 text-info">Event Fee</div>
+                    <div class="col-md-1 col-sm-1 text-info">Gross Skins</div>
+                    <div class="col-md-1 col-sm-1 text-info">Net Skins</div>
+                    <div class="col-md-1 col-sm-1 text-info">Greens Fee</div>
+                    <div class="col-md-1 col-sm-1 text-info">Cart Fee</div>
+                    <div class="col-md-3 col-sm-3 text-info text-right"><strong>Total</strong></div>
+                </div>
+                <div class="row m-t-10" *ngFor="let reg of registrationGroup.registrations">
+                    <div class="col-md-4 col-sm-4 col-xs-12">
+                        <div class="input-group">
+                            <span class="read-only" (click)="removeFriend(reg)" *ngIf="reg.hasMember">
+                                <i *ngIf="reg.memberId !== currentUser.member.id" class="zmdi zmdi-close-circle c-red m-r-15"></i>{{ reg.memberName }}
+                            </span>
+                            <span class="read-only" *ngIf="!reg.hasMember">Find partner (above) ...</span>
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-sm-1 hidden-xs">
+                        <div class="checkbox">
+                            <input type="checkbox" [(ngModel)]="reg.isEventFeePaid" [disabled]="true"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-xs-3">
+                        <div class="checkbox">
+                            <label class="visible-xs-inline">Gross</label>
+                            <input type="checkbox" [(ngModel)]="reg.isGrossSkinsFeePaid" [disabled]="!hasSkins" (change)="updatePayment()"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-xs-3">
+                        <div class="checkbox">
+                            <label class="visible-xs-inline">Net</label>
+                            <input type="checkbox" [(ngModel)]="reg.isNetSkinsFeePaid" [disabled]="!hasSkins" (change)="updatePayment()"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-xs-3">
+                        <div class="checkbox">
+                            <label class="visible-xs-inline">Greens</label>
+                            <input type="checkbox" [(ngModel)]="reg.isGreensFeePaid" (change)="updatePayment()"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-xs-3">
+                        <div class="checkbox">
+                            <label class="visible-xs-inline">Cart</label>
+                            <input type="checkbox" [(ngModel)]="reg.isCartFeePaid" (change)="updatePayment()"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3 hidden-xs text-right">{{ reg.totalFees | currency:'USD':true }}</div>
+                </div>
+                <div class="row m-t-15">
+                    <div class="col-sm-10 col-xs-8 text-right"><strong>Group total:</strong></div>
+                    <div class="col-sm-2 col-xs-4 text-right"><strong>{{ registrationGroup.payment.subtotal | currency:'USD':true }}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-10 col-xs-8 text-right">Transaction fee:</div>
+                    <div class="col-sm-2 col-xs-4 text-right">{{ registrationGroup.payment.transactionFee | currency:'USD':true }}</div>
+                </div>
+                <div class="row m-t-5">
+                    <div class="col-sm-10 col-xs-8 text-right"><h4>Amount due:</h4></div>
+                    <div class="col-sm-2 col-xs-4 text-right"><h4>{{ registrationGroup.payment.total | currency:'USD':true }}</h4></div>
+                </div>
+                <div class="row">
+                    <timer [expiration]="expires" [expiryMessage]="expiryMessage" (onTimeElapsed)="cancelReservation()"></timer>
+                    <div class="pull-right">
+                        <button class="btn btn-warning m-t-10" [disabled]="cancelling" (click)="cancelReservation()">Cancel</button>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary m-r-10 m-t-10" (click)="openPayment()">Pay Now</button>
+                        <payment [registrationGroup]="registrationGroup" [eventDetail]="eventDetail" (onClose)="paymentComplete($event)"></payment>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="controls ">
+                            <label>Notes / Special Requests</label>
+                            <textarea class="form-control fc-alt" rows="3"
+                                      name="notes" [(ngModel)]="registrationGroup.notes" #notes="ngModel">
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="friends && eventDetail.groupSize > 1">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>Friends</h2>
+            </div>
+            <div class="card-body card-padding" *ngIf="friends.length === 0">
+                <p>You don't currently have any members in your Friends list.</p>
+                <p>Anyone you sign up for an event will automatically be added to your Friends list.</p>
+            </div>
+            <div class="card-body card-padding" *ngIf="friends.length > 0">
+                <div class="list-group">
+                    <button class="list-group-item list-group-item-action friend-item"
+                            *ngFor="let friend of friends"
+                            [disabled]="friend.isRegistered"
+                            [class.disabled]="friend.isRegistered"
+                            (click)="add(friend)">{{ friend.name }}
+                        <span *ngIf="friend.isRegistered" class="badge">registered</span>
+                    </button>
+                </div>
+                <div>
+                    <p>You can add or remove members from your Friends list on your account page.</p>
+                    <p>Anyone you sign up for an event will automatically be added to your Friends list.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

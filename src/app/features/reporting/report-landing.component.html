@@ -1,0 +1,53 @@
+<div class="block-header">
+    <h2>Reporting</h2>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>Membership Reports</h2>
+            </div>
+            <div class="card-body card-padding report-list">
+                <button class="btn btn-link" [routerLink]="['/member', 'reports', 'all-members']">Full Membership</button>
+                <p>All member records, including inactive accounts.</p>
+                <button class="btn btn-link" [routerLink]="['/member', 'reports', 'current-members']">Current Membership</button>
+                <p>Membership report for the {{config.year}} season.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>Event Reports</h2>
+                <small>These can also be run from the event detail page</small>
+            </div>
+            <div class="card-body card-padding report-list">
+                <button class="btn btn-link" [disabled]="!selectedEvent" [routerLink]="['/events', selectedEvent && selectedEvent.id, 'report']">Event Signup Report</button>
+                <p>A listing of all sign-ups captured online or entered through the administration website.</p>
+                <button class="btn btn-link" [disabled]="!selectedEvent" [routerLink]="['/events', selectedEvent && selectedEvent.id, 'check-in-report']">Event Check-in Report</button>
+                <p>A printable check-in / skins sheet for Wednesday night events. To be used by those working the check-in table.</p>
+                <button class="btn btn-link" [disabled]="!selectedEvent" [routerLink]="['/events', selectedEvent && selectedEvent.id, 'recon-report']">Event Reconciliation Report</button>
+                <p>This is a pull from Stripe side-by-side with our own sign-up group records to ensure that the payment info we
+                    have matches what our payment provider has.</p>
+                <button class="btn btn-link" [routerLink]="['/events', config.matchPlayId, 'matchplay', 'report']">Match Play Sign-ups</button>
+                <p>Match play sign-ups for the {{config.year}} season.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>Upcoming or Recent Events</h2>
+                <small>Select one to run an event report</small>
+            </div>
+            <div class="card-body card-padding">
+                <div class="list-group">
+                    <a *ngFor="let e of events"
+                       class="list-group-item text-left"
+                       [class.active]="selectedEvent && e.id===selectedEvent.id"
+                       (click)="selectEvent(e)">{{e.name}} ({{e.startDate.format('dddd, MMMM Do')}})</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

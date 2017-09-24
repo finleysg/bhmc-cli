@@ -1,0 +1,25 @@
+<div class="block-header" *ngIf="eventDetail">
+    <h2>{{ eventDetail.name }} ({{ eventDetail.startDate.format('dddd, MMMM Do') }}): Registered</h2>
+    <ul class="actions">
+        <li>
+            <a class="clickable" (click)="refresh()">
+                <i class="zmdi zmdi-refresh-alt"></i>
+            </a>
+        </li>
+        <li>
+            <a [routerLink]="['/events', eventDetail.id, 'detail']">
+                <i class="zmdi zmdi-view-dashboard"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="card">
+    <div class="pm-body clearfix">
+        <ul class="tab-nav tn-justified">
+            <li *ngFor="let c of courses" class="btn-wave" [routerLinkActive]="['active']">
+                <a [routerLink]="[c.id]">{{c.name}}</a>
+            </li>
+        </ul>
+        <router-outlet></router-outlet>
+    </div>
+</div>

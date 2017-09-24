@@ -1,0 +1,100 @@
+<div class="block-header">
+    <h2>Event Sign-up Report</h2>
+    <ul class="actions">
+        <!--<li *ngIf="report && showCourse">
+            <download-csv [csvData]="legacyCsv()" [filename]="'LegacyEventExport.csv'"></download-csv>
+        </li>-->
+        <li *ngIf="report && showCourse">
+            <download-csv [csvData]="wednesdayCsv()" [filename]="'WednesdayEventExport.csv'"></download-csv>
+        </li>
+        <li *ngIf="report && !showCourse">
+            <download-csv [csvData]="majorCsv()" [filename]="'MajorEventExport.csv'"></download-csv>
+        </li>
+        <li>
+            <a href="#">
+                <i class="zmdi zmdi-print"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>{{eventDetail.name}}: {{eventDetail.startDate.format('MMMM Do, YYYY')}}</h2><i bhmc-spinner="event-rpt"></i>
+            </div>
+            <div class="card-body card-padding">
+                <div class="table-responsive">
+                    <table class="table table-striped table-condensed">
+                        <thead>
+                        <tr>
+                            <th *ngIf="showCourse">Course</th>
+                            <th *ngIf="showHole">Hole</th>
+                            <th *ngIf="showGroup">Group</th>
+                            <th>Member</th>
+                            <th>Date Reserved</th>
+                            <th>Signed Up By</th>
+                            <th>Payment Code</th>
+                            <th class="text-right">Event Fee</th>
+                            <th class="text-right">Gross Skins</th>
+                            <th class="text-right">Net Skins</th>
+                            <th class="text-right">Green Fee</th>
+                            <th class="text-right">Cart Fee</th>
+                            <th class="text-right">Total Fees</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let row of report">
+                            <td *ngIf="showCourse">{{row.course}}</td>
+                            <td *ngIf="showHole">{{row.hole}}</td>
+                            <td *ngIf="showGroup">{{row.groupId}}</td>
+                            <td>{{row.memberName}}</td>
+                            <td>{{row.reserved}}</td>
+                            <td>{{row.signedUpBy}}</td>
+                            <td>{{row.paymentCode}}</td>
+                            <td class="text-right">{{row.eventFee | currency:'USD':true}}</td>
+                            <td class="text-right">{{row.grossSkinsFee | currency:'USD':true}}</td>
+                            <td class="text-right">{{row.netSkinsFee | currency:'USD':true}}</td>
+                            <td class="text-right">{{row.greenFee | currency:'USD':true}}</td>
+                            <td class="text-right">{{row.cartFee | currency:'USD':true}}</td>
+                            <td class="text-right">{{row.totalFees | currency:'USD':true}}</td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td *ngIf="showCourse"></td>
+                            <td *ngIf="showHole"></td>
+                            <td *ngIf="showGroup"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">Totals:</td>
+                            <td class="text-right">{{summary.eventFees | currency:'USD':true}}</td>
+                            <td class="text-right">{{summary.grossSkinsFees | currency:'USD':true}}</td>
+                            <td class="text-right">{{summary.netSkinsFees | currency:'USD':true}}</td>
+                            <td class="text-right">{{summary.greenFees | currency:'USD':true}}</td>
+                            <td class="text-right">{{summary.cartFees | currency:'USD':true}}</td>
+                            <td class="text-right">{{summary.totalFees | currency:'USD':true}}</td>
+                        </tr>
+                        <tr>
+                            <td *ngIf="showCourse"></td>
+                            <td *ngIf="showHole"></td>
+                            <td *ngIf="showGroup"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">Counts:</td>
+                            <td class="text-right">{{summary.eventCount}}</td>
+                            <td class="text-right">{{summary.grossSkinsCount}}</td>
+                            <td class="text-right">{{summary.netSkinsCount}}</td>
+                            <td class="text-right">{{summary.greenCount}}</td>
+                            <td class="text-right">{{summary.cartCount}}</td>
+                            <td class="text-right">{{summary.eventCount}}</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

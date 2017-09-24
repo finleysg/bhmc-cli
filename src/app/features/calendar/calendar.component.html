@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-lg-9 col-md-12">
+        <div id="calendar-wrap" *ngIf="calendar">
+
+            <header class="fc-toolbar">
+                <div class="month-title">
+                  <a class="month-nav" [routerLink]="['/calendar', calendar.lastMonth().year, calendar.lastMonth().month.toLowerCase()]">&lt;</a>
+                  <span>{{calendar.thisMonth().month}} {{calendar.thisMonth().year}}</span>
+                  <a class="month-nav" [routerLink]="['/calendar', calendar.nextMonth().year, calendar.nextMonth().month.toLowerCase()]">&gt;</a>
+                </div>
+            </header>
+
+            <div *ngIf="!calendar.hasEvents()" class="visible-xs text-center m-t-20">
+                <h4>No events scheduled</h4>
+            </div>
+            <div id="calendar">
+                <ul class="weekdays current-skin">
+                    <li>Sunday</li>
+                    <li>Monday</li>
+                    <li>Tuesday</li>
+                    <li>Wednesday</li>
+                    <li>Thursday</li>
+                    <li>Friday</li>
+                    <li>Saturday</li>
+                </ul>
+                <ul *ngFor="let week of calendar.weeks" class="days">
+                    <li *ngFor="let d of week.days" class="day" [class.hidden-xs]="!d.hasEvents()" [class.other-month]="!d.isCurrentMonth" [class.today]="d.isToday">
+                        <div class="date hidden-xs">{{d.day}}</div>
+                        <div class="date visible-xs">{{d.date | date: 'fullDate'}}</div>
+                        <div *ngFor="let e of d.events" class="event" [ngClass]="e.eventTypeClass()">
+                            <div *ngIf="!e.externalUrl" class="event-desc"><a [routerLink]="['/events', e.id, 'detail']">{{e.name}}</a></div>
+                            <div *ngIf="e.externalUrl" class="event-desc"><a [href]="e.externalUrl" target="_blank">{{e.name}}</a></div>
+                        </div>
+                    </li>
+                </ul>
+            </div><!-- /. calendar -->
+        </div><!-- /. wrap -->
+    </div>
+    <div class="col-lg-2 visible-lg" *ngIf="calendar">
+        <div class="card event-card">
+            <div class="card-header">
+                <h2>{{calendar.thisMonth().year}}</h2>
+            </div>
+            <div class="card-body card-padding">
+                <div class="list-group">
+                    <a *ngFor="let m of monthListing" class="list-group-item text-center"
+                        [routerLinkActive]="['active', 'list-group-item-success']"
+                        [routerLink]="['/calendar', m.year, m.month.toLowerCase()]">{{m.month}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

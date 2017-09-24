@@ -1,0 +1,27 @@
+<div class="block-header">
+    <h2>About the Men's Club</h2>
+</div>
+<div class="card">
+    <div class="card-body card-padding">
+        <div class="listview">
+            <div class="lv-header">
+                Interested in joining Bunker Hills Men’s Golf Club?
+            </div>
+            <div class="lv-body">
+                <div class="lv-item" *ngFor="let p of policies">
+                    <div class="media">
+                        <div class="pull-left">
+                            <img class="lv-img-sm" src="../../assets/img/BallHole.png" alt="About the club">
+                        </div>
+                        <div class="media-body">
+                            <div class="lv-title">{{ p.title }}</div>
+                            <div [markdown]="p.description"></div>
+                        </div>
+                    </div>
+                </div>
+                <button *ngIf="!currentUser.isAuthenticated && config.acceptNewMembers" class="btn btn-primary"
+                        [routerLink]="['/member', 'new-member-signup', config.registrationId]">Sign Up Now</button>
+            </div>
+        </div>
+    </div>
+</div>

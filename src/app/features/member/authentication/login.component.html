@@ -1,0 +1,38 @@
+<div class="login-content">
+    <div class="lc-block" id="l-login">
+        <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
+            <div class="lcb-form">
+                <div class="input-group m-b-20" [class.has-error]="f.submitted && !username.valid">
+                    <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                    <input type="text" class="form-control" name="username" [(ngModel)]="model.username"
+                           #username="ngModel" placeholder="Username or Email" required>
+                </div>
+
+                <div class="input-group m-b-20" [class.has-error]="f.submitted && !password.valid">
+                    <span class="input-group-addon"><i class="zmdi zmdi-help-outline"></i></span>
+                    <input type="password" class="form-control" name="password" [(ngModel)]="model.password"
+                           #password="ngModel" placeholder="Password" required>
+                </div>
+
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="remember" [(ngModel)]="model.remember" #remember="ngModel" checked
+                               value="true">
+                        <i class="input-helper"></i>
+                        Keep me signed in
+                    </label>
+                </div>
+
+                <button [disabled]="loading"
+                        class="btn btn-login btn-success btn-float waves-effect waves-circle waves-float"><i
+                        class="zmdi zmdi-arrow-forward"></i></button>
+            </div>
+        </form>
+        <div class="lcb-navigation">
+            <!--<a [routerLink]="['/member', 'new-member-signup', config.registrationId]" data-ma-block="#l-register"><i class="zmdi zmdi-plus"></i>-->
+                <!--<span>Register</span></a>-->
+            <a [routerLink]="['/member/reset-password']" data-ma-block="#l-forget-password"><i>?</i>
+                <span>Forgot Password</span></a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+.registration-hole {
+    padding: 4px 12px 4px 4px;
+}
+
+.registration-hole span {
+    font-weight: bold;
+}
+
+.registration-hole button {
+    float: right;
+}
+
+.registration-slot {
+    border: solid 1px slategray;
+    text-align: center;
+    padding: 8px;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 767px) {
+    .registration-hole button {
+        float: right;
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+}
+
