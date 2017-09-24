@@ -4,7 +4,7 @@ import { EventDetail } from './event-detail';
 import { SlotPayment } from './slot-payment';
 import { PublicMember } from './member';
 import { User } from './user';
-declare const moment: any;
+import * as moment from 'moment';
 
 export class EventRegistrationGroup {
     id: number;

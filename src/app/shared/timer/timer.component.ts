@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-declare const moment: any;
+import * as moment from 'moment';
 import { ToasterService } from 'angular2-toaster';
 
 @Component({

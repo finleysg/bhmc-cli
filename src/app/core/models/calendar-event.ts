@@ -1,6 +1,6 @@
 import { EventDetail, StartType } from './event-detail';
 import { EventType } from './event-detail';
-declare const moment: any;
+import * as moment from 'moment';
 
 export class CalendarEvent {
     id: number;

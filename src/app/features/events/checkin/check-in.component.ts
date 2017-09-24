@@ -6,8 +6,6 @@ import { TypeaheadMatch, ModalDirective } from 'ngx-bootstrap';
 import { ToasterService } from 'angular2-toaster';
 import * as _ from 'lodash';
 
-declare const moment: any;
-
 @Component({
     moduleId: module.id,
     templateUrl: 'check-in.component.html',

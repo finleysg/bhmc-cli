@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { OfflineRegistration } from './offline-registration';
-declare const moment: any;
 
 @Injectable()
 export class OfflineRegistrationForm {

@@ -28,7 +28,6 @@ export class UploadComponent implements OnInit {
     private config: AppConfig;
     private spinner: any;
     private spinnerElement: any;
-    private options: ModalOptions;
   
     constructor(
         private documentService: DocumentService,
@@ -41,15 +40,13 @@ export class UploadComponent implements OnInit {
 
     ngOnInit() {
       this.initSpinner();
-      this.options.backdrop = 'static';
-      this.options.keyboard = false;
     }
 
     open(document: EventDocument, titleSuffix: string = null): void {
         this.existingDocument = document;
         this.titleSuffix = titleSuffix;
         this.documentName = this.deriveDocumentTitle();
-        this.uploadModal.config = this.options;
+        this.uploadModal.config = {backdrop: 'static', keyboard: false};
         this.uploadModal.show();
     }
 
@@ -57,7 +54,7 @@ export class UploadComponent implements OnInit {
         this.existingDocument = document;
         this.documentType = type;
         this.documentName = this.deriveDocumentTitle();
-        this.uploadModal.config = this.options;
+        this.uploadModal.config = {backdrop: 'static', keyboard: false};
         this.uploadModal.show();
     }
 

@@ -1,5 +1,5 @@
 import { User } from '../../../core';
-declare const moment: any;
+import * as moment from 'moment';
 
 export class NewUser {
 

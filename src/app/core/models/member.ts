@@ -1,4 +1,4 @@
-declare const moment: any;
+import * as moment from 'moment';
 
 export class PublicMember {
     id: number;

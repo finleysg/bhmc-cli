@@ -1,5 +1,5 @@
 import { CalendarEvent } from './calendar-event';
-declare const moment: any;
+import * as moment from 'moment';
 
 export class Day {
     name: string;

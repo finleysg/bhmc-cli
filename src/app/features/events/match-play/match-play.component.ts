@@ -4,7 +4,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { User, AuthenticationService, EventDetail, EventDocument, DocumentType, DocumentService } from '../../../core';
 import { ActivatedRoute } from '@angular/router';
 import { UploadComponent } from '../../../shared/upload/upload.component';
-declare const moment: any;
+import * as moment from 'moment';
 
 @Component({
     moduleId: module.id,

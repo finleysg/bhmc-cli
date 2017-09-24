@@ -10,7 +10,7 @@ import { ConfigService } from '../../app-config.service';
 import { AppConfig } from '../../app-config';
 import { BhmcErrorHandler } from './bhmc-error-handler.service';
 
-declare const moment: any;
+import * as moment from 'moment';
 
 @Injectable()
 export class AuthenticationService {

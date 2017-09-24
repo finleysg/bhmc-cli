@@ -9,7 +9,6 @@ import { Observable } from 'rxjs/Observable';
 import { TypeaheadMatch } from 'ngx-bootstrap';
 import { PaymentComponent, ProcessingStatus } from '../../../shared/payments/payment.component';
 import { TimerComponent } from '../../../shared/timer/timer.component';
-declare const moment: any;
 
 @Component({
     moduleId: module.id,

@@ -1,6 +1,6 @@
 import { EventRegistration } from './event-registration';
 import { DocumentType, EventDocument } from './event-document';
-declare const moment: any;
+import * as moment from 'moment';
 
 export class EventDetail {
     id: number;
