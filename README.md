@@ -6,7 +6,7 @@ Manages the event calendar, communications, and event registration for club memb
 
 ## Pending Tasks for 2018
     
-###Required Updates, Upgrades, and Performance Enhancements
+###Required Updates, Upgrades, Bug-Fixes, and Performance Enhancements
 * ~~Update the website project to use Angular CLI and WebPack~~
 * ~~Update website to Angular 5~~
 * ~~Move top-level features to lazy routes~~
@@ -19,7 +19,23 @@ Manages the event calendar, communications, and event registration for club memb
   * Each event (mid-week and majors) will have a separate event portal page in GG
   * i.e. Not just the document link that we have now
 * It should be more obvious to our members when they are logged it to the site, especially on the phone
-
+* Bug: New reg and login: should not be presented with a reg button
+* Creation of new mid-week events should also create the signup slots
+* Ensure new member registration obeys the config flag
+* Identity and handle returning inactive member signup (redirect from failed login)
+* How to handle members with the same name? (typeaheads)
+* How can we gracefully handle a 503 from the api?
+* "Secure" wording on the payment component
+* Scroll to top on mobile
+* Match play cannot handle multiple documents
+* Upload 2 day event teetimes?
+* Easy home page link to tee times and results
+* Clean up Quick Links to include only our events
+* Remove "League" language (replace with ?)
+* Make home page api calls public on the back-end for guest users
+    * current events
+    * sponsors
+    * announcements
 
 ###New Season Roll-over
 * Add 2018 events
@@ -58,22 +74,3 @@ Manages the event calendar, communications, and event registration for club memb
 * How to add or change policies (including rules)
 * How to publish home page announcements
 * How to export event signups
-
-###Issues
-* Bug: New reg and login: should not be presented with a reg button
-* Creation of new mid-week events should also create the signup slots
-* Ensure new member registration obeys the config flag
-* Identity and handle returning inactive member signup (redirect from failed login)
-* How to handle members with the same name? (typeaheads)
-* How can we gracefully handle a 503 from the api?
-* "Secure" wording on the payment component
-* Scroll to top on mobile
-* Match play cannot handle multiple documents
-* Upload 2 day event teetimes?
-* Easy home page link to tee times and results
-* Clean up Quick Links to include only our events
-* Remove "League" language (replace with ?)
-* Make home page api calls public on the back-end for guest users
-    * current events
-    * sponsors
-    * announcements
