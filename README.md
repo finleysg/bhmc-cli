@@ -6,7 +6,7 @@ Manages the event calendar, communications, and event registration for club memb
 
 ## Pending Tasks for 2018
     
-###Required Updates, Upgrades, Bug-Fixes, and Performance Enhancements
+###Updates, Upgrades, Bug-Fixes, and Performance Enhancements
 * ~~Update the website project to use Angular CLI and WebPack~~
 * ~~Update website to Angular 5~~
 * ~~Move top-level features to lazy routes~~
@@ -14,6 +14,8 @@ Manages the event calendar, communications, and event registration for club memb
 * Update the Contacts
 * Update the email forward rules
 * Move all admin pages to a separate admin feature
+* Refactor data calls to use the new Angular HttpClient
+* Refactor RXJS imports to use lettable operators
 * Split public and private event feature pages
 * Results page and detail page should be capable of linking to Golf Genius event portal
   * Each event (mid-week and majors) will have a separate event portal page in GG
@@ -29,7 +31,7 @@ Manages the event calendar, communications, and event registration for club memb
 * Scroll to top on mobile
 * Match play cannot handle multiple documents
 * Upload 2 day event teetimes?
-* Easy home page link to tee times and results
+* Better home page link to tee times and results when creating announcements
 * Clean up Quick Links to include only our events
 * Remove "League" language (replace with ?)
 * Make home page api calls public on the back-end for guest users
