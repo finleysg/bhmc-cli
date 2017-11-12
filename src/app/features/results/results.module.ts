@@ -4,6 +4,7 @@ import { LeagueResultsComponent } from './league/league-results.component';
 import { MajorResultsComponent } from './major/major-results.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ArchivePipe } from './league/archive.pipe';
+import { ResultsLandingComponent } from './results-landing.component';
 
 @NgModule({
     imports: [
@@ -11,10 +12,10 @@ import { ArchivePipe } from './league/archive.pipe';
         SharedModule
     ],
     declarations: [
+        ResultsLandingComponent,
         LeagueResultsComponent,
         MajorResultsComponent,
         ArchivePipe,
     ]
 })
-export class ResultsModule {
-}
+export class ResultsModule { }

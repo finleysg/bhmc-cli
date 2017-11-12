@@ -13,10 +13,11 @@ import { ChangePasswordComponent } from './account/change-password.component';
 import { NewMemberSignupComponent } from './signup/new-member-signup.component';
 import { AccountReportComponent } from './report/account-report.component';
 import { MemberReportComponent } from './report/member-report.component';
+import { MemberLandingComponent } from './member-landing.component';
 
 const routes: Routes = [
     {
-        path: 'member', children: [
+        path: '', component: MemberLandingComponent, children: [
             { path: 'login', component: LoginComponent },
             { path: 'new-member-signup/:id', resolve: { eventDetail: EventDetailResolver }, component: NewMemberSignupComponent },
             { path: 'reset-password', component: ResetPasswordComponent },

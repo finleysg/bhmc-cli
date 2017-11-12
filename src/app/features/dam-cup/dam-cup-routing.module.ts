@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DamCupComponent } from './dam-cup.component';
 
 const routes: Routes = [
-    { path: 'dam-cup', component: DamCupComponent },
+    { path: '', component: DamCupComponent },
 ];
 
 @NgModule({

@@ -1,12 +1,9 @@
-import { Policy, PolicyCategory } from './policy';
-import { PolicyService } from './policy.service';
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService, User } from '../../core';
+import { AuthenticationService, PolicyService, Policy, PolicyCategory, User } from '../../core';
 import { ConfigService } from '../../app-config.service';
 import { AppConfig } from '../../app-config';
 
 @Component({
-    moduleId: module.id,
     templateUrl: 'about-us.component.html'
 })
 export class AboutUsComponent implements OnInit {

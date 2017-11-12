@@ -1,14 +1,9 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PoliciesComponent }    from './policies.component';
+import { AboutUsComponent }     from './about-us.component';
 
 const routes: Routes = [
-    {
-        path: '',
-        children: [
-            { path: ':category', component: PoliciesComponent },
-        ]
-    }
+    { path: '', component: AboutUsComponent }
 ];
 
 @NgModule({
@@ -16,4 +11,4 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 
-export class PoliciesRoutingModule { }
+export class AboutUsRoutingModule { }

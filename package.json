@@ -6,12 +6,20 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod --vc=true",
+    "build-patch": "npm version patch && npm run build",
+    "build-minor": "npm version minor && npm run build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": true,
+  "keywords": [
+    "golf",
+    "club",
+    "membership",
+    "registration"
+  ],
+  "author": "Stuart Finley (finleysg@gmail.com)",
   "dependencies": {
     "@angular/animations": "^5.0.1",
     "@angular/common": "^5.0.1",

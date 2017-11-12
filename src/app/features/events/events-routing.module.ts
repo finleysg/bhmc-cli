@@ -19,29 +19,32 @@ import { MatchplayReportComponent } from './reports/matchplay-report.component';
 import { CheckInReportComponent } from './reports/check-in-report.component';
 import { ReconciliationReportComponent } from './reports/reconciliation-report.component';
 import { CheckInComponent } from './checkin/check-in.component';
+import {EventLandingComponent} from "./event-landing.component";
 
 const routes: Routes = [
-    { path: 'test', children: [
-        { path: 'payments', component: PaymentTestComponent },
-    ]},
-    { path: 'events/:id', resolve: { eventDetail: EventDetailResolver }, children: [
-        { path: 'check-in', component: CheckInComponent },
-        { path: 'detail', component: EventComponent },
-        { path: 'report', canActivate: [AuthGuard], component: EventReportComponent },
-        { path: 'check-in-report', canActivate: [AuthGuard], component: CheckInReportComponent },
-        { path: 'recon-report', canActivate: [AuthGuard], component: ReconciliationReportComponent },
-        { path: 'register', canActivate: [AuthGuard, CanRegisterGuard], canDeactivate: [CanDeactivateGuard], component: RegisterComponent },
-        { path: 'matchplay', component: MatchPlayComponent },
-        { path: 'matchplay/register', canActivate: [AuthGuard, MatchPlayGuard], component: MatchPlaySignupComponent },
-        { path: 'matchplay/report', canActivate: [AuthGuard], component: MatchplayReportComponent },
-        { path: 'season-signup', canActivate: [AuthGuard], component: SeasonSignupComponent },
-        { path: 'reserve', canActivate: [AuthGuard], component: ReserveComponent, children: [
-            { path: ':course', canActivate: [CanReserveGuard], component: ReserveTableComponent }
-        ]},
-        { path: 'registered', component: RegisteredComponent, children: [
-            { path: ':course', component: ReadonlyTableComponent }
-        ]},
+    // { path: 'test', children: [
+    //     { path: 'payments', component: PaymentTestComponent },
+    // ]},
+  { path: '', component: EventLandingComponent, children: [
+    { path: ':id', resolve: { eventDetail: EventDetailResolver }, children: [
+      { path: 'check-in', component: CheckInComponent },
+      { path: 'detail', component: EventComponent },
+      { path: 'report', canActivate: [AuthGuard], component: EventReportComponent },
+      { path: 'check-in-report', canActivate: [AuthGuard], component: CheckInReportComponent },
+      { path: 'recon-report', canActivate: [AuthGuard], component: ReconciliationReportComponent },
+      { path: 'register', canActivate: [AuthGuard, CanRegisterGuard], canDeactivate: [CanDeactivateGuard], component: RegisterComponent },
+      { path: 'matchplay', component: MatchPlayComponent },
+      { path: 'matchplay/register', canActivate: [AuthGuard, MatchPlayGuard], component: MatchPlaySignupComponent },
+      { path: 'matchplay/report', canActivate: [AuthGuard], component: MatchplayReportComponent },
+      { path: 'season-signup', canActivate: [AuthGuard], component: SeasonSignupComponent },
+      { path: 'reserve', canActivate: [AuthGuard], component: ReserveComponent, children: [
+        { path: ':course', canActivate: [CanReserveGuard], component: ReserveTableComponent }
+      ]},
+      { path: 'registered', component: RegisteredComponent, children: [
+        { path: ':course', component: ReadonlyTableComponent }
+      ]},
     ]}
+  ]}
 ];
 
 @NgModule({

@@ -19,6 +19,7 @@ import { MatchplayReportComponent } from './reports/matchplay-report.component';
 import { CheckInReportComponent } from './reports/check-in-report.component';
 import { ReconciliationReportComponent } from './reports/reconciliation-report.component';
 import { CheckInComponent } from './checkin/check-in.component';
+import { EventLandingComponent } from './event-landing.component';
 
 @NgModule({
     imports: [
@@ -26,6 +27,7 @@ import { CheckInComponent } from './checkin/check-in.component';
         SharedModule
     ],
     declarations: [
+        EventLandingComponent,
         EventComponent,
         EventReportComponent,
         RegisterComponent,

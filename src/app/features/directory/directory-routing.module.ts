@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DirectoryComponent } from './directory.component';
 
 const routes: Routes = [
-    {path: 'directory', component: DirectoryComponent, canActivate: [AuthGuard]}
+    {path: '', component: DirectoryComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

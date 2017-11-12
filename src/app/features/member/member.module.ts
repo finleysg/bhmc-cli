@@ -15,6 +15,7 @@ import { NewMemberDataService } from './signup/new-member-data.service';
 import { NewMemberForm } from './signup/new-member-form.service';
 import { AccountReportComponent } from './report/account-report.component';
 import { MemberReportComponent } from './report/member-report.component';
+import { MemberLandingComponent } from "./member-landing.component";
 
 @NgModule({
     imports: [
@@ -22,6 +23,7 @@ import { MemberReportComponent } from './report/member-report.component';
         SharedModule
     ],
     declarations: [
+        MemberLandingComponent,
         LoginComponent,
         ResetPasswordComponent,
         ResetPasswordSentComponent,

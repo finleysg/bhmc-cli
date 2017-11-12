@@ -1,9 +1,6 @@
-import { months } from 'moment';
-import { Policy, PolicyCategory } from './policy';
 import { ActivatedRoute, Params } from '@angular/router';
-import { PolicyService } from './policy.service';
 import { Component, OnInit } from '@angular/core';
-import { DocumentService, EventDocument, DocumentType } from '../../core';
+import { DocumentService, EventDocument, DocumentType, PolicyService, Policy, PolicyCategory } from '../../core';
 
 @Component({
     moduleId: module.id,
@@ -25,7 +22,7 @@ export class PoliciesComponent implements OnInit {
 
     ngOnInit(): void {
         // this.route.params is an observable of the child (category) routes under /policies
-        this.route.params.subscribe((p: Params) => this.loadPolicies(p['category']))
+        this.route.params.subscribe((p: Params) => this.loadPolicies(p['category']));
         this.documentService.getDocuments(DocumentType.Other)
             .subscribe(docs => {
                 const d = docs.filter(d => d.title.indexOf('Law') >= 0);

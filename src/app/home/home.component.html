@@ -205,7 +205,7 @@
                                 </div>
                                 <div class="media-body">
                                     <div class="lv-title">{{ sponsor.name }}</div>
-                                    <img class="img-responsive" [src]="sponsor.imageUrl" />
+                                    <img *ngIf="sponsor.imageUrl" class="img-responsive" [src]="sponsor.imageUrl" />
                                 </div>
                             </div>
                         </a>

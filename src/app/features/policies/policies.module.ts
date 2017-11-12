@@ -1,9 +1,7 @@
-import { PolicyService } from './policy.service';
 import { NgModule } from '@angular/core';
 import { PoliciesRoutingModule } from './policies-routing.module';
 import { PoliciesComponent } from './policies.component';
 import { SharedModule } from '../../shared/shared.module';
-import { AboutUsComponent } from './about-us.component';
 
 @NgModule({
     imports: [
@@ -11,12 +9,7 @@ import { AboutUsComponent } from './about-us.component';
         SharedModule
     ],
     declarations: [
-        PoliciesComponent,
-        AboutUsComponent
-    ],
-    providers: [
-        PolicyService
+        PoliciesComponent
     ]
 })
-export class PoliciesModule {
-}
+export class PoliciesModule { }
