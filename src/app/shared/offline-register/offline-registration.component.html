@@ -1,7 +1,7 @@
 <div class="input-group m-b-25">
-    <template #memberTemplate let-model="item" let-index="index">
+    <ng-template #memberTemplate let-model="item" let-index="index">
         <span>{{ model.name }}</span>
-    </template>
+    </ng-template>
     <span class="input-group-addon"><i class="zmdi zmdi-search"></i></span>
     <input [(ngModel)]="selectedMemberName"
            [typeahead]="members"

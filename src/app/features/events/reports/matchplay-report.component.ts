@@ -6,6 +6,7 @@ import { AppConfig } from '../../../app-config';
 import { ConfigService } from '../../../app-config.service';
 import { ActivatedRoute } from '@angular/router';
 import { SpinnerService } from '../../../shared/spinner/spinner.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
     moduleId: module.id,
@@ -36,16 +37,17 @@ export class MatchplayReportComponent implements OnInit {
             .subscribe((data: {eventDetail: EventDetail}) => {
                 this.eventDetail = data.eventDetail;
                 this.summary = new EventDataSummary(this.eventDetail);
-                Observable.forkJoin([
+                //noinspection TypeScriptUnresolvedFunction
+                Observable.forkJoin(
                     this.memberService.getMembers(),
                     this.registerService.getGroups(this.eventDetail.id)
-                ]).do(
+                ).subscribe(
                     results => {
-                        let members = results[0];
-                        let groups = results[1];
+                        const members: PublicMember[] = results[0];
+                        const groups: EventRegistrationGroup[] = results[1];
                         this.eventDetail.registrations.forEach(r => {
-                            let member = members.find((m: PublicMember) => { return m.id === r.memberId });
-                            let group = groups.find((g: EventRegistrationGroup) => { return g.id === r.groupId; });
+                            let member = members.find((m: PublicMember) => m.id === r.memberId);
+                            let group = groups.find((g: EventRegistrationGroup) => g.id === r.groupId);
                             let row = EventData.create(this.eventDetail, group, r);
                             if (member) { // TODO: no member would be some sort of bug
                                 row.forwardTees = member.forwardTees;
@@ -59,7 +61,7 @@ export class MatchplayReportComponent implements OnInit {
                             this.spinnerService.hide('match-play-rpt');
                         }, 500);
                     }
-                ).subscribe();
+                );
             });
     }
 

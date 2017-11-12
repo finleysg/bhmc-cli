@@ -116,6 +116,7 @@ export class PaymentComponent implements OnInit {
     open(): void {
         this.messages.length = 0;
         this.processStatus = ProcessingStatus.Pending;
+        //noinspection TypeScriptValidateTypes
         this.paymentModal.config = { backdrop: 'static', keyboard: false };
         this.paymentModal.show();
     }

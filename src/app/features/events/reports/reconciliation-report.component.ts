@@ -5,6 +5,7 @@ import { EventDetail, RegistrationService, EventRegistrationGroup, StripeCharge 
 import { ConfigService } from '../../../app-config.service';
 import { AppConfig } from '../../../app-config';
 import { SpinnerService } from '../../../shared/spinner/spinner.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
     moduleId: module.id,
@@ -29,41 +30,41 @@ export class ReconciliationReportComponent implements OnInit {
         this.route.data
             .subscribe((data: {eventDetail: EventDetail}) => {
                 this.eventDetail = data.eventDetail;
-                Observable.forkJoin([
+                //noinspection TypeScriptUnresolvedFunction
+                Observable.forkJoin(
                     this.registrationService.getPayments(this.eventDetail.id),
                     this.registrationService.getGroups(this.eventDetail.id)
-                ]).do(
-                    results => {
-                        this.report = [];
-                        let charges = results[0];
-                        let groups = results[1];
-                        groups.forEach((group: EventRegistrationGroup) => {
-                            let reconCode = 'OK';
-                            let charge: StripeCharge;
-                            if (group.paymentConfirmationCode.indexOf('ch_') === 0) {
-                                charge = charges.find((c: StripeCharge) => c.id === group.paymentConfirmationCode);
-                                if (charge && charge.id) {
-                                    if (charge.amount.toFixed(2) !== (+group.payment.total).toFixed(2)) {
-                                        reconCode = 'ERROR';
-                                    }
-                                } else {
+                ).subscribe(results => {
+                    this.report = [];
+                    const charges: StripeCharge[] = results[0];
+                    const groups: EventRegistrationGroup[] = results[1];
+                    groups.forEach((group: EventRegistrationGroup) => {
+                        let reconCode = 'OK';
+                        let charge: StripeCharge;
+                        if (group.paymentConfirmationCode.indexOf('ch_') === 0) {
+                            charge = charges.find((c: StripeCharge) => c.id === group.paymentConfirmationCode);
+                            if (charge && charge.id) {
+                                if (charge.amount.toFixed(2) !== (+group.payment.total).toFixed(2)) {
                                     reconCode = 'ERROR';
                                 }
                             } else {
-                                reconCode = '';
+                                reconCode = 'ERROR';
                             }
-                            this.report.push({
-                                group: group,
-                                charge: charge,
-                                reconCode: reconCode,
-                                isCharge: group.paymentConfirmationCode.indexOf('ch_') === 0,
-                                link: charge ? `${this.config.stripeUrl}/${charge.id}` : ''
-                            });
+                        } else {
+                            reconCode = '';
+                        }
+                        this.report.push({
+                            group: group,
+                            charge: charge,
+                            reconCode: reconCode,
+                            isCharge: group.paymentConfirmationCode.indexOf('ch_') === 0,
+                            link: charge ? `${this.config.stripeUrl}/${charge.id}` : ''
                         });
-                        setTimeout(() => {
-                            this.spinnerService.hide('recon');
-                        }, 500);
-                    }).subscribe();
+                    });
+                    setTimeout(() => {
+                        this.spinnerService.hide('recon');
+                    }, 500);
+                });
             });
     }
 
