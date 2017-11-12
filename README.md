@@ -4,9 +4,9 @@ The web project for the home (front-end only) of the Bunker Hills Men's Club.
 
 Manages the event calendar, communications, and event registration for club members.
 
-# Pending Tasks for 2018
+## Pending Tasks for 2018
     
-##Updates, Upgrades, Bug-Fixes, and Performance Enhancements
+### Updates, Upgrades, Bug-Fixes, and Performance Enhancements
 * ~~Update the website project to use Angular CLI and WebPack~~
 * ~~Update website to Angular 5~~
 * ~~Move top-level features to lazy routes~~
@@ -39,14 +39,14 @@ Manages the event calendar, communications, and event registration for club memb
     * sponsors
     * announcements
 
-##New Season Roll-over
+### New Season Roll-over
 * Add 2018 events
 * Delete all login tokens from 2017
 * Ensure online sign-up works for returning members
 * Ensure online sign-up works for new members
 * Update season config settings (i.e. create online registration windows)
 
-##Possible Enhancements/Features
+### Possible Enhancements/Features
 * Make Contact page data driven (so it isn't a programmer task each year)
 * Photo Gallery
 * Registration for events open to non-members
@@ -64,7 +64,7 @@ Manages the event calendar, communications, and event registration for club memb
 * Print styling - move print formatting to server for some reports
 * Possible new or improved reports/exports for Golf Genius integration
 
-##Admin Training / Documentation
+### Admin Training / Documentation
 * Who can do admin tasks (roles)
 * How to upload results and teetimes (Dan)
 * How to add groups on the par 3s
