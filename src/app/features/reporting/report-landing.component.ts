@@ -16,13 +16,13 @@ export class ReportLandingComponent implements OnInit {
 
     constructor(
         private calendarService: CalendarService,
-        private configService: ConfigService,
+        private configService: ConfigService
     ) {
     }
 
     ngOnInit(): void {
         this.config = this.configService.config;
-        this.calendarService.quickEvents().then(events => this.events = events);
+        this.calendarService.quickEvents().subscribe(events => this.events = events);
     }
 
     selectEvent(e: CalendarEvent): void {

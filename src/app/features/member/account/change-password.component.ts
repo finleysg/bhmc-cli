@@ -26,15 +26,16 @@ export class ChangePasswordComponent implements OnInit {
     updatePassword() {
         if (this.model.matching) {
             this.loading = true;
-            this.authService.changePassword(this.model.password1, this.model.password2)
-                .then(() => {
+            this.authService.changePassword(this.model.password1, this.model.password2).subscribe(
+                () => {
                     this.toaster.pop('success', 'Password Change Complete', 'Your password has been changed');
                     this.router.navigate(['settings'], {relativeTo: this.route.parent});
-                })
-                .catch((err: string) => {
+                },
+                (err: string) => {
                     this.loading = false;
                     this.toaster.pop('error', 'Password Change Error', err);
-                });
+                }
+            );
         }
     }
 }

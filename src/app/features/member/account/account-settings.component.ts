@@ -35,14 +35,15 @@ export class AccountSettingsComponent implements OnInit {
 
     doUpdate(updateType: AccountUpdateType): void {
         let partial = this.user.partialUpdateJson(updateType);
-        this.authService.updateAccount(partial)
-            .then(() => {
+        this.authService.updateAccount(partial).subscribe(
+            () => {
                 this.editIdentity = false;
                 this.toaster.pop('success', 'Account Updated', 'Your username have been changed');
-            })
-            .catch((err: string) => {
+            },
+            (err: string) => {
                 this.toaster.pop('error', 'Account Error', err);
-            });
+            }
+        );
     }
 
     changePassword(): void {

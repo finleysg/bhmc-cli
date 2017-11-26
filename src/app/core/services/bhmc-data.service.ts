@@ -6,6 +6,7 @@ import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
 import { BhmcErrorHandler } from './bhmc-error-handler.service';
 import { ConfigService } from '../../app-config.service';
 import { Subject } from 'rxjs/Subject';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class BhmcDataService {
@@ -62,8 +63,8 @@ export class BhmcDataService {
         this.loadingBar.color = 'blue';
         this.loadingBar.start();
         let options = this.createOptions(method, data);
-        return this.http.request(url, options)
-            .map((response: Response) => {
+        return this.http.request(url, options).pipe(
+            map(response => {
                 this.loadingBar.color = 'green';
                 this.loadingBar.complete();
                 try {
@@ -71,8 +72,9 @@ export class BhmcDataService {
                 } catch(e) {
                     return {};
                 }
-            })
-            .catch((err: any) => this.handleError(err));
+            }),
+            catchError((err: any) => this.handleError(err))
+        );
     }
 
     private createHeaders(contentType: string): Headers {

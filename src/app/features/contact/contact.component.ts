@@ -26,25 +26,22 @@ export class ContactComponent implements OnInit {
             return;
         }
         this.loading = true;
-        this.contactService.sendContactUsMessage(this.message)
-            .then(
-                () => {
-                    this.toaster.pop(
-                        'success',
-                        'Message Sent',
-                        'Your message has been sent. Someone will get back to you at the earliest opportunity.'
-                    );
-                }
-            )
-            .catch(
-                err => {
-                    this.loading = false;
-                    this.toaster.pop(
-                        'error',
-                        'Message Error',
-                        err.toString()
-                    );
-                }
-            );
+        this.contactService.sendContactUsMessage(this.message).subscribe(
+            () => {
+                this.toaster.pop(
+                    'success',
+                    'Message Sent',
+                    'Your message has been sent. Someone will get back to you at the earliest opportunity.'
+                );
+            },
+            (err) => {
+                this.loading = false;
+                this.toaster.pop(
+                    'error',
+                    'Message Error',
+                    err.toString()
+                );
+            }
+        );
     }
 }

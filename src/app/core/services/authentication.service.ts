@@ -9,6 +9,8 @@ import { MemberService } from './member.service';
 import { ConfigService } from '../../app-config.service';
 import { AppConfig } from '../../app-config';
 import { BhmcErrorHandler } from './bhmc-error-handler.service';
+import { map, mergeMap, catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import * as moment from 'moment';
 
@@ -37,7 +39,7 @@ export class AuthenticationService {
                 this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser)); // session storage
             } else {
                 this._rememberUser = true;
-                this._currentUser = Object.assign(new User(), JSON.parse(storedUser)); // TODO: IE polyfill
+                this._currentUser = Object.assign(new User(), JSON.parse(storedUser));
                 if (this._currentUser.member && this._currentUser.member.birthDate) {
                     this._currentUser.member.birthDate = moment(this._currentUser.member.birthDate);
                 }
@@ -53,7 +55,7 @@ export class AuthenticationService {
         return this._currentUser;
     }
 
-    login(username: string, password: string, remember: boolean): Promise<void> {
+    login(username: string, password: string, remember: boolean): Observable<void> {
 
         this._rememberUser = remember;
 
@@ -63,123 +65,121 @@ export class AuthenticationService {
             username = '';
         }
 
-        return this.dataService.postAuthRequest('login', {username: username, email: email, password: password})
-            .flatMap((data: any) => {
+        return this.dataService.postAuthRequest('login', {username: username, email: email, password: password}).pipe(
+            mergeMap((data: any) => {
                 if (data && data.key) {
                     this.saveToStorage('bhmc_token', data.key);
                     return this.getUser();
                 }
-            })
-            .flatMap(user => {
+            }),
+            mergeMap(user => {
                 this._currentUser = user;
                 return this.memberService.isRegistered(this.config.registrationId, this._currentUser.member.id);
-            })
-            .flatMap(isCurrent => {
+            }),
+            mergeMap(isCurrent => {
                 this._currentUser.member.membershipIsCurrent = isCurrent;
                 return this.memberService.isRegistered(this.config.matchPlayId, this._currentUser.member.id);
-            })
-            .map(isParticipant => {
+            }),
+            map(isParticipant => {
                 this._currentUser.member.matchplayParticipant = isParticipant;
                 this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser));
                 this.errorHandler.setUserContext(this._currentUser);
                 this.currentUserSource.next(this._currentUser);
                 return;
             })
-            .toPromise();
+        );
     }
 
     // during the registration process, we use this login to complete the registration
-    quietLogin(username: string, password: string): Promise<void> {
-        return this.dataService.postAuthRequest('login', {username: username, email: '', password: password})
-            .map((data: any) => {
+    quietLogin(username: string, password: string): Observable<void> {
+        return this.dataService.postAuthRequest('login', {username: username, email: '', password: password}).pipe(
+            map((data: any) => {
                 if (data && data.key) {
                     this.saveToStorage('bhmc_token', data.key);
                     return;
                 }
             })
-            .toPromise();
+         );
     }
 
-    logout(): Promise<void> {
-        return this.dataService.postAuthRequest('logout', {})
-            .toPromise()
-            .then(() => this.resetUser())
-            .catch(() => {
-                this.resetUser();
-            });
+    logout(): void {
+        this.dataService.postAuthRequest('logout', {}).subscribe(
+            () => this.resetUser(),   // onNext
+            (err) => this.resetUser() // onError
+        );
     }
 
-    checkEmail(email: string): Promise<boolean> {
-        return this.dataService.getApiRequest('members/check', {'e': email})
-            .toPromise()
-            .then(() => {
+    checkEmail(email: string): Observable<boolean> {
+        return this.dataService.getApiRequest('members/check', {'e': email}).pipe(
+            map(() => {
                 return false;
+            }),
+            catchError(() => {
+                return of(true);  // TODO: only on a 409
             })
-            .catch(() => {
-                return true;  // TODO: only on a 409
-            });
+        );
     }
 
-    resetPassword(email: string): Promise<void> {
-        return this.dataService.postAuthRequest('password/reset', {email: email}).toPromise();
+    resetPassword(email: string): Observable<void> {
+        return this.dataService.postAuthRequest('password/reset', {email: email});
     }
 
-    changePassword(password1: string, password2: string): Promise<void> {
+    changePassword(password1: string, password2: string): Observable<void> {
         return this.dataService.postAuthRequest('password/change', {
             'new_password1': password1,
             'new_password2': password2
-        }).toPromise();
+        });
     }
 
-    confirmReset(reset: PasswordReset): Promise<void> {
-        return this.dataService.postAuthRequest('password/reset/confirm', reset.toJson()).toPromise();
+    confirmReset(reset: PasswordReset): Observable<void> {
+        return this.dataService.postAuthRequest('password/reset/confirm', reset.toJson());
     }
 
-    createAccount(newUser: any): Promise<void> {
-        return this.dataService.postApiRequest('members/register', newUser).toPromise();
+    createAccount(newUser: any): Observable<void> {
+        return this.dataService.postApiRequest('members/register', newUser);
     }
 
-    updateAccount(partial: any): Promise<void> {
-        return this.dataService.patchAuthRequest('user', partial)
-            .map(data => {
+    updateAccount(partial: any): Observable<void> {
+        return this.dataService.patchAuthRequest('user', partial).pipe(
+            map(data => {
                 let user = new User().fromJson(data);
                 this.saveToStorage('bhmc_user', JSON.stringify(user));
                 this._currentUser = user;
                 this.currentUserSource.next(this._currentUser);
                 return;
             })
-            .toPromise();
+         );
     }
 
     refreshUser(): void {
-        this.getUser()
-            .flatMap(user => {
+        this.getUser().pipe(
+            mergeMap(user => {
                 this._currentUser = user;
                 return this.memberService.isRegistered(this.config.registrationId, this._currentUser.member.id);
-            })
-            .flatMap(isCurrent => {
+            }),
+            mergeMap(isCurrent => {
                 this._currentUser.member.membershipIsCurrent = isCurrent;
                 return this.memberService.isRegistered(this.config.matchPlayId, this._currentUser.member.id);
-            })
-            .map(isParticipant => {
+            }),
+            map(isParticipant => {
                 this._currentUser.member.matchplayParticipant = isParticipant;
                 this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser));
                 this.currentUserSource.next(this._currentUser);
                 return;
             })
-            .toPromise()
-            .then(() => {return;}); // no-op - force the call
+         ).subscribe(() => {return;}); // no-op - force the call
     }
 
     getUser(): Observable<User> {
-        return this.dataService.getAuthRequest('user')
-            .map((data: any) => {
+        return this.dataService.getAuthRequest('user').pipe(
+            map((data: any) => {
                 return new User().fromJson(data);
-            })
-            .catch(() => {
+            }),
+            catchError(() => {
                 this.removeFromStorage('bhmc_token');
-                return Observable.of(new User());
-            });
+                return of(new User());
+            })
+        );
     }
 
     onError(message: string): void {

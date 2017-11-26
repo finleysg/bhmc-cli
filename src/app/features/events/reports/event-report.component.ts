@@ -29,7 +29,7 @@ export class EventReportComponent implements OnInit {
                 this.eventDetail = data.eventDetail;
                 this.summary = new EventDataSummary(data.eventDetail);
                 this.registerService.getGroups(this.eventDetail.id)
-                    .do(groups => {
+                    .subscribe(groups => {
                         this.report = [];
                         this.eventDetail.registrations.forEach(r => {
                             let group = groups.find(g => { return g.id === r.groupId; });
@@ -38,7 +38,7 @@ export class EventReportComponent implements OnInit {
                                 this.summary.update(r);
                             }
                         });
-                    }).subscribe();
+                    });
                 this.showCourse = this.eventDetail.eventType === EventType.League;
                 this.showHole = this.eventDetail.eventType === EventType.League;
                 this.showGroup = this.eventDetail.eventType === EventType.Major && this.eventDetail.groupSize > 1;

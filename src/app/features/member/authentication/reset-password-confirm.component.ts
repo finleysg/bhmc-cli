@@ -30,14 +30,15 @@ export class ResetPasswordConfirmComponent implements OnInit {
         this.invalid = !this.model.isValid;
         if (!this.invalid) {
             this.loading = true;
-            this.authService.confirmReset(this.model)
-                .then(() => {
+            this.authService.confirmReset(this.model).subscribe(
+                () => {
                     this.router.navigate(['reset-password-complete'], {relativeTo: this.route.parent});
-                })
-                .catch((err: string) => {
+                },
+                (err: string) => {
                     this.loading = false;
                     this.toaster.pop('error', 'Password Reset Error', err);
-                });
+                }
+            );
         }
     }
 }

@@ -34,15 +34,16 @@ export class LoginComponent implements OnInit {
 
     login() {
         this.loading = true;
-        this.authenticationService.login(this.model.username, this.model.password, this.model.remember)
-            .then(() => this.router.navigate([this.returnUrl]))
-            .catch((err: string) => {
+        this.authenticationService.login(this.model.username, this.model.password, this.model.remember).subscribe(
+            () => this.router.navigate([this.returnUrl]),
+            (err: string) => {
                 this.loading = false;
                 if (err.indexOf('disabled') > 0) {
                     this.toaster.pop('error', 'Inactive Account', 'You\'re account is inactive. Register now for the new season!');
                 } else {
                     this.toaster.pop('error', 'Invalid Credentials', err);
                 }
-            });
+            }
+        );
     }
 }

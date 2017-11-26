@@ -28,8 +28,6 @@ export class RegisteredComponent implements OnInit {
     }
 
     refresh(): void {
-        this.eventService.refreshEventDetail().then(() => {
-            // TODO: stop spinner
-        });
+        this.eventService.refreshEventDetail().subscribe();
     }
 }

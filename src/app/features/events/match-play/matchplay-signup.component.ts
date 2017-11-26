@@ -4,7 +4,9 @@ import { User, AuthenticationService, EventDetail, RegistrationService,
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentComponent } from '../../../shared/payments/payment.component';
 import { ToasterService } from 'angular2-toaster';
-import * as _ from 'lodash';
+import { tap, catchError } from 'rxjs/operators';
+import { empty } from 'rxjs/observable/empty';
+import { merge } from 'lodash';
 
 @Component({
     moduleId: module.id,
@@ -56,31 +58,35 @@ export class MatchPlaySignupComponent implements OnInit {
             this.toaster.pop('warning', 'Invalid', 'Select the scratch or flighted bracket.');
             return;
         }
-        this.registrationService.reserve(this.eventDetail.id)
-            .then(() => {
+        this.registrationService.reserve(this.eventDetail.id).pipe(
+            tap(() => {
                 // preserve the registration choices made
                 let group = this.registrationService.currentGroup;
-                let registration = _.merge({}, group.registrations[0], this.registrationGroup.registrations[0]);
-                this.paymentGroup = _.merge({}, group, this.registrationGroup);
+                let registration = merge({}, group.registrations[0], this.registrationGroup.registrations[0]);
+                this.paymentGroup = merge({}, group, this.registrationGroup);
                 this.paymentGroup.registrations[0] = registration;
                 this.updatePayment();
                 this.paymentComponent.open();
-            })
-            .catch((err: string) => {
+            }),
+            catchError((err: string) => {
                 this.toaster.pop('error', 'Error', err);
-            });
+                return empty();
+            })
+        ).subscribe();
     }
 
     paymentComplete(result: boolean): void {
         if (result) {
-            this.eventService.refreshEventDetail()
-                .then(() => {
+            this.eventService.refreshEventDetail().pipe(
+                tap(() => {
                     this.authService.refreshUser();
                     this.router.navigate(['registered'], { relativeTo: this.route.parent });
-                })
-                .catch((err: string) => {
+                }),
+                catchError((err: string) => {
                     this.toaster.pop('error', 'Error', err);
+                    return empty();
                 })
+            ).subscribe();
         } else {
             this.registrationService.cancelReservation(this.paymentGroup);
         }

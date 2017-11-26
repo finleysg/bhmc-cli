@@ -1,11 +1,10 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { EventDetail, RegistrationService, EventRegistrationGroup, StripeCharge } from '../../../core';
 import { ConfigService } from '../../../app-config.service';
 import { AppConfig } from '../../../app-config';
 import { SpinnerService } from '../../../shared/spinner/spinner.service';
-import { tap } from 'rxjs/operators';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
     moduleId: module.id,
@@ -30,8 +29,7 @@ export class ReconciliationReportComponent implements OnInit {
         this.route.data
             .subscribe((data: {eventDetail: EventDetail}) => {
                 this.eventDetail = data.eventDetail;
-                //noinspection TypeScriptUnresolvedFunction
-                Observable.forkJoin(
+                forkJoin(
                     this.registrationService.getPayments(this.eventDetail.id),
                     this.registrationService.getGroups(this.eventDetail.id)
                 ).subscribe(results => {

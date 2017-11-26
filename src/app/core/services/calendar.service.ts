@@ -4,6 +4,7 @@ import { BhmcDataService } from './bhmc-data.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class CalendarService {
@@ -19,9 +20,8 @@ export class CalendarService {
     setCalendar(year: number, month: string): void {
         const thisMonth = Calendar.getMonth(month, false); // zeroBased = false
         this.dataService.getApiRequest('events', {'year': year, 'month': thisMonth})
-            .toPromise()
-            .then((events) => {
-                let calendar = new Calendar(year, month);
+            .subscribe((events) => {
+                const calendar = new Calendar(year, month);
                 for (const event of events) {
                     calendar.addEvent(new CalendarEvent().fromJson(event));
                 }
@@ -29,12 +29,13 @@ export class CalendarService {
             })
     }
 
-    quickEvents(): Promise<CalendarEvent[]> {
-        return this.dataService.getApiRequest('events/current').map(events => {
-            return events.map((e: any) => {
-                return new CalendarEvent().fromJson(e);
-            });
-        })
-        .toPromise();
+    quickEvents(): Observable<CalendarEvent[]> {
+        return this.dataService.getApiRequest('events/current').pipe(
+            map(events => {
+                return events.map((e: any) => {
+                    return new CalendarEvent().fromJson(e);
+                });
+            })
+        );
     }
 }

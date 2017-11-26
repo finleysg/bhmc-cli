@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PublicMember, MemberService } from '../../core';
 import { ToasterService } from 'angular2-toaster';
-import { Observable } from 'rxjs/Observable';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
     moduleId: module.id,
@@ -23,7 +23,7 @@ export class DirectoryComponent implements OnInit {
     }
 
     ngOnInit() {
-        Observable.forkJoin([
+        forkJoin([
             this.memberService.getMembers(),
             this.memberService.friends()
         ]).subscribe(
@@ -50,14 +50,14 @@ export class DirectoryComponent implements OnInit {
 
     toggleFriendship(member: PublicMember) {
         if (member.isFriend) {
-            this.memberService.removeFriend(member).then(
+            this.memberService.removeFriend(member).subscribe(
                 () => {
                     member.isFriend = false;
                     this.toaster.pop('warning', 'Friends List', `${member.name} has been removed from your friends list`);
                 }
             );
         } else {
-            this.memberService.addFriend(member).then(
+            this.memberService.addFriend(member).subscribe(
                 () => {
                     member.isFriend = true;
                     this.toaster.pop('success', 'Friends List', `${member.name} has been added to your friends list`);

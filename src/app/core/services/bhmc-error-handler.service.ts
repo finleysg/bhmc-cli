@@ -3,7 +3,7 @@ import { Response } from '@angular/http';
 import { ConfigService } from '../../app-config.service';
 import { AppConfig } from '../../app-config';
 import { User } from '../models/user';
-import Raven from 'raven-js';
+import * as Raven from 'raven-js';
 
 @Injectable()
 export class BhmcErrorHandler extends ErrorHandler {

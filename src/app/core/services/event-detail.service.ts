@@ -7,6 +7,7 @@ import { EventRegistrationGroup } from '../models/event-registration-group';
 import { BhmcDataService } from './bhmc-data.service';
 import { EventDetail, EventType } from '../models/event-detail';
 import { RegistrationRow } from '../../features/events/models/registration-row';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class EventDetailService {
@@ -19,12 +20,12 @@ export class EventDetailService {
 
     constructor(private dataService: BhmcDataService) { }
 
-    getEventDetail(id: number): Promise<EventDetail> {
+    getEventDetail(id: number): Observable<EventDetail> {
         this.currentEventId = id;
-        return this.dataService.getApiRequest(`events/${id}`)
-            .map((data: any) => {
-                let event = new EventDetail().fromJson(data);
-                let courses = this.eventCourses(event);
+        return this.dataService.getApiRequest(`events/${id}`).pipe(
+            map(data => {
+                const event = new EventDetail().fromJson(data);
+                const courses = this.eventCourses(event);
                 this.signupTableSources = new Map<number, BehaviorSubject<EventSignupTable>>();
                 this.signupTables = new Map<number, Observable<EventSignupTable>>();
                 courses.forEach(c => {
@@ -34,23 +35,22 @@ export class EventDetailService {
                 });
                 this.currentEvent = event;
                 return event;
-            })
-            .toPromise();
+            }));
     }
 
-    refreshEventDetail(): Promise<void> {
-        return this.dataService.getApiRequest(`events/${this.currentEventId}`)
-            .map((data: any) => {
-                let event = new EventDetail().fromJson(data);
-                let courses = this.eventCourses(event);
+    refreshEventDetail(): Observable<void> {
+        // TODO: tap instead of map?
+        return this.dataService.getApiRequest(`events/${this.currentEventId}`).pipe(
+            map((data: any) => {
+                const event = new EventDetail().fromJson(data);
+                const courses = this.eventCourses(event);
                 courses.forEach(c => {
                     let table = this.createSignupTable(event, c);
                     this.signupTableSources.get(c.id).next(table);
                 });
                 this.currentEvent = event;
                 return;
-            })
-            .toPromise();
+            }));
     }
 
     signupTable(id: number): Observable<EventSignupTable> {

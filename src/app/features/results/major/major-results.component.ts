@@ -20,6 +20,8 @@ export class MajorResultsComponent implements OnInit {
                 private documentService: DocumentService) {
     }
 
+    // TODO: move date sort to a utility
+    // TODO: replace hard-coded years
     ngOnInit(): void {
         this.years = [2016, 2015, 2014, 2013];
         this.selectedYear = 2016;

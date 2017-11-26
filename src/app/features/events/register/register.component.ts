@@ -5,10 +5,12 @@ import { User, AuthenticationService, PublicMember, MemberService,
          CanComponentDeactivate, DialogService, EventDetailService,
          EventRegistrationGroup, RegistrationService } from '../../../core';
 import { ActivatedRoute, Router, CanDeactivate } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { TypeaheadMatch } from 'ngx-bootstrap';
 import { PaymentComponent, ProcessingStatus } from '../../../shared/payments/payment.component';
 import { TimerComponent } from '../../../shared/timer/timer.component';
+import { tap, catchError } from 'rxjs/operators';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { empty } from 'rxjs/observable/empty';
 
 @Component({
     moduleId: module.id,
@@ -53,7 +55,7 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
                 this.expires = this.registrationGroup.expires;
                 this.registrationGroup.updatePayment(this.eventDetail);
             });
-        Observable.forkJoin([
+        forkJoin([
             this.memberService.getRegisteredMembers(),
             this.memberService.friends(),
         ]).subscribe(
@@ -109,7 +111,7 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
     paymentComplete(result: boolean): void {
         if (result) {
             this.timerComponent.stop();
-            this.eventService.refreshEventDetail().then(() => {
+            this.eventService.refreshEventDetail().subscribe(() => {
                 if (this.eventDetail.eventType === EventType.Registration) {
                     this.authService.refreshUser();
                 }
@@ -124,11 +126,17 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
         if (this.paymentComponent.processStatus !== ProcessingStatus.Complete) {
             this.cancelling = true;
             this.timerComponent.stop();
-            this.registrationService.cancelReservation(this.registrationGroup).then(() => {
-                this.eventService.refreshEventDetail().then(() => {
-                    this.location.back();
-                });
-            }).catch(() => this.cancelling = false);
+            this.registrationService.cancelReservation(this.registrationGroup).pipe(
+                tap(() => {
+                    this.eventService.refreshEventDetail().subscribe(() => {
+                        this.location.back();
+                    });
+                }),
+                catchError((err: string) => {
+                    this.cancelling = false;
+                    return empty();
+                })
+            ).subscribe();
         }
     }
 
@@ -142,7 +150,7 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
             `Are you sure you want to leave the registration page? You will not be registered,
              and your hole reservation (Wednesday events) will be canceled.`)
             .then(() => {
-                return this.registrationService.cancelReservation(this.registrationGroup).then(() => { return true; })
+                return this.registrationService.cancelReservation(this.registrationGroup).subscribe(() => { return true; })
             })
             .catch(() => { return false; });
     }

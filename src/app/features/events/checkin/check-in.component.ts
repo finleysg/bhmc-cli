@@ -4,7 +4,9 @@ import { AuthenticationService, EventDetail, MemberService, PublicMember, EventR
     SlotPayment, RegistrationService } from '../../../core';
 import { TypeaheadMatch, ModalDirective } from 'ngx-bootstrap';
 import { ToasterService } from 'angular2-toaster';
-import * as _ from 'lodash';
+import { map, tap, catchError } from 'rxjs/operators';
+import { empty } from 'rxjs/observable/empty';
+import { clone } from 'lodash';
 
 @Component({
     moduleId: module.id,
@@ -47,10 +49,10 @@ export class CheckInComponent implements OnInit {
 
     findRegistration(member: PublicMember) {
         this.registrationService.getRegistration(this.eventDetail.id, member.id)
-            .then((reg: EventRegistration) => {
+            .subscribe((reg: EventRegistration) => {
                 if (reg) {
                     this.registration = reg;
-                    this.registrationOriginal = _.clone(reg);
+                    this.registrationOriginal = clone(reg);
                 }
             });
     }
@@ -65,8 +67,8 @@ export class CheckInComponent implements OnInit {
     }
 
     addPlayer(): void {
-        this.registration = _.clone(this.selectedHole);
-        this.registrationOriginal = _.clone(this.selectedHole);
+        this.registration = clone(this.selectedHole);
+        this.registrationOriginal = clone(this.selectedHole);
         this.registration.memberId = this.currentMember.id;
         this.registration.memberFirstName = this.currentMember.firstName;
         this.registration.memberLastName = this.currentMember.lastName;
@@ -89,26 +91,30 @@ export class CheckInComponent implements OnInit {
 
     savePlayer(): void {
         if (this.registration.groupId > 0) {
-            this.registrationService.updateRegistration(this.registration)
-                .then(() => {
+            this.registrationService.updateRegistration(this.registration).pipe(
+                map(() => {
                     return this.registrationService.addSlotPayment(this.payment);
-                })
-                .then(() => {
+                }),
+                tap(() => {
                     this.toaster.pop('success', 'Check-in Complete', `${this.registration.memberName} has been checked in`);
                     this.clear();
-                })
-                .catch((err: string) => {
+                }),
+                catchError((err: string) => {
                     this.toaster.pop('error', 'Check-in Failure', err);
-                });
+                    return empty();
+                })
+            ).subscribe();
         } else {
-            this.registrationService.sameDayRegistration(this.eventDetail, this.registration, this.payment)
-                .then(() => {
+            this.registrationService.sameDayRegistration(this.eventDetail, this.registration, this.payment).pipe(
+                tap(() => {
                     this.toaster.pop('success', 'Check-in Complete', `${this.registration.memberName} has been checked in`);
                     this.clear();
-                })
-                .catch((err: string) => {
+                }),
+                catchError((err: string) => {
                     this.toaster.pop('error', 'Check-in Failure', err);
-                });
+                    return empty();
+                })
+            ).subscribe();
         }
     }
 

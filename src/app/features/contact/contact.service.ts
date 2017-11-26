@@ -9,6 +9,6 @@ export class ContactService {
     }
 
     sendContactUsMessage(message: ContactMessage) {
-        return this.dataService.postApiRequest('contact-us', message).toPromise();
+        return this.dataService.postApiRequest('contact-us', message);
     }
 }

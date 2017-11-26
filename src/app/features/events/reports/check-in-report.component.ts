@@ -27,7 +27,7 @@ export class CheckInReportComponent implements OnInit {
                 this.eventDetail = data.eventDetail;
                 let courses = this.eventService.eventCourses(this.eventDetail);
                 courses.forEach(course => {
-                    this.eventService.signupTable(course.id).do(table => this.tables.push(table)).subscribe();
+                    this.eventService.signupTable(course.id).subscribe(table => this.tables.push(table));
                 });
                 setTimeout(() => {
                     this.spinnerService.hide('check-in');

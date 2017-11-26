@@ -9,6 +9,8 @@ import { AppConfig } from '../../../app-config';
 import { FormGroup } from '@angular/forms';
 import { NewUser } from './new-user';
 import { NewMemberForm } from './new-member-form.service';
+import { map, tap, catchError } from 'rxjs/operators';
+import { empty } from 'rxjs/observable/empty';
 
 @Component({
     moduleId: module.id,
@@ -72,15 +74,15 @@ export class NewMemberSignupComponent implements OnInit {
 
         this.formService.updateValue(this.newUser);
         setTimeout(() => {
-            this.authService.createAccount(this.newUser.toUser().toJson(this.newUser.password1))
-                .then(() => {
+            this.authService.createAccount(this.newUser.toUser().toJson(this.newUser.password1)).pipe(
+                map(() => {
                     this.toaster.pop('info', 'Account Created', 'Step 1 complete: your account has been created');
                     return this.authService.quietLogin(this.newUser.username, this.newUser.password1)
-                })
-                .then(() => {
+                }),
+                map(() => {
                     return this.registrationService.reserve(this.eventDetail.id);
-                })
-                .then(() => {
+                }),
+                tap(() => {
                     this.group = this.registrationService.currentGroup;
                     this.group.notes = 'NEW MEMBER REGISTRATION';
                     if (this.newUser.formerClubName) {
@@ -91,11 +93,13 @@ export class NewMemberSignupComponent implements OnInit {
                     }
                     this.group.updatePayment(this.eventDetail, true);
                     this.paymentComponent.open();
-                })
-                .catch((err: any) => {
+                }),
+                catchError((err: any) => {
                     this.loading = false;
                     this.toaster.pop('error', 'Account Creation Error', err);
+                    return empty();
                 })
+            );
         }, 1000);
     }
 
@@ -106,7 +110,7 @@ export class NewMemberSignupComponent implements OnInit {
             this.registered = true;
         } else {
             this.registrationService.cancelReservation(this.group)
-                .then(() => {
+                .subscribe(() => {
                     this.authService.resetUser();
                     this.router.navigate(['/home']);
                 });

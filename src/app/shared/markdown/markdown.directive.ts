@@ -1,5 +1,6 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
-import { Converter } from 'showdown';
+import * as showdown from 'showdown';
+// const converter = new showdown.Converter();
 
 @Directive({ selector: '[markdown]' })
 export class MarkdownDirective implements OnInit {
@@ -11,8 +12,9 @@ export class MarkdownDirective implements OnInit {
         this.element = elementRef.nativeElement;
      }
 
-    ngOnInit() { 
-        let markup = new Converter().makeHtml(this.source);
+    ngOnInit() {
+        //noinspection TypeScriptUnresolvedFunction
+        let markup = new showdown.Converter().makeHtml(this.source);
         this.element.innerHTML = markup;
     }
 }

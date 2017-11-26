@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { DocumentType, DocumentService, EventDetail, EventDocument } from '../../core';
 import { AppConfig } from '../../app-config';
 import { ConfigService } from '../../app-config.service';
 import { ToasterService } from 'angular2-toaster';
+import { tap, catchError } from 'rxjs/operators';
 
 declare const Spinner: any;
 
@@ -46,6 +47,7 @@ export class UploadComponent implements OnInit {
         this.existingDocument = document;
         this.titleSuffix = titleSuffix;
         this.documentName = this.deriveDocumentTitle();
+        //noinspection TypeScriptValidateTypes
         this.uploadModal.config = {backdrop: 'static', keyboard: false};
         this.uploadModal.show();
     }
@@ -54,6 +56,7 @@ export class UploadComponent implements OnInit {
         this.existingDocument = document;
         this.documentType = type;
         this.documentName = this.deriveDocumentTitle();
+        //noinspection TypeScriptValidateTypes
         this.uploadModal.config = {backdrop: 'static', keyboard: false};
         this.uploadModal.show();
     }
@@ -86,17 +89,18 @@ export class UploadComponent implements OnInit {
         } else {
             form = this.createDocument();
         }
-        this.documentService.uploadDocument(form, id)
-            .then((doc: EventDocument) => {
+        this.documentService.uploadDocument(form, id).subscribe(
+            (doc: EventDocument) => {
                 this.onClose.emit(doc);
                 this.uploadModal.hide();
                 this.spinner.stop();
                 this.clearFile();
-            })
-            .catch((err: string) => {
+            },
+            (err: string) => {
                 this.spinner.stop();
                 this.toaster.pop('error', 'Upload Failed', err);
-            });
+            }
+        );
     }
 
     private createDocument(): FormData {

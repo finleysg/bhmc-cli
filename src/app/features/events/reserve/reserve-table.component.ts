@@ -5,6 +5,8 @@ import { AuthenticationService, User, EventDetailService, RegistrationService } 
 import { RegistrationSlot, SlotStatus } from '../models/registration-slot';
 import { RegistrationRow } from '../models/registration-row';
 import { ToasterService } from 'angular2-toaster';
+import { tap, catchError } from 'rxjs/operators';
+import { empty } from 'rxjs/observable/empty';
 
 @Component({
     moduleId: module.id,
@@ -77,13 +79,15 @@ export class ReserveTableComponent implements OnInit {
     register = (row: RegistrationRow) => {
         // The group created is saved on the service
         let eventId = this.route.snapshot.parent.parent.params['id'];
-        this.registrationService.reserve(eventId, row)
-            .then(() => {
+        this.registrationService.reserve(eventId, row).pipe(
+            tap(() => {
                 this.router.navigate(['register'], {relativeTo: this.route.parent.parent});
-            })
-            .catch(err => {
+            }),
+            catchError(err => {
                 this.eventService.refreshEventDetail();
                 this.toaster.pop('error', 'Reservation Failure', err);
-            });
+                return empty();
+            })
+        ).subscribe();
     }
 }

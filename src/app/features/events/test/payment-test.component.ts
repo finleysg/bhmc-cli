@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { EventDetailService } from '../../../core/services/event-detail.service';
 import { PaymentComponent } from '../../../shared/payments/payment.component';
 import { PublicMember, MemberService } from '../../../core';
-import { Observable } from 'rxjs/Observable';
 import { EventRegistrationGroup } from '../../../core/models/event-registration-group';
 import { EventDetail } from '../../../core/models/event-detail';
 import { RegistrationService } from '../../../core/services/registration.service';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
     moduleId: module.id,
@@ -26,23 +26,20 @@ export class PaymentTestComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        Observable.forkJoin([
-            this.eventService.getEventDetail(40),
-            this.memberService.getMembers(),
-        ]).subscribe(
-            results => {
-                this.eventDetail = results[0];
-                this.members = results[1].filter((m: PublicMember) => {
+        this.memberService.getMembers().subscribe(members => {
+            this.eventService.getEventDetail(40).subscribe(evt => {
+                this.eventDetail = evt;
+                this.members = members.filter((m:PublicMember) => {
                     if (!this.eventDetail.isRegistered(m.id)) {
                         return m;
                     }
                 });
-            }
-        );
+            });
+        });
     }
 
     reserve() {
-        this.registrationService.reserve(this.eventDetail.id).then( () => {
+        this.registrationService.reserve(this.eventDetail.id).subscribe( () => {
             this.group = this.registrationService.currentGroup;
             this.group.clearRegistration(this.group.registrations[0].id);
             this.group.registerMember(this.getRandomMember());
@@ -52,7 +49,7 @@ export class PaymentTestComponent implements OnInit {
     }
 
     cancel() {
-        this.registrationService.cancelReservation(this.group).then( () => {
+        this.registrationService.cancelReservation(this.group).subscribe( () => {
             this.group = new EventRegistrationGroup();
         });
     }

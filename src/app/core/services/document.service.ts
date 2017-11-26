@@ -6,6 +6,7 @@ import { PhotoType, Photo } from '../models/photo';
 import { EventType, EventDetail } from '../models/event-detail';
 import { RequestMethod } from '@angular/http';
 import { ConfigService } from '../../app-config.service';
+import { map } from 'rxjs/operators';
 
 class DocumentFilter {
     constructor(docType?: DocumentType, year?: number, eventType?: EventType) {
@@ -32,21 +33,23 @@ class PhotoFilter {
 @Injectable()
 export class DocumentService {
 
-    constructor(private dataService: BhmcDataService,
-                private configService: ConfigService) {
-    }
+    constructor(
+        private dataService: BhmcDataService,
+        private configService: ConfigService) 
+    {  }
 
     getDocuments(docType?: DocumentType, year?: number, eventType?: EventType): Observable<EventDocument[]> {
-        let filter = new DocumentFilter(docType, year, eventType);
-        return this.dataService.getApiRequest('documents', filter).map(members => {
-            return members.map((m: any) => {
-                return new EventDocument().fromJson(m);
-            });
-        });
+        const filter = new DocumentFilter(docType, year, eventType);
+        return this.dataService.getApiRequest('documents', filter).pipe(
+            map(members => {
+                return members.map((m: any) => {
+                    return new EventDocument().fromJson(m);
+                });
+            })
+        );
     }
 
-
-    uploadDocument(form: FormData, id: number = 0): Promise<EventDocument> {
+    uploadDocument(form: FormData, id: number = 0): Observable<EventDocument> {
         let method = RequestMethod.Post;
         let resource = 'documents/';
         if (id > 0) {
@@ -54,19 +57,21 @@ export class DocumentService {
             resource = resource + id.toString() + '/';
         }
         const url: string = this.configService.config.apiUrl + resource;
-        return this.dataService.request(method, url, form)
-            .map((json: any) => {
+        return this.dataService.request(method, url, form).pipe(
+            map((json: any) => {
                 return new EventDocument().fromJson(json);
             })
-            .toPromise();
+        );
     }
 
     getPhotos(picType?: PhotoType, year?: number, eventType?: EventType): Observable<Photo[]> {
-        let filter = new PhotoFilter(picType, year, eventType);
-        return this.dataService.getApiRequest('photos', filter).map(pics => {
-            return pics.map((pic: any) => {
-                return new Photo().fromJson(pic);
-            });
-        });
+        const filter = new PhotoFilter(picType, year, eventType);
+        return this.dataService.getApiRequest('photos', filter).pipe(
+            map(pics => {
+                return pics.map((pic: any) => {
+                    return new Photo().fromJson(pic);
+                });
+            })
+        );
     }
 }

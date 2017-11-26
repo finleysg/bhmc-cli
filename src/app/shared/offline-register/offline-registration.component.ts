@@ -7,6 +7,8 @@ import { FormGroup } from '@angular/forms';
 import { OfflineRegistration } from './offline-registration';
 import { OfflineRegistrationForm } from './offline-registration-form.service';
 import { TypeaheadMatch } from 'ngx-bootstrap';
+import { empty } from 'rxjs/observable/empty';
+import { map, tap, catchError } from 'rxjs/operators';
 
 @Component({
     moduleId: module.id,
@@ -63,8 +65,8 @@ export class OfflineRegistrationComponent implements OnInit {
     // TODO: ensure the number of members is not greater than the event max
     register(): void {
         this.formService.updateValue(this.registration);
-        this.registrationService.reserve(this.eventDetail.id)
-            .then(() => {
+        this.registrationService.reserve(this.eventDetail.id).pipe(
+            map(() => {
                 // fill out the group and registrations
                 let group = this.registrationService.currentGroup;
                 group.paymentConfirmationCode = this.registration.paymentNotes;
@@ -74,12 +76,14 @@ export class OfflineRegistrationComponent implements OnInit {
                 group.clearRegistrations();
                 this.registration.members.forEach(m => group.registerMember(m));
                 return this.registrationService.register(group);
-            })
-            .then(() => {
+            }),
+            tap(() => {
                 this.toaster.pop('success', 'Registration Complete', 'The player(s) have been registered in ' + this.eventDetail.name);
-            })
-            .catch(err => {
+            }),
+            catchError(err => {
                 this.toaster.pop('error', 'Registration Error', err);
-            });
+                return empty();
+            })
+        ).subscribe();
     }
 }

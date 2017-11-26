@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { EventDetail, PublicMember, RegistrationService, EventRegistrationGroup,
          MemberService, EventData, EventDataSummary } from '../../../core';
 import { AppConfig } from '../../../app-config';
 import { ConfigService } from '../../../app-config.service';
 import { ActivatedRoute } from '@angular/router';
 import { SpinnerService } from '../../../shared/spinner/spinner.service';
-import { tap } from 'rxjs/operators';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
     moduleId: module.id,
@@ -37,8 +36,7 @@ export class MatchplayReportComponent implements OnInit {
             .subscribe((data: {eventDetail: EventDetail}) => {
                 this.eventDetail = data.eventDetail;
                 this.summary = new EventDataSummary(this.eventDetail);
-                //noinspection TypeScriptUnresolvedFunction
-                Observable.forkJoin(
+                forkJoin(
                     this.memberService.getMembers(),
                     this.registerService.getGroups(this.eventDetail.id)
                 ).subscribe(

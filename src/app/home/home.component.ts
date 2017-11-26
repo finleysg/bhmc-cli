@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CalendarService, CalendarEvent, AnnouncementService, Announcement,
          User, AuthenticationService, Sponsor, SponsorService } from '../core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ConfigService } from '../app-config.service';
 import { AppConfig } from '../app-config';
 
@@ -31,21 +31,9 @@ export class HomeComponent implements OnInit {
     ngOnInit(): void {
         this.config = this.configService.config;
         this.authService.currentUser$.subscribe(user => this.user = user);
-        Observable.forkJoin([
-            this.announcementService.currentAnnouncements(),
-            this.calendarService.quickEvents()
-        ]).subscribe(
-            results => {
-                this.announcements = results[0];
-                this.eventList = results[1];
-                // this.announcements.forEach(a => {
-                //     if (a.documentName) {
-                //         a.documentUrl = `${this.config.apiUrl}${a.documentUrl}`
-                //     }
-                // });
-            }
-        );
-        this.sponsorService.getSponsors().then(sponsors => this.sponsors = sponsors);
+        this.announcementService.currentAnnouncements().subscribe(a => this.announcements = a);
+        this.calendarService.quickEvents().subscribe(e => this.eventList = e);
+        this.sponsorService.getSponsors().subscribe(s => this.sponsors = s);
     }
 
     registerOnline(): void {

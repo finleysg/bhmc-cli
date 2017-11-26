@@ -30,13 +30,14 @@ export class ResetPasswordComponent implements OnInit {
 
     resetPassword() {
         this.loading = true;
-        this.authenticationService.resetPassword(this.model.email)
-            .then(() => {
+        this.authenticationService.resetPassword(this.model.email).subscribe(
+            () => {
                 this.router.navigate(['reset-password-sent'], {relativeTo: this.route.parent});
-            })
-            .catch((error: string) => {
+            },
+            (error: string) => {
                 this.toaster.pop('error', 'Password Reset Error', error);
                 this.loading = false;
-            });
+            }
+        );
     }
 }

@@ -18,6 +18,7 @@ export class LeagueResultsComponent implements OnInit {
                 private documentService: DocumentService) {
     }
 
+    // TODO: replace hard-coded years
     ngOnInit(): void {
         this.years = [2016, 2015, 2014, 2013];
         this.selectedYear = 2016;

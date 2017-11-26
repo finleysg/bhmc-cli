@@ -8,6 +8,8 @@ import { AppConfig } from '../../app-config';
 import { ConfigService } from '../../app-config.service';
 import { FormGroup } from '@angular/forms';
 import { CreditCardForm } from './credit-card.form';
+import { tap, catchError } from 'rxjs/operators';
+
 // import { Stripe } from 'stripe';
 
 declare const Stripe: any;
@@ -86,7 +88,7 @@ export class PaymentComponent implements OnInit {
         this.creditCardForm.errors$.subscribe(errors => this.cardErrors = errors);
         this.creditCardForm.buildForm(this.card);
         if (this.authService.user.isAuthenticated) {
-            this.memberService.stripeSavedCard().then((savedCard: SavedCard) => {
+            this.memberService.stripeSavedCard().subscribe((savedCard: SavedCard) => {
                 this.savedCard = savedCard;
                 this.hasSavedCard = savedCard.last4.length > 0;
                 this.useSavedCard = this.hasSavedCard;
@@ -172,12 +174,14 @@ export class PaymentComponent implements OnInit {
     quickPayment(): void {
         this.processStatus = ProcessingStatus.Processing;
         this.spinner.spin(this.spinnerElement);
-        this.registrationService.register(this.registrationGroup)
-            .then((conf: string) => {
+        this.registrationService.register(this.registrationGroup).subscribe(
+            (conf: string) => {
                 this.successState(conf);
-            }).catch(response => {
+            },
+            (response) => {
                 this.errorState(response);
-            });
+            }
+        );
     };
 
     fullPayment(): void {
@@ -188,7 +192,7 @@ export class PaymentComponent implements OnInit {
             .then((token: string) => {
                 this.processStatus = ProcessingStatus.Processing;
                 this.registrationGroup.cardVerificationToken = token;
-                return this.registrationService.register(this.registrationGroup);
+                return this.registrationService.register(this.registrationGroup).toPromise();
             }).then((conf: string) => {
                 this.successState(conf);
             }).catch((response: any) => {

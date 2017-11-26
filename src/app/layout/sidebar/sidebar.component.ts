@@ -60,8 +60,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
     logout(): void {
         this.close();
-        this._authService.logout().then( () => {
-            this._router.navigate(['/']);
-        });
+        this._authService.logout();
+        this._router.navigate(['/']);
     }
 }
