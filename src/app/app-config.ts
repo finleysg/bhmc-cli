@@ -15,10 +15,10 @@ export class AppConfig {
 
     constructor() {
         this._isLocal = window.location.hostname.indexOf('localhost') >= 0;
-        // if (this._isLocal) {
-        //     this._authUrl = 'http://localhost:8000/rest-auth/';
-        //     this._apiUrl = 'http://localhost:8000/api/';
-        // }
+        if (this._isLocal) {
+            this._authUrl = 'http://localhost:8000/rest-auth/';
+            this._apiUrl = 'http://localhost:8000/api/';
+        }
     }
 
     get year(): number {

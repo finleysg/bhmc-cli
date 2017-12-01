@@ -1,19 +1,25 @@
 import { Injectable, ErrorHandler } from '@angular/core';
-import { Response } from '@angular/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ConfigService } from '../../app-config.service';
 import { AppConfig } from '../../app-config';
 import { User } from '../models/user';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import * as Raven from 'raven-js';
 
 @Injectable()
 export class BhmcErrorHandler extends ErrorHandler {
-
+    
+    private errorSource: Subject<string>;
+    public lastError$: Observable<string>;
     private config: AppConfig;
 
     constructor(
         private configService: ConfigService
     ) {
         super();
+        this.errorSource = new Subject();
+        this.lastError$ = this.errorSource.asObservable();
         this.config = configService.config;
         if (!this.config.isLocal) {
             const options = { 'release': configService.config.version, 'autoBreadcrumbs': { 'xhr': false }};
@@ -39,6 +45,7 @@ export class BhmcErrorHandler extends ErrorHandler {
     }
 
     handleError(err: any): void {
+        this.errorSource.next(err.message ? err.message : err.toString());
         if (this.config.isLocal) {
             super.handleError(err);
         } else {
@@ -47,6 +54,7 @@ export class BhmcErrorHandler extends ErrorHandler {
     }
 
     logError(err: any): void {
+        this.errorSource.next(err.message ? err.message : err.toString());
         if (this.config.isLocal) {
             console.error(err.toString());
         } else {
@@ -54,14 +62,18 @@ export class BhmcErrorHandler extends ErrorHandler {
         }
     }
 
-    logResponse(message: string, response: Response) {
+    logResponse(message: string, response: HttpErrorResponse) {
+        this.errorSource.next(message);
         if (this.config.isLocal) {
             // TODO: handle text or blob responses
-            console.info(`${response.status}: ${JSON.stringify(response.json())}`)
+            console.info(`${response.status}: ${JSON.stringify(response.error)}`)
         } else {
             const options: any = {
                 level: 'error',
-                extra: {'response': response}
+                extra: {
+                    'message': response.message,
+                    'error': response.error
+                }
             };
             Raven.captureMessage(message, options)
         }

@@ -1,7 +1,6 @@
 import { CalendarService } from './services/calendar.service';
 import { AuthGuard } from './services/auth-guard.service';
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
 import { LayoutService } from './services/layout.service';
 import { AuthenticationService } from './services/authentication.service';
 import { BhmcDataService } from './services/bhmc-data.service';
@@ -18,11 +17,21 @@ import { DocumentService } from './services/document.service';
 import { RegistrationService } from './services/registration.service';
 import { SponsorService } from './services/sponsor.service';
 import { PolicyService } from "./services/policy.service";
-// import './rxjs-extensions';
+import { HttpClientModule, HTTP_INTERCEPTORS, HttpClientXsrfModule } from '@angular/common/http';
+import { InterceptorApi } from './services/interceptor-api.service';
+import { InterceptorAuth } from './services/interceptor-auth.service';
+import { InterceptorError } from './services/interceptor-error.service';
+import { InterceptorProgress } from './services/interceptor-progress.service';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
     imports: [
         HttpModule,
+        HttpClientModule,
+        HttpClientXsrfModule.withOptions({
+            cookieName: 'csrftoken',
+            headerName: 'X-CSRFToken',
+        })
     ],
     providers: [
         LayoutService,
@@ -42,7 +51,27 @@ import { PolicyService } from "./services/policy.service";
         DocumentService,
         RegistrationService,
         SponsorService,
-        PolicyService
+        PolicyService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: InterceptorApi,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: InterceptorAuth,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: InterceptorError,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: InterceptorProgress,
+            multi: true
+        }
     ]
 })
 export class BhmcCoreModule {}

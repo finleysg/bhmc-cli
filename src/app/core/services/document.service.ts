@@ -4,8 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { EventDocument, DocumentType } from '../models/event-document';
 import { PhotoType, Photo } from '../models/photo';
 import { EventType, EventDetail } from '../models/event-detail';
-import { RequestMethod } from '@angular/http';
-import { ConfigService } from '../../app-config.service';
 import { map } from 'rxjs/operators';
 
 class DocumentFilter {
@@ -33,10 +31,7 @@ class PhotoFilter {
 @Injectable()
 export class DocumentService {
 
-    constructor(
-        private dataService: BhmcDataService,
-        private configService: ConfigService) 
-    {  }
+    constructor(private dataService: BhmcDataService) {  }
 
     getDocuments(docType?: DocumentType, year?: number, eventType?: EventType): Observable<EventDocument[]> {
         const filter = new DocumentFilter(docType, year, eventType);
@@ -50,14 +45,16 @@ export class DocumentService {
     }
 
     uploadDocument(form: FormData, id: number = 0): Observable<EventDocument> {
-        let method = RequestMethod.Post;
         let resource = 'documents/';
         if (id > 0) {
-            method = RequestMethod.Patch;
             resource = resource + id.toString() + '/';
+            return this.dataService.patchForm(resource, form).pipe(
+                map((json: any) => {
+                    return new EventDocument().fromJson(json);
+                })
+            );
         }
-        const url: string = this.configService.config.apiUrl + resource;
-        return this.dataService.request(method, url, form).pipe(
+        return this.dataService.postForm(resource, form).pipe(
             map((json: any) => {
                 return new EventDocument().fromJson(json);
             })

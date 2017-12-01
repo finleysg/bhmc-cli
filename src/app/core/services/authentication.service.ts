@@ -13,6 +13,7 @@ import { map, mergeMap, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import * as moment from 'moment';
+import {InterceptorError} from './interceptor-error.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -48,7 +49,7 @@ export class AuthenticationService {
         }
         this.currentUserSource = new BehaviorSubject(this._currentUser);
         this.currentUser$ = this.currentUserSource.asObservable();
-        this.dataService.lastError$.subscribe(err => this.onError(err));
+        this.errorHandler.lastError$.subscribe(err => this.onError(err));
     }
 
     get user(): User {
