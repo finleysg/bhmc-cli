@@ -19,7 +19,7 @@ export class EventDetailResolver implements Resolve<EventDetail> {
         let id = route.params['id'];
         return this.eventService.getEventDetail(id).pipe(
             map(evt => {
-                if (route.children && route.children[0] && route.children[0].url[0].path === 'reserve') {
+                if (EventDetailResolver.isReserveRoute(route)) {
                     // A CanActivate guard didn't work because we don't have an event detail yet (guard ordering issue)
                     if (evt.registrationWindow !== RegistrationWindowType.Registering) {
                         this.errorHandler.logWarning(`Event ${id} is not in its registration window`);
@@ -36,5 +36,17 @@ export class EventDetailResolver implements Resolve<EventDetail> {
                 return of(null);
             })
         );
+    }
+    
+    static isReserveRoute(route: ActivatedRouteSnapshot): boolean {
+        let result = false;
+        if (route.children && 
+            route.children[0] &&
+            route.children[0].url &&
+            route.children[0].url[0] &&
+            route.children[0].url[0].path === 'reserve') {
+            result = true;
+        }
+        return result;
     }
 }

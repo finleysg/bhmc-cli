@@ -16,13 +16,18 @@ export class CanReserveGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
 
-        const eventId = route.pathFromRoot[1].url[1].path;
-
+        const eventId = CanReserveGuard.eventIdFromUrl(state.url);
+        if (!eventId) {
+            this.errorHandler.logWarning(`No event id could be parsed from ${state.url}`);
+            return of(false);
+        }
+        
         return this.registrationService.isRegistered(+eventId, this.authService.user.member.id).pipe(
             map(result => {
                 if (result) {
                     this.errorHandler.logWarning(`Event ${eventId}: member ${this.authService.user.member.id} is already registered`);
-                    this.router.navigate(['/events', eventId, 'detail']);
+                    // events/123/registered/1
+                    this.router.navigate(['/events', eventId, 'registered', 1]);
                     return false;
                 }
                 return true;
@@ -31,5 +36,17 @@ export class CanReserveGuard implements CanActivate {
                 return of(false);
             })
         );
+    }
+
+    static eventIdFromUrl(url: string): number {
+        let id = 0;
+        const segments = url.split('/');
+        for(let i = 0; i < segments.length; i++) {
+            if (segments[i] === 'events') {
+                id = +segments[i+1];
+                break;
+            }
+        }
+        return id;
     }
 }

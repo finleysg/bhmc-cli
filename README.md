@@ -10,19 +10,19 @@ Manages the event calendar, communications, and event registration for club memb
 * ~~Update the website project to use Angular CLI and WebPack~~
 * ~~Update website to Angular 5~~
 * ~~Move top-level features to lazy routes~~
-* Convert from Stripe v2 to v3
+* Convert from Stripe v2 to v3 (possibly for 2019)
 * Update the Contacts
 * Update the email forward rules
 * Move all admin pages to a separate admin feature
-* Refactor data calls to use the new Angular HttpClient
-* Refactor RXJS imports to use lettable operators
+* ~~Refactor data calls to use the new Angular HttpClient~~
+* ~~Refactor RXJS imports to use lettable operators~~
 * Split public and private event feature pages
 * Results page and detail page should be capable of linking to Golf Genius event portal
   * Each event (mid-week and majors) will have a separate event portal page in GG
   * i.e. Not just the document link that we have now
 * It should be more obvious to our members when they are logged it to the site, especially on the phone
 * Bug: New reg and login: should not be presented with a reg button
-* Creation of new mid-week events should also create the signup slots
+* ~~Creation of new mid-week events should also create the signup slots~~
 * Ensure new member registration obeys the config flag
 * Identity and handle returning inactive member signup (redirect from failed login)
 * How to handle members with the same name? (typeaheads)
