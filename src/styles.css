@@ -41,6 +41,10 @@
   background-color: transparent;
 }
 
+.condense p {
+    margin-bottom: 6px !important;
+}
+
 @media print {
 
   aside,

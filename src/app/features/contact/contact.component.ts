@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ContactMessage } from './contact-message';
 import { ContactService } from './contact.service';
 import { ToasterService } from 'angular2-toaster';
+import { Contact } from './contact';
+import { AppConfig } from '../../app-config';
+import { ConfigService } from '../../app-config.service';
 
 @Component({
     moduleId: module.id,
@@ -10,15 +13,20 @@ import { ToasterService } from 'angular2-toaster';
 })
 export class ContactComponent implements OnInit {
 
-    public message: ContactMessage;
-    public loading: boolean;
+    config: AppConfig;
+    contact: Contact;
+    message: ContactMessage;
+    loading: boolean;
 
     constructor(private contactService: ContactService,
-                private toaster: ToasterService) {
+                private toaster: ToasterService,
+                private configService: ConfigService) {
     }
 
     ngOnInit(): void {
+        this.config = this.configService.config;
         this.message = new ContactMessage();
+        this.contactService.getContactData().subscribe(c => this.contact = c);
     }
 
     sendMessage(form: any) {
@@ -28,6 +36,7 @@ export class ContactComponent implements OnInit {
         this.loading = true;
         this.contactService.sendContactUsMessage(this.message).subscribe(
             () => {
+                this.loading = false;
                 this.toaster.pop(
                     'success',
                     'Message Sent',
