@@ -11,8 +11,8 @@ Manages the event calendar, communications, and event registration for club memb
 * ~~Update website to Angular 5~~
 * ~~Move top-level features to lazy routes~~
 * Convert from Stripe v2 to v3 (possibly for 2019)
-* Update the Contacts
-* Update the email forward rules
+* ~~Update the Contacts~~
+* ~~Update the email forward rules~~
 * Move all admin pages to a separate admin feature
 * ~~Refactor data calls to use the new Angular HttpClient~~
 * ~~Refactor RXJS imports to use lettable operators~~
@@ -47,7 +47,7 @@ Manages the event calendar, communications, and event registration for club memb
 * Update season config settings (i.e. create online registration windows)
 
 ### Possible Enhancements/Features
-* Make Contact page data driven (so it isn't a programmer task each year)
+* ~~Make Contact page data driven (so it isn't a programmer task each year)~~
 * Photo Gallery
 * Registration for events open to non-members
 * Registration for meetings including optional meal

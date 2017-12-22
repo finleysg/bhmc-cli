@@ -6,11 +6,13 @@ import { ToggleSubmenuDirective } from './sidebar/toggle-submenu.directive';
 import { RouterModule } from '@angular/router';
 import { LayoutComponent } from './layout.component';
 import { SharedModule } from '../shared/shared.module';
+import { ToasterModule } from 'angular2-toaster';
 
 @NgModule({
     imports: [
         RouterModule,
         SharedModule,
+        ToasterModule
     ],
     declarations: [
         LayoutComponent,

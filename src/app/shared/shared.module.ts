@@ -11,7 +11,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { TimerComponent } from './timer/timer.component';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
-import { ToasterModule } from 'angular2-toaster';
 import { PaymentComponent } from './payments/payment.component';
 import { UploadComponent } from './upload/upload.component';
 import { OfflineRegistrationComponent } from './offline-register/offline-registration.component';
@@ -30,7 +29,6 @@ import { CreditCardForm } from './payments/credit-card.form';
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
-        ToasterModule,
         TypeaheadModule.forRoot(),
         ModalModule.forRoot(),
         BsDropdownModule.forRoot(),
@@ -68,7 +66,6 @@ import { CreditCardForm } from './payments/credit-card.form';
         SpinnerButtonComponent,
         MarkdownDirective,
         TimerComponent,
-        ToasterModule,
         TypeaheadModule,
         ModalModule,
         BsDropdownModule,

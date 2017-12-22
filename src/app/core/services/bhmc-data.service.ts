@@ -23,11 +23,11 @@ export class BhmcDataService {
 
     getAuthRequest(resource: string, data?: any): Observable<any> {
         const url: string = this._authUrl + resource + '/';
-        const params = new HttpParams();
+        let params = new HttpParams();
         if (data && !BhmcDataService.isEmptyObject(data)) {
             for (const key in data) {
-                if (data.hasOwnProperty(key)) {
-                    params.set(key, data[key]);
+                if (data.hasOwnProperty(key) && data[key] !== null) {
+                    params = params.set(key, data[key]);
                 }
             }
         }
@@ -36,11 +36,11 @@ export class BhmcDataService {
 
     getApiRequest(resource: string, data?: any): Observable<any> {
         const url: string = this._apiUrl + resource + '/';
-        const params = new HttpParams();
+        let params = new HttpParams();
         if (data && !BhmcDataService.isEmptyObject(data)) {
             for (const key in data) {
-                if (data.hasOwnProperty(key)) {
-                    params.set(key, data[key]);
+                if (data.hasOwnProperty(key) && data[key] !== null) {
+                    params = params.set(key, data[key]);
                 }
             }
         }
