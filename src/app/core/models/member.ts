@@ -6,6 +6,7 @@ export class PublicMember {
     firstName: string;
     lastName: string;
     email: string;
+    username: string;
     birthDate: any;
     location: string;
     phoneNumber: string;
@@ -53,6 +54,7 @@ export class PublicMember {
         this.firstName = json.first_name;
         this.lastName = json.last_name;
         this.email = json.email;
+        this.username = json.username;
         this.birthDate = moment(json.birth_date);
         this.signupDate = moment(json.date_joined);
         this.location = json.city;

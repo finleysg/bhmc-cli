@@ -10,43 +10,29 @@
                         Announcements
                     </div>
                     <div class="lv-body">
-                        <!--<div class="lv-item" *ngIf="user && !user.isAuthenticated">
+                        <div class="lv-item" *ngIf="user && !user.isAuthenticated">
                             <div class="media">
-                                <div class="pull-left">
-                                    <img class="lv-img-sm" src="../../assets/img/QuestionMark.png" alt="Are you a returning member?">
-                                </div>
-                                <div class="media-body">
-                                    <div class="lv-title">Are You a Returning Member?</div>
-                                    <p>If so, then this must look a bit strange to you! Welcome to the new club website. Before you
-                                        can register for events in the upcoming season, we need to update your account. Click on the
-                                        link below to get more information.
-                                    </p>
-                                    <p>
-                                        <button class="btn btn-sm btn-info" (click)="getPassword()">Returning Members</button>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>-->
-                        <div class="lv-item" *ngIf="user && !user.isAuthenticated && config.acceptNewMembers">
-                            <div class="media">
-                                <div class="pull-left">
-                                    <img class="lv-img-sm" src="../../assets/img/RegisterNow.png" alt="Register now!">
-                                </div>
                                 <div class="media-body">
                                     <div class="lv-title">Welcome to the Bunker Hills Men's Club</div>
                                     <p>Feel free to look around and get to know us. Visit the
                                         <a [routerLink]="['/about-us']">About Us</a> page or the
                                         <a [routerLink]="['/policies', 'new-members']">New Member Info</a>
-                                        page to learn more about the club. If you like what you
-                                        see, register online to join us for the {{config.year}} golf season.
+                                        page to learn more about the club.
                                     </p>
                                     <p>
-                                        <button class="btn btn-sm btn-success" (click)="registerOnline()">Register Online</button>
+                                        Already a member or were you a member in {{config.year - 1}}? Log in
+                                        now to ensure you don't miss out on any of the {{config.year}} events.
+                                    </p>
+                                    <p>
+                                        <a class="btn btn-sm btn-primary" [routerLink]="['/member', 'login']">Login</a>
+                                    </p>
+                                    <p *ngIf="config.acceptNewMembers">
+                                        <button class="btn btn-sm btn-success" (click)="registerOnline()">New Member Registration</button>
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <!--<div class="lv-item" *ngIf="user && user.isAuthenticated && !user.member.membershipIsCurrent">
+                        <div class="lv-item" *ngIf="user && user.isAuthenticated && !user.member.membershipIsCurrent">
                             <div class="media">
                                 <div class="pull-left">
                                     <img class="lv-img-sm" src="../../assets/img/RegisterNow.png" alt="Register now!">
@@ -54,13 +40,13 @@
                                 <div class="media-body">
                                     <div class="lv-title">Register for the {{config.year}} Golf Season</div>
                                     <p>Registration is now open for the {{config.year}} golf season. Don't wait for the last minute!
-                                    Click the "Register" button below to register online or to download the application form.</p>
+                                    Click the button below to register online or to download the application form.</p>
                                     <p>
-                                        <button class="btn btn-sm btn-success" (click)="registerOnline()">Register</button>
+                                        <button class="btn btn-sm btn-success" (click)="registerOnline()">Returning Member Registration</button>
                                     </p>
                                 </div>
                             </div>
-                        </div>-->
+                        </div>
                         <div class="lv-item" *ngFor="let a of announcements">
                             <div class="media" *ngIf="a.isVisible(user.isAuthenticated)">
                                 <div class="media-body">

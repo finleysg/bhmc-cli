@@ -17,6 +17,7 @@ export { SlotPayment } from './models/slot-payment';
 export { Sponsor } from './models/sponsor';
 export { Policy, PolicyCategory } from './models/policy';
 export { AuthGuard } from './services/auth-guard.service';
+export { AnonGuard } from './services/anon-guard.service';
 export { AuthenticationService } from './services/authentication.service';
 export { BhmcDataService } from './services/bhmc-data.service';
 export { CalendarService } from './services/calendar.service';

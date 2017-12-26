@@ -11,11 +11,10 @@ import { AccountInfoComponent } from './account/account-info.component';
 import { AccountSettingsComponent } from './account/account-settings.component';
 import { ChangePasswordComponent } from './account/change-password.component';
 import { NewMemberSignupComponent } from './signup/new-member-signup.component';
-import { NewMemberDataService } from './signup/new-member-data.service';
-import { NewMemberForm } from './signup/new-member-form.service';
 import { AccountReportComponent } from './report/account-report.component';
 import { MemberReportComponent } from './report/member-report.component';
 import { MemberLandingComponent } from "./member-landing.component";
+import { SignupService } from './signup/signup.service';
 
 @NgModule({
     imports: [
@@ -38,8 +37,7 @@ import { MemberLandingComponent } from "./member-landing.component";
         MemberReportComponent,
     ],
     providers: [
-        NewMemberDataService,
-        NewMemberForm
+        SignupService
     ]
 })
 export class MemberModule { }

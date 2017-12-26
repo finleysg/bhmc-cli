@@ -13,7 +13,6 @@ import { map, mergeMap, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import * as moment from 'moment';
-import {InterceptorError} from './interceptor-error.service';
 
 @Injectable()
 export class AuthenticationService {

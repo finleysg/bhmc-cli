@@ -1,29 +1,17 @@
 <div class="block-header">
     <h2>New Member Registration</h2>
 </div>
-<div class="row" *ngIf="eventDetail">
+<div class="row" *ngIf="eventDetail && config">
     <div class="col-lg-4 col-md-6 col-sm-6">
         <div class="card event-card">
             <div class="card-header">
-                <h2>Notes and Policies</h2>
+                <h2>{{config.year}} New Member Fees and Policies</h2>
             </div>
             <div class="card-body card-padding">
                 <div [markdown]="eventDetail.description"></div>
-                <div>
-                    <a [href]="application.url" target="_blank" class="btn btn-info event-button m-r-10">Offline Application</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4 col-md-6 col-sm-6">
-        <div class="card" *ngIf="config">
-            <div class="card-header">
-                <h2>{{config.year}} New Member Fees</h2>
-            </div>
-            <div class="card-body card-padding">
                 <div class="row">
                     <div class="col-xs-12">
-                        <p>Make sure you have read the new member information and you are not a returning member.</p>
+                        <p>Make sure you have read the policy information above and you are <span class="text-danger text-bold">NOT a returning member</span>.</p>
                     </div>
                 </div>
                 <div class="row">
@@ -31,7 +19,15 @@
                         <p class="m-b-5">New member registration fee:</p>
                     </div>
                     <div class="col-xs-3 text-right">
-                        <p class="m-b-5">{{ paymentCalc.subtotal | currency:'USD':true }}</p>
+                        <p class="m-b-5">{{ eventDetail.eventFeeAlt | currency:'USD':'symbol-narrow' }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-9">
+                        <p class="m-b-5">Patron card (non-senior):</p>
+                    </div>
+                    <div class="col-xs-3 text-right">
+                        <p class="m-b-5">{{ eventDetail.greensFee | currency:'USD':'symbol-narrow' }}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -39,7 +35,7 @@
                         <p class="m-b-5">Credit card transaction fees (online only):</p>
                     </div>
                     <div class="col-xs-3 text-right">
-                        <p class="m-b-5">{{ paymentCalc.transactionFee | currency:'USD':true }}</p>
+                        <p class="m-b-5">{{ paymentCalc.transactionFee | currency:'USD':'symbol-narrow' }}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -47,145 +43,253 @@
                         <p class="m-b-5">Total registration amount:</p>
                     </div>
                     <div class="col-xs-3 text-right">
-                        <p class="m-b-5"><strong>{{ paymentCalc.total | currency:'USD':true }}</strong></p>
+                        <p class="m-b-5"><strong>{{ paymentCalc.total | currency:'USD':'symbol-narrow' }}</strong></p>
                     </div>
+                </div>
+                <div class="row m-t-30">
+                    <a *ngIf="application" [href]="application.url" target="_blank" class="btn btn-default event-button m-r-10">Offline Application</a>
+                    <button *ngIf="currentStep === 0" class="btn btn-primary" (click)="startSignup()">Sign Up Now!</button>
+                    <payment [registrationGroup]="group" [eventDetail]="eventDetail" (onClose)="done($event)"></payment>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-6">
-        <div class="card">
+    <div class="col-lg-4 col-md-6 col-sm-6 wizard">
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 1" [@stepTransition]="getAnimationDirection(1)">
             <div class="card-header">
-                <h2>Online Registration</h2>
-                <small>* required information</small>
+                <h2>Contact Email</h2>
+                <small>Step 1 of 7</small>
             </div>
             <div class="card-body card-padding">
-                <div class="row">
-                    <form [formGroup]="userForm" (ngSubmit)="createAccount()" class="form-horizontal" novalidate>
-                        <fieldset [disabled]="registered || loading">
-                            <legend>Personal Information</legend>
-                            <div class="form-group" [class.has-error]="fieldErrors.firstName">
-                                <label for="firstName" class="col-sm-3 control-label">*First name:</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="firstName" formControlName="firstName" placeholder="First name" required>
-                                    <div *ngIf="fieldErrors.firstName">
-                                        <small class="text-danger">{{ fieldErrors.firstName }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group" [class.has-error]="fieldErrors.lastName">
-                                <label for="lastName" class="col-sm-3 control-label">*Last name:</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="lastName" formControlName="lastName" placeholder="Last name" required>
-                                    <div *ngIf="fieldErrors.lastName">
-                                        <small class="text-danger">{{ fieldErrors.lastName }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group" [class.has-error]="fieldErrors.birthDate">
-                                <label for="birthDate" class="col-sm-3 control-label">*Birth date:</label>
-                                <div class="col-sm-9">
-                                    <input type="date" class="form-control" id="birthDate" formControlName="birthDate" required>
-                                    <div *ngIf="fieldErrors.birthDate">
-                                        <small class="text-danger">{{ fieldErrors.birthDate }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="phoneNumber" class="col-sm-3 control-label">Phone number:</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber" placeholder="Phone number">
-                                </div>
-                            </div>
-                            <div class="form-group" [class.has-error]="fieldErrors.email">
-                                <label for="email" class="col-sm-3 control-label">*Email:</label>
-                                <div class="col-sm-9">
-                                    <input type="email" class="form-control" id="email" formControlName="email" placeholder="Email" required>
-                                    <div *ngIf="fieldErrors.email">
-                                        <small class="text-danger">{{ fieldErrors.email }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset [disabled]="registered || loading">
-                            <legend>Former Club Information</legend>
-                            <div class="form-group" [class.has-error]="fieldErrors.club">
-                                <label for="formerClubName" class="col-sm-3 control-label">Former club:</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="formerClubName" formControlName="formerClubName" placeholder="Former club">
-                                    <div *ngIf="fieldErrors.club">
-                                        <small class="text-danger">{{ fieldErrors.club }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="formerClubNumber" class="col-sm-3 control-label">Club number:</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="formerClubNumber" formControlName="formerClubNumber" placeholder="Club number">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="ghin" class="col-sm-3 control-label">GHIN:</label>
-                                <div class="col-sm-9">
-                                    <input type="tel" class="form-control" id="ghin" formControlName="ghin" placeholder="GHIN">
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset [disabled]="registered || loading">
-                            <legend>Tee Preference</legend>
-                            <div class="form-group">
-                                <label class="col-lg-3 control-label">Forward tees:</label>
-                                <div class="col-lg-9">
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="forwardTees" formControlName="forwardTees"> I will play forward (gold) tees
-                                    </label>
-                                    <p class="help-block"><small>* Make sure you qualify for the rule of 78.</small></p>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset [disabled]="registered || loading">
-                            <legend>Log In Credentials</legend>
-                            <div class="form-group" [class.has-error]="fieldErrors.username">
-                                <label for="username" class="col-sm-3 control-label">*Log in name:</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="username" formControlName="username" placeholder="Log in name" required>
-                                    <div *ngIf="fieldErrors.username">
-                                        <small class="text-danger">{{ fieldErrors.username }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group" [class.has-error]="fieldErrors.password1">
-                                <label for="password1" class="col-sm-3 control-label">*Password:</label>
-                                <div class="col-sm-9">
-                                    <input type="password" class="form-control" id="password1" formControlName="password1" placeholder="Password" required>
-                                    <div *ngIf="fieldErrors.password1">
-                                        <small class="text-danger">{{ fieldErrors.password1 }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group" [class.has-error]="fieldErrors.passwords">
-                                <label for="password2" class="col-sm-3 control-label">*Confirm password:</label>
-                                <div class="col-sm-9">
-                                    <input type="password" class="form-control" id="password2" formControlName="password2" placeholder="Confirm password" required>
-                                    <div *ngIf="fieldErrors.passwords">
-                                        <small class="text-danger">{{ fieldErrors.passwords }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <div>
-                            <button [disabled]="userForm.invalid || registered || loading" type="submit" class="btn btn-primary btn-sm m-t-10 m-l-10 pull-right">Register</button>
-                            <payment [registrationGroup]="group" [eventDetail]="eventDetail" (onClose)="done($event)"></payment>
-                        </div>
-                    </form>
-                    <div class="m-t-30" *ngIf="registered">
-                        <h3 class="text-success">Registration Complete</h3>
-                        <p class="text-success"><strong>Thank you for registering with the Bunker Hills Men's Club! Welcome to the club;
-                            we hope you have a great year.</strong></p>
-                        <p>We have sent a confirmation email to the address you entered above. Make sure that you allow emails
-                            from bhmc.org to reach your inbox. If you have any trouble, feel free to contact a Board member.</p>
-                        <p>You can <a [routerLink]="['/member/login']">log in</a> now.</p>
+                <p>Please provide a contact email for club news and registration receipts (required).</p>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*Email:</label>
+                    <div class="col-sm-9">
+                        <input type="email" class="form-control" [(ngModel)]="newUser.email" name="email" #email="ngModel" placeholder="Email" required>
                     </div>
+                </div>
+                <div class="row m-t-15" *ngIf="fieldErrors && fieldErrors.length">
+                    <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
+                </div>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" (click)="cancelSignup()">Cancel</button>
+                    <button class="btn btn-success" (click)="nextStep(2)">Next</button>
+                </div>
+            </div>
+        </div>
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 2" [@stepTransition]="getAnimationDirection(2)">
+            <div class="card-header">
+                <h2>Name and Birthdate</h2>
+                <small>Step 2 of 7</small>
+            </div>
+            <div class="card-body card-padding">
+                <p>We ask for your date of birth to ensure your eligibility for events such as our senior club championship (required).</p>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*First name:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="firstName" #firstName="ngModel" [(ngModel)]="newUser.firstName" placeholder="First name" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*Last name:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="lastName" #lastName="ngModel" [(ngModel)]="newUser.lastName" placeholder="Last name" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*Birth date:</label>
+                    <div class="col-sm-9">
+                        <input type="date" class="form-control" name="birthDate" #birthDate="ngModel" [(ngModel)]="newUser.birthDate" required>
+                    </div>
+                </div>
+                <div class="row m-t-15" *ngIf="fieldErrors && fieldErrors.length">
+                    <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
+                </div>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" (click)="prevStep(1)">Back</button>
+                    <button class="btn btn-success" (click)="nextStep(3)">Next</button>
+                </div>
+            </div>
+        </div>
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 3" [@stepTransition]="getAnimationDirection(3)">
+            <div class="card-header">
+                <h2>Former Club</h2>
+                <small>Step 3 of 7</small>
+            </div>
+            <div class="card-body card-padding">
+                <p>If you had handicap with another club last year, please enter the club name and your ghin (optional).</p>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">Former club:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="formerClubName" #formerClubName="ngModel" [(ngModel)]="newUser.formerClubName" placeholder="Former club">
+                        <div *ngIf="fieldErrors.club">
+                            <small class="text-danger">{{ fieldErrors.club }}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">GHIN:</label>
+                    <div class="col-sm-9">
+                        <input type="tel" class="form-control" name="ghin" #ghin="ngModel" [(ngModel)]="newUser.ghin" placeholder="GHIN">
+                    </div>
+                </div>
+                <div class="row m-t-15" *ngIf="fieldErrors && fieldErrors.length">
+                    <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
+                </div>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" (click)="prevStep(2)">Back</button>
+                    <button class="btn btn-success" (click)="nextStep(4)">Next</button>
+                </div>
+            </div>
+        </div>
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 4" [@stepTransition]="getAnimationDirection(4)">
+            <div class="card-header">
+                <h2>Tee Preference</h2>
+                <small>Step 4 of 7</small>
+            </div>
+            <div class="card-body card-padding">
+                <p>Please make sure you qualify to play the forward tees before selecting this option (see policy information).</p>
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <div class="checkbox pull-right">
+                            <input type="checkbox" name="forwardTees" #forwardTees="ngModel" [(ngModel)]="newUser.forwardTees"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-10 m-t-10">
+                        I will play forward (gold) tees
+                    </div>
+                </div>
+                <div class="row m-t-15" *ngIf="fieldErrors && fieldErrors.length">
+                    <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
+                </div>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" (click)="prevStep(3)">Back</button>
+                    <button class="btn btn-success" (click)="nextStep(5)">Next</button>
+                </div>
+            </div>
+        </div>
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 5" [@stepTransition]="getAnimationDirection(5)">
+            <div class="card-header">
+                <h2>Account Credentials</h2>
+                <small>Step 5 of 7</small>
+            </div>
+            <div class="card-body card-padding">
+                <p>Your log in name (username) or email can be used to log into the website (required).</p>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*Log in name:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="username" #username="ngModel" [(ngModel)]="newUser.username" placeholder="Log in name" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*Password:</label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control" name="password1" #password1="ngModel" [(ngModel)]="newUser.password1" placeholder="Password" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*Confirm password:</label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control" name="password2" #password2="ngModel" [(ngModel)]="newUser.password2" placeholder="Confirm password" required>
+                    </div>
+                </div>
+                <div class="row m-t-15" *ngIf="fieldErrors && fieldErrors.length">
+                    <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
+                </div>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" (click)="prevStep(4)">Back</button>
+                    <button class="btn btn-success" (click)="nextStep(6)">Next</button>
+                </div>
+            </div>
+        </div>
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 6" [@stepTransition]="getAnimationDirection(6)">
+            <div class="card-header">
+                <h2>Patron Card</h2>
+                <small>Step 6 of 7</small>
+            </div>
+            <div class="card-body card-padding">
+                <p>By registering online, you also have the option of paying for your Bunker Hills patron card. If you
+                qualify for the senior patron card rate, however, you must pay in person to get that reduced rate. Clear
+                the checkbox below to pay for your patron card in pro shop.</p>
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <div class="checkbox pull-right">
+                            <input type="checkbox" name="patronCard" #patronCard="ngModel" [(ngModel)]="includePatronCard"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-10 m-t-10">
+                        Include the patron card fee: {{eventDetail.greensFee | currency:'USD':'symbol-narrow' }}
+                    </div>
+                </div>
+                <div class="row m-t-15" *ngIf="fieldErrors && fieldErrors.length">
+                    <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
+                </div>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" (click)="prevStep(5)">Back</button>
+                    <button class="btn btn-success" (click)="nextStep(7)">Next</button>
+                </div>
+            </div>
+        </div>
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 7" [@stepTransition]="getAnimationDirection(7)">
+            <div class="card-header">
+                <h2>Registration Complete</h2>
+            </div>
+            <div class="card-body card-padding">
+                <p>Thank you!</p>
+                <p>You can log in now using the credentials you entered earlier. Once logged in a a device, you can stay
+                logged in for the rest of the season. You must be logged in on a device to register for events.</p>
+                <p>We hope you have a great {{config.year}} season.</p>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" [routerLink]="['/member/login']">Login</button>
+                </div>
+            </div>
+        </div>
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 98" [@stepTransition]="getAnimationDirection(98)">
+            <div class="card-header">
+                <h2>Email Already Registered</h2>
+                <small></small>
+            </div>
+            <div class="card-body card-padding">
+                <p>The email {{newUser.email}} has already been registered at one time with the men's club.</p>
+                <p>If you are a returning member from {{config.year-1}}, please log in and register as a returning member.
+                    If you were a men's club member from a previous season, contact us at <a href="mailto:contact@bhmc.org">contact@bhmc.org</a>
+                    to reactive your account. Once your account is reactivated, you can log in and register for this season.</p>
+                <p>If you entered your email incorrectly, click the back button to edit your email and continue as a new member.</p>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" (click)="prevStep(1)">Back</button>
+                    <button class="btn btn-default" (click)="quitSignup()">Quit</button>
+                </div>
+            </div>
+        </div>
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 99" [@stepTransition]="getAnimationDirection(99)">
+            <div class="card-header">
+                <h2>GHIN Already Registered</h2>
+                <small></small>
+            </div>
+            <div class="card-body card-padding">
+                <p>The ghin {{newUser.ghin}} has already been registered at one time with the men's club.</p>
+                <p>If you are a returning member from {{config.year-1}}, please log in and register as a returning member.
+                    If you were a men's club member from a previous season, contact us at <a href="mailto:contact@bhmc.org">contact@bhmc.org</a>
+                    to reactive your account. Once your account is reactivated, you can log in and register for this season.</p>
+                <p>If you entered your ghin incorrectly, click the back button to edit your email and continue as a new member.</p>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" (click)="prevStep(3)">Back</button>
+                    <button class="btn btn-default" (click)="quitSignup()">Quit</button>
+                </div>
+            </div>
+        </div>
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 100" [@stepTransition]="getAnimationDirection(100)">
+            <div class="card-header">
+                <h2>Registration Incomplete</h2>
+                <small></small>
+            </div>
+            <div class="card-body card-padding">
+                <p>Your account has been created, but you will not be able to register for any {{config.year}} events until you
+                    submit your payment for the season. If you do not do so before the men's club season starts, your account
+                    will be deactivated. Contact us at <a href="mailto:contact@bhmc.org">contact@bhmc.org</a>
+                    if you have any questions.</p>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" (click)="quitSignup()">Quit</button>
                 </div>
             </div>
         </div>

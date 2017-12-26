@@ -8,7 +8,7 @@ import { StripeCharge } from '../models/stripe-charge';
 import { SlotPayment } from '../models/slot-payment';
 import { EventRegistration } from '../models/event-registration';
 import { EventDetail } from '../models/event-detail';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { merge } from 'lodash';
@@ -52,7 +52,7 @@ export class RegistrationService {
             });
         }
         return this.dataService.postApiRequest('registration/reserve', payload).pipe(
-            map((data: any) => {
+            tap((data: any) => {
                 this.group = new EventRegistrationGroup().fromJson(data);
                 this.registrationGroupSource.next(this.group);
             })
@@ -73,7 +73,7 @@ export class RegistrationService {
 
     cancelReservation(group: EventRegistrationGroup): Observable<void> {
         return this.dataService.postApiRequest('registration/cancel', {group_id: group.id}).pipe(
-            map(() => {
+            tap(() => {
                 this.group = null;
                 this.registrationGroupSource.next(this.group);
             })

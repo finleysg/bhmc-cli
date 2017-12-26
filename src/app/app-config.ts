@@ -11,7 +11,7 @@ export class AppConfig {
     private _adminUrl: string = 'https://finleysg.pythonanywhere.com/admin';
     private _authUrl: string = 'https://finleysg.pythonanywhere.com/rest-auth/';
     private _apiUrl: string = 'https://finleysg.pythonanywhere.com/api/';
-    private _stripeUrl: string = 'https://dashboard.stripe.com/test/payments';
+    private _stripeUrl: string = 'https://dashboard.stripe.com/test/payments'; // TODO: move to settings object
 
     constructor() {
         this._isLocal = window.location.hostname.indexOf('localhost') >= 0;
@@ -69,14 +69,13 @@ export class AppConfig {
         return this._ravenDsn;
     }
 
-    // TODO: get remaining values from the api
     loadJson(json: any) {
         this._year = json.year;
         this._registrationId = json.reg_event;
         this._matchPlayId = json.match_play_event ? json.match_play_event : 0;
         this._acceptNewMembers = json.accept_new_members;
         this._version = (window as any).bhmcVersion;
-        this._stripePublicKey = 'pk_live_IlLRf6swyzRpCntya5UM8moz';
-        this._ravenDsn = 'https://9b56cf753b264c9fa9be08b86846551b@sentry.io/126710';
+        this._stripePublicKey = json.stripe_pk;
+        this._ravenDsn = json.raven_dsn;
     }
 }

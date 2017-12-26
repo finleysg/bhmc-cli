@@ -23,6 +23,7 @@ import { InterceptorAuth } from './services/interceptor-auth.service';
 import { InterceptorError } from './services/interceptor-error.service';
 import { InterceptorProgress } from './services/interceptor-progress.service';
 import { HttpModule } from '@angular/http';
+import { AnonGuard } from './services/anon-guard.service';
 
 @NgModule({
     imports: [
@@ -42,6 +43,7 @@ import { HttpModule } from '@angular/http';
         DialogService,
         WindowRef,
         AuthGuard,
+        AnonGuard,
         CanDeactivateGuard,
         BhmcErrorHandler,
         StripeDetailsResolver,

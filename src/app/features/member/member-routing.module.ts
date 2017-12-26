@@ -5,7 +5,7 @@ import { ResetPasswordComponent } from './authentication/reset-password.componen
 import { ResetPasswordSentComponent } from './authentication/reset-password-sent.component';
 import { ResetPasswordCompleteComponent } from './authentication/reset-password-complete.component';
 import { ResetPasswordConfirmComponent } from './authentication/reset-password-confirm.component';
-import { AuthGuard, StripeDetailsResolver, EventDetailResolver } from '../../core';
+import { AuthGuard, AnonGuard, StripeDetailsResolver, EventDetailResolver } from '../../core';
 import { AccountComponent } from './account/account.component';
 import { AccountSettingsComponent } from './account/account-settings.component';
 import { AccountInfoComponent } from './account/account-info.component';
@@ -19,7 +19,7 @@ const routes: Routes = [
     {
         path: '', component: MemberLandingComponent, children: [
             { path: 'login', component: LoginComponent },
-            { path: 'new-member-signup/:id', resolve: { eventDetail: EventDetailResolver }, component: NewMemberSignupComponent },
+            { path: 'new-member-signup/:id', canActivate: [AnonGuard], resolve: { eventDetail: EventDetailResolver }, component: NewMemberSignupComponent },
             { path: 'reset-password', component: ResetPasswordComponent },
             { path: 'reset-password-complete', component: ResetPasswordCompleteComponent },
             { path: 'reset-password-confirm/:uid/:token', component: ResetPasswordConfirmComponent },

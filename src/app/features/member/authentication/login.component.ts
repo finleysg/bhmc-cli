@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
             (err: string) => {
                 this.loading = false;
                 if (err.indexOf('disabled') > 0) {
-                    this.toaster.pop('error', 'Inactive Account', 'You\'re account is inactive. Register now for the new season!');
+                    this.toaster.pop('error', 'Inactive Account', 'You\'re account is inactive. Contact the board or site admin to reactivate your account.');
                 } else {
                     this.toaster.pop('error', 'Invalid Credentials', err);
                 }
