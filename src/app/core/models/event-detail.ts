@@ -30,6 +30,7 @@ export class EventDetail {
     signupStart: any;
     signupEnd: any;
     registrationMaximum: number;
+    portalUrl: string;
     documents: EventDocument[];
     registrations: EventRegistration[];
 
@@ -171,6 +172,7 @@ export class EventDetail {
         this.signupStart = moment(json.signup_start);
         this.signupEnd = moment(json.signup_end);
         this.registrationMaximum = json.registration_maximum;
+        this.portalUrl = json.portal_url;
 
         if (json.documents && json.documents.length > 0) {
             this.documents = [];

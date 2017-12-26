@@ -52,6 +52,24 @@ export class EventDetailService {
                 return;
             }));
     }
+    
+    updateEventPortal(event: EventDetail): Observable<EventDetail> {
+        const data = {
+            portal: event.portalUrl
+        };
+        return this.dataService.postApiRequest(`events/${event.id}/portal`, data).pipe(
+            map((json: any) => {
+                const evt = new EventDetail().fromJson(json);
+                const courses = this.eventCourses(evt);
+                courses.forEach(c => {
+                    let table = this.createSignupTable(evt, c);
+                    this.signupTableSources.get(c.id).next(table);
+                });
+                this.currentEvent = evt;
+                return this.currentEvent;
+            })
+        );
+    }
 
     signupTable(id: number): Observable<EventSignupTable> {
         return this.signupTables.get(id);

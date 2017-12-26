@@ -1,0 +1,25 @@
+<div>
+<div bsModal (onShown)="onShown()" #portalModal="bs-modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bgm-blue">
+                <h4 class="modal-title">{{eventDetail.name}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group m-t-30">
+                    <span class="input-group-addon" id="gg-url">Url:</span>
+                    <input type="text" [(ngModel)]="eventDetail.portalUrl" class="form-control" placeholder="Golf Genius Portal Url" aria-describedby="gg-url">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" type="button" (click)="cancelPortal()">Cancel</button>
+                <button class="btn btn-relative btn-icon-text btn-success"
+                        [disabled]="!eventDetail.portalUrl"
+                        (click)="savePortal()">
+                    <i class="zmdi zmdi-cloud-upload"></i> Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

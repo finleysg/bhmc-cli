@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToasterService } from 'angular2-toaster';
-import { DialogService, SavedCard, User, AuthenticationService, AccountUpdateType } from '../../../core';
+import { SavedCard, User, AuthenticationService, AccountUpdateType, MemberService } from '../../../core';
 
 @Component({
     moduleId: module.id,
@@ -13,10 +13,11 @@ export class AccountSettingsComponent implements OnInit {
     public savedCard: SavedCard;
     public user: User;
     public editIdentity: boolean;
+    public editPaymentInfo: boolean;
 
     constructor(private authService: AuthenticationService,
+                private memberService: MemberService,
                 private toaster: ToasterService,
-                private dialog: DialogService,
                 private router: Router,
                 private route: ActivatedRoute) {
     }
@@ -33,12 +34,22 @@ export class AccountSettingsComponent implements OnInit {
         this.doUpdate(AccountUpdateType.Username);
     }
 
+    updatePaymentInfo(): void {
+        this.doUpdate(AccountUpdateType.PaymentInfo);
+    }
+    
     doUpdate(updateType: AccountUpdateType): void {
         let partial = this.user.partialUpdateJson(updateType);
         this.authService.updateAccount(partial).subscribe(
             () => {
-                this.editIdentity = false;
-                this.toaster.pop('success', 'Account Updated', 'Your username have been changed');
+                if (this.editIdentity) {
+                    this.editIdentity = false;
+                    this.toaster.pop('success', 'Account Updated', 'Your username have been changed');
+                } else if (this.editPaymentInfo) {
+                    this.memberService.stripeSavedCard().subscribe(card => this.savedCard = card);
+                    this.editPaymentInfo = false;
+                    this.toaster.pop('success', 'Account Updated', 'Your payment preferences have been updated');
+                }
             },
             (err: string) => {
                 this.toaster.pop('error', 'Account Error', err);
@@ -50,14 +61,9 @@ export class AccountSettingsComponent implements OnInit {
         this.router.navigate(['change-password'], {relativeTo: this.route.parent});
     }
 
-    openPaymentReport(): void {
-        this.dialog.info('Coming Soon', `This button will pull all your payments for the current season from Stripe. It
-                                         will allow you to check for yourself if you have a doubt about whether or not
-                                         a payment went through.`);
-    }
-
     canceled(): void {
         this.editIdentity = false;
+        this.editPaymentInfo = false;
         this.authService.refreshUser();
     }
 }

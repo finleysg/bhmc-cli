@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content" *ngIf="registrationGroup && eventDetail">
             <div class="modal-header bgm-teal">
-                <h3 class="modal-title">Payment: {{ registrationGroup.payment.total | currency:'USD':true }}</h3>
+                <h3 class="modal-title">Payment: {{ registrationGroup.payment.total | currency:'USD':'symbol-narrow' }}</h3>
                 <small>{{ eventDetail.name }} ({{ eventDetail.startDate.format('MMM D') }})</small>
                 <span id="spinner-span" class="pull-right"></span>
             </div>

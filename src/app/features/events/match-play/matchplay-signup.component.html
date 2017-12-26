@@ -42,15 +42,15 @@
                             <input type="checkbox" [(ngModel)]="reg.isNetSkinsFeePaid" (change)="toggleBracket('flighted')"><i class="input-helper"></i>
                         </div>
                     </div>
-                    <div class="col-sm-3 col-xs-3 text-right">{{ reg.totalFees | currency:'USD':true }}</div>
+                    <div class="col-sm-3 col-xs-3 text-right">{{ reg.totalFees | currency:'USD':'symbol-narrow' }}</div>
                 </div>
                 <div class="row m-t-20">
                     <div class="col-sm-10 col-xs-8 text-right">Transaction fee:</div>
-                    <div class="col-sm-2 col-xs-4 text-right">{{ registrationGroup.payment.transactionFee | currency:'USD':true }}</div>
+                    <div class="col-sm-2 col-xs-4 text-right">{{ registrationGroup.payment.transactionFee | currency:'USD':'symbol-narrow' }}</div>
                 </div>
                 <div class="row m-t-5">
                     <div class="col-sm-10 col-xs-8 text-right"><h4>Amount due:</h4></div>
-                    <div class="col-sm-2 col-xs-4 text-right"><h4>{{ registrationGroup.payment.total | currency:'USD':true }}</h4></div>
+                    <div class="col-sm-2 col-xs-4 text-right"><h4>{{ registrationGroup.payment.total | currency:'USD':'symbol-narrow' }}</h4></div>
                 </div>
                 <div class="row">
                     <div class="pull-right">

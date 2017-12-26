@@ -4,7 +4,8 @@ export enum AccountUpdateType {
     PersonalInfo,
     ContactInfo,
     Username,
-    ForwardTees
+    ForwardTees,
+    PaymentInfo
 }
 
 export class User {
@@ -51,7 +52,7 @@ export class User {
         }
         return false;
     }
-
+    
     fromJson(json: any): User {
         if (json) {
             this.id = json.id;
@@ -108,6 +109,12 @@ export class User {
                 return {
                     'member': {
                         'forward_tees': this.member.forwardTees
+                    }
+                };
+            case AccountUpdateType.PaymentInfo:
+                return {
+                    'member': {
+                        'save_last_card': this.member.saveLastCard
                     }
                 };
             default:

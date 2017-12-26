@@ -70,20 +70,20 @@
                             <input type="checkbox" [(ngModel)]="reg.isCartFeePaid" (change)="updatePayment()"><i class="input-helper"></i>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-3 hidden-xs text-right">{{ reg.totalFees | currency:'USD':true }}</div>
+                    <div class="col-md-3 col-sm-3 hidden-xs text-right">{{ reg.totalFees | currency:'USD':'symbol-narrow' }}</div>
                 </div>
                 <div class="row m-t-15">
                     <div class="col-sm-10 col-xs-8 text-right"><strong>Group total:</strong></div>
-                    <div class="col-sm-2 col-xs-4 text-right"><strong>{{ registrationGroup.payment.subtotal | currency:'USD':true }}</strong>
+                    <div class="col-sm-2 col-xs-4 text-right"><strong>{{ registrationGroup.payment.subtotal | currency:'USD':'symbol-narrow' }}</strong>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-10 col-xs-8 text-right">Transaction fee:</div>
-                    <div class="col-sm-2 col-xs-4 text-right">{{ registrationGroup.payment.transactionFee | currency:'USD':true }}</div>
+                    <div class="col-sm-2 col-xs-4 text-right">{{ registrationGroup.payment.transactionFee | currency:'USD':'symbol-narrow' }}</div>
                 </div>
                 <div class="row m-t-5">
                     <div class="col-sm-10 col-xs-8 text-right"><h4>Amount due:</h4></div>
-                    <div class="col-sm-2 col-xs-4 text-right"><h4>{{ registrationGroup.payment.total | currency:'USD':true }}</h4></div>
+                    <div class="col-sm-2 col-xs-4 text-right"><h4>{{ registrationGroup.payment.total | currency:'USD':'symbol-narrow' }}</h4></div>
                 </div>
                 <div class="row">
                     <timer [expiration]="expires" [expiryMessage]="expiryMessage" (onTimeElapsed)="cancelReservation()"></timer>

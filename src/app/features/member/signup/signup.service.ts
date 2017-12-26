@@ -168,12 +168,6 @@ export class SignupService {
         if (!username) {
             isValid = false;
             this.addError('a unique username is required');
-        } else {
-            const exists = this._members.findIndex(m => m.username === username) >= 0;
-            if (exists) {
-                isValid = false;
-                this.addError('that username had already been taken');
-            }
         }
         if (!password1) {
             isValid = false;

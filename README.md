@@ -13,21 +13,20 @@ Manages the event calendar, communications, and event registration for club memb
 * Convert from Stripe v2 to v3 (possibly for 2019)
 * ~~Update the Contacts~~
 * ~~Update the email forward rules~~
-* Move all admin pages to a separate admin feature
+* Move all admin pages to a separate admin feature (small perf. optimization)
 * ~~Refactor data calls to use the new Angular HttpClient~~
 * ~~Refactor RXJS imports to use lettable operators~~
-* Split public and private event feature pages
-* Results page and detail page should be capable of linking to Golf Genius event portal
-  * Each event (mid-week and majors) will have a separate event portal page in GG
-  * i.e. Not just the document link that we have now
-* It should be more obvious to our members when they are logged it to the site, especially on the phone
-* Bug: New reg and login: should not be presented with a reg button
+* Split public and private event feature pages (small perf. optimization)
+* ~~Results page and detail page should be capable of linking to Golf Genius event portal~~
+  * ~~Each event (mid-week and majors) will have a separate event portal page in GG~~
+  * ~~i.e. Not just the document link that we have now~~
+* ~~It should be more obvious to our members when they are logged it to the site, especially on the phone~~
+* ~~Bug: New reg and login: should not be presented with a reg button~~
 * ~~Creation of new mid-week events should also create the signup slots~~
-* Ensure new member registration obeys the config flag
-* Identity and handle returning inactive member signup (redirect from failed login)
+* ~~Ensure new member registration obeys the config flag~~
+* ~~Identity and handle returning inactive member signup (redirect from failed login)~~
 * How to handle members with the same name? (typeaheads)
 * How can we gracefully handle a 503 from the api?
-* "Secure" wording on the payment component
 * Scroll to top on mobile
 * Match play cannot handle multiple documents
 * Upload 2 day event teetimes?
@@ -41,9 +40,8 @@ Manages the event calendar, communications, and event registration for club memb
 
 ### New Season Roll-over
 * Add 2018 events
-* Delete all login tokens from 2017
-* Ensure online sign-up works for returning members
-* Ensure online sign-up works for new members
+* ~~Ensure online sign-up works for returning members~~
+* ~~Ensure online sign-up works for new members~~
 * Update season config settings (i.e. create online registration windows)
 
 ### Possible Enhancements/Features
@@ -52,7 +50,7 @@ Manages the event calendar, communications, and event registration for club memb
 * Registration for events open to non-members
 * Registration for meetings including optional meal
 * Skins online signup
-* Payments: ability to choose whether or not to save a card
+* ~~Payments: ability to choose whether or not to save a card~~
 * Payments: saving/selecting multiple cards
 * Where to display sponsors
 * Job to refund all for a rainout

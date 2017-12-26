@@ -12,17 +12,20 @@
                 <li *ngIf="!isMajor && (currentUser.isOfficer || currentUser.isBoardMember || currentUser.isProshopStaff)">
                     <a class="clickable" (click)="checkIn()">Pre-event Registration</a>
                 </li>-->
-                <li *ngIf="!isMajor && (currentUser.isOfficer || currentUser.isBoardMember)">
+                <li *ngIf="!isMajor && (currentUser.isOfficer)">
                     <a class="clickable" (click)="addGroups()">Add Par 3 Groups</a>
                 </li>
-                <li *ngIf="currentUser.isOfficer || currentUser.isBoardMember">
+                <li *ngIf="currentUser.isOfficer || currentUser.isProshopStaff">
                     <a class="clickable" (click)="eventReport()">Event Report</a>
                 </li>
                 <li *ngIf="currentUser.isOfficer">
                     <a class="clickable" (click)="reconReport()">Reconciliation Report</a>
                 </li>
-                <li *ngIf="!isMajor && (currentUser.isOfficer || currentUser.isBoardMember)">
+                <li *ngIf="!isMajor && (currentUser.isOfficer || currentUser.isProshopStaff)">
                     <a class="clickable" (click)="checkInReport()">Check-in Report</a>
+                </li>
+                <li *ngIf="currentUser.isOfficer || currentUser.isProshopStaff">
+                    <a class="clickable" (click)="updatePortal()">Golf Genius Portal</a>
                 </li>
                 <li *ngIf="isMajor && (currentUser.isOfficer || currentUser.isProshopStaff)">
                     <a class="clickable" (click)="uploadTeetimes()">Upload Teetimes</a>
@@ -42,6 +45,7 @@
                 <div>
                     <a *ngIf="canRegister()" (click)="register()" class="btn btn-warning event-button">Register Now</a>
                     <a *ngIf="eventDetail.canViewRegistrations" (click)="registered()" class="btn btn-info event-button m-r-10">Registered</a>
+                    <a *ngIf="eventDetail.portalUrl" [href]="eventDetail.portalUrl" target="_blank" class="btn btn-info event-button m-r-10">Golf Genius</a>
                     <a *ngIf="teetimes" [href]="teetimes.url" target="_blank" class="btn btn-info event-button m-r-10">Tee Times</a>
                     <a *ngIf="results" [href]="results.url" target="_blank" class="btn btn-info event-button m-r-10">Results</a>
                 </div>
@@ -84,12 +88,13 @@
                         <h2>Fees and Points</h2>
                     </div>
                     <div class="card-body card-padding">
-                        <p><strong>Event fee:</strong> {{ eventDetail.eventFee | currency:'USD':true }}</p>
+                        <p><strong>Event fee:</strong> {{ eventDetail.eventFee | currency:'USD':'symbol-narrow' }}</p>
                         <p *ngIf="hasSkins"><strong>{{ eventDetail.skinsType }} Skins:</strong>
-                            {{ eventDetail.skinsFee | currency:'USD':true }}</p>
+                            {{ eventDetail.skinsFee | currency:'USD':'symbol-narrow' }}</p>
                         <p><strong>Group size:</strong> {{ eventDetail.groupSize }}</p>
                         <p><strong>Season long points:</strong> {{ eventDetail.seasonPoints }}</p>
                         <upload (onClose)="uploadComplete($event)" [eventDetail]="eventDetail"></upload>
+                        <portal [eventDetail]="eventDetail"></portal>
                     </div>
                 </div>
             </div>

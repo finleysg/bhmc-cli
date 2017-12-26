@@ -42,12 +42,12 @@
                             <td>{{row.group.paymentConfirmationDateFormatted}}</td>
                             <td *ngIf="!row.isCharge">{{row.group.paymentConfirmationCode}}</td>
                             <td *ngIf="row.isCharge"><a href="{{row.link}}" target="_blank">{{row.group.paymentConfirmationCode}}</a></td>
-                            <td class="text-right">{{row.group.payment.total | currency:'USD':true}}</td>
+                            <td class="text-right">{{row.group.payment.total | currency:'USD':'symbol-narrow'}}</td>
                             <td>{{row.charge ? row.charge.memberName : ''}}</td>
                             <td>{{row.charge ? row.charge.createDateFormatted : ''}}</td>
                             <td>{{row.charge ? row.charge.card : ''}}</td>
                             <td>{{row.charge ? row.charge.status : ''}}</td>
-                            <td class="text-right">{{!row.charge ? '' : row.charge.amount | currency:'USD':true}}</td>
+                            <td class="text-right">{{!row.charge ? '' : row.charge.amount | currency:'USD':'symbol-narrow'}}</td>
                             <td>
                                 <strong [class.text-success]="row.reconCode==='OK'" [class.text-danger]="row.reconCode==='ERROR'">{{row.reconCode}}</strong>
                             </td>

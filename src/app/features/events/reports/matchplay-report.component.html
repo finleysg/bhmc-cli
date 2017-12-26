@@ -47,7 +47,7 @@
                             <td>{{row.reserved}}</td>
                             <td class="text-center">{{row.isNewMember ? 'X' : ''}}</td>
                             <td>{{row.paymentCode}}</td>
-                            <td class="text-right">{{row.eventFee | currency:'USD':true}}</td>
+                            <td class="text-right">{{row.eventFee | currency:'USD':'symbol-narrow'}}</td>
                             <td class="text-center">{{row.isNetSignup ? '' : 'X'}}</td>
                             <td class="text-center">{{row.isNetSignup ? 'X' : ''}}</td>
                         </tr>
@@ -63,7 +63,7 @@
                             <td></td>
                             <td></td>
                             <td class="text-right">Totals:</td>
-                            <td class="text-right">{{summary.eventFees | currency:'USD':true}}</td>
+                            <td class="text-right">{{summary.eventFees | currency:'USD':'symbol-narrow'}}</td>
                             <td></td>
                             <td></td>
                         </tr>

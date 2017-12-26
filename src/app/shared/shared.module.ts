@@ -22,6 +22,7 @@ import { ExpiryFormatDirective } from './payments/expiry-format.directive';
 import { CvcFormatDirective } from './payments/cvc-format.directive';
 import { CreditCardService } from './payments/credit-card.service';
 import { CreditCardForm } from './payments/credit-card.form';
+import { PortalComponent } from './portal/portal.component';
 
 @NgModule({
     imports: [
@@ -41,6 +42,7 @@ import { CreditCardForm } from './payments/credit-card.form';
         MarkdownDirective,
         TimerComponent,
         UploadComponent,
+        PortalComponent,
         OfflineRegistrationComponent,
         DownloadCsvComponent,
         ChargeComponent,
@@ -72,6 +74,7 @@ import { CreditCardForm } from './payments/credit-card.form';
         SlimLoadingBarModule,
         PaymentComponent,
         UploadComponent,
+        PortalComponent,
         OfflineRegistrationComponent,
         DownloadCsvComponent,
         ChargeComponent

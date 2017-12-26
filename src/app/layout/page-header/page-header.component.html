@@ -1,4 +1,4 @@
-<header id="header" class="current-skin">
+<header *ngIf="user" id="header" [class.auth]="user.isAuthenticated" [class.anon]="!user.isAuthenticated">
   <ul class="header-inner clearfix">
     <li id="menu-trigger" (click)="toggleSidebar()" [class.open]="isOpen">
       <div class="line-wrap">
@@ -13,9 +13,10 @@
     <li class="logo visible-xs">
       <a [routerLink]="['/home']">BHMC</a>
     </li>
-    <li class="pull-right">
-      <ul class="top-menu">
-        <li class="pull-right text-warning">{{version}}</li>
+    <li class="pull-right current-user">
+      <ul>
+          <li>v{{version}}</li>
+          <li>{{user.name}}</li>
       </ul>
     </li>
   </ul>

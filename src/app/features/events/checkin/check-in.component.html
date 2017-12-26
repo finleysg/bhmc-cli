@@ -58,7 +58,7 @@
                 </div>
                 <div class="row m-t-20">
                     <div class="col-xs-4 checkin-label">Amount Due</div>
-                    <div class="col-xs-8 checkin-label checkin-data">{{ registration.totalFees | currency:'USD':true }}</div>
+                    <div class="col-xs-8 checkin-label checkin-data">{{ registration.totalFees | currency:'USD':'symbol-narrow' }}</div>
                 </div>
             </div>
             <div class="card-footer">

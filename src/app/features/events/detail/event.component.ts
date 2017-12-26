@@ -6,6 +6,7 @@ import { UploadComponent } from '../../../shared/upload/upload.component';
 import { ToasterService } from 'angular2-toaster';
 import { tap, catchError } from 'rxjs/operators';
 import { empty } from 'rxjs/observable/empty';
+import { PortalComponent } from '../../../shared/portal/portal.component';
 
 @Component({
     moduleId: module.id,
@@ -15,6 +16,7 @@ import { empty } from 'rxjs/observable/empty';
 export class EventComponent implements OnInit {
 
     @ViewChild(UploadComponent) resultsUpload: UploadComponent;
+    @ViewChild(PortalComponent) portalModal: PortalComponent;
 
     public eventDetail: EventDetail;
     public currentUser: User;
@@ -100,6 +102,10 @@ export class EventComponent implements OnInit {
         this.resultsUpload.openType(this.teetimes, DocumentType.Teetimes);
     }
 
+    updatePortal(): void {
+        this.portalModal.open();
+    }
+    
     checkIn(): void {
         this.router.navigate(['check-in'], {relativeTo: this.route.parent});
     }

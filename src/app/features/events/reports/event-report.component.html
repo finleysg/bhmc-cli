@@ -52,12 +52,12 @@
                             <td>{{row.reserved}}</td>
                             <td>{{row.signedUpBy}}</td>
                             <td>{{row.paymentCode}}</td>
-                            <td class="text-right">{{row.eventFee | currency:'USD':true}}</td>
-                            <td class="text-right">{{row.grossSkinsFee | currency:'USD':true}}</td>
-                            <td class="text-right">{{row.netSkinsFee | currency:'USD':true}}</td>
-                            <td class="text-right">{{row.greenFee | currency:'USD':true}}</td>
-                            <td class="text-right">{{row.cartFee | currency:'USD':true}}</td>
-                            <td class="text-right">{{row.totalFees | currency:'USD':true}}</td>
+                            <td class="text-right">{{row.eventFee | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{row.grossSkinsFee | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{row.netSkinsFee | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{row.greenFee | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{row.cartFee | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{row.totalFees | currency:'USD':'symbol-narrow'}}</td>
                         </tr>
                         </tbody>
                         <tfoot>
@@ -69,12 +69,12 @@
                             <td></td>
                             <td></td>
                             <td class="text-right">Totals:</td>
-                            <td class="text-right">{{summary.eventFees | currency:'USD':true}}</td>
-                            <td class="text-right">{{summary.grossSkinsFees | currency:'USD':true}}</td>
-                            <td class="text-right">{{summary.netSkinsFees | currency:'USD':true}}</td>
-                            <td class="text-right">{{summary.greenFees | currency:'USD':true}}</td>
-                            <td class="text-right">{{summary.cartFees | currency:'USD':true}}</td>
-                            <td class="text-right">{{summary.totalFees | currency:'USD':true}}</td>
+                            <td class="text-right">{{summary.eventFees | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{summary.grossSkinsFees | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{summary.netSkinsFees | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{summary.greenFees | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{summary.cartFees | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{summary.totalFees | currency:'USD':'symbol-narrow'}}</td>
                         </tr>
                         <tr>
                             <td *ngIf="showCourse"></td>

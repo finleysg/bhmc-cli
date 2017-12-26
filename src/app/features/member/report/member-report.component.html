@@ -51,9 +51,9 @@
                             <td>{{row.reserved}}</td>
                             <td class="text-center">{{row.isNewMember ? 'X' : ''}}</td>
                             <td>{{row.paymentCode}}</td>
-                            <td class="text-right">{{row.eventFee | currency:'USD':true}}</td>
-                            <td class="text-right">{{row.greenFee | currency:'USD':true}}</td>
-                            <td class="text-right">{{row.totalFees | currency:'USD':true}}</td>
+                            <td class="text-right">{{row.eventFee | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{row.greenFee | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{row.totalFees | currency:'USD':'symbol-narrow'}}</td>
                         </tr>
                         </tbody>
                         <tfoot *ngIf="summary">
@@ -69,9 +69,9 @@
                             <td></td>
                             <td></td>
                             <td class="text-right">Totals:</td>
-                            <td class="text-right">{{summary.eventFees | currency:'USD':true}}</td>
-                            <td class="text-right">{{summary.greenFees | currency:'USD':true}}</td>
-                            <td class="text-right">{{summary.totalFees | currency:'USD':true}}</td>
+                            <td class="text-right">{{summary.eventFees | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{summary.greenFees | currency:'USD':'symbol-narrow'}}</td>
+                            <td class="text-right">{{summary.totalFees | currency:'USD':'symbol-narrow'}}</td>
                         </tr>
                         <tr>
                             <td></td>

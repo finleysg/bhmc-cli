@@ -1,3 +1,16 @@
-.current-skin {
-  background-color: green;
+.auth {
+  background-color: #4CAF50;
+}
+
+.anon {
+  background-color: #2196F3;
+}
+
+.current-user {
+    color: white;
+}
+
+.current-user ul li {
+    list-style: none;
+    text-align: right;
 }
