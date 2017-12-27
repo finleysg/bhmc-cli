@@ -9,6 +9,7 @@ export class AppConfig {
     private _stripePublicKey: string;
     private _ravenDsn: string;
     private _adminUrl: string = 'https://finleysg.pythonanywhere.com/admin';
+    private _wikiUrl: string = 'https://finleysg.pythonanywhere.com/wiki';
     private _authUrl: string = 'https://finleysg.pythonanywhere.com/rest-auth/';
     private _apiUrl: string = 'https://finleysg.pythonanywhere.com/api/';
     private _stripeUrl: string = 'https://dashboard.stripe.com/test/payments'; // TODO: move to settings object
@@ -47,6 +48,10 @@ export class AppConfig {
 
     get adminUrl(): string {
         return this._adminUrl;
+    }
+
+    get wikiUrl(): string {
+        return this._wikiUrl;
     }
 
     get authUrl(): string {

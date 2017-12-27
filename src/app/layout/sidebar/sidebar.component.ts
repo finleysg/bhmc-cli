@@ -17,6 +17,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     public user: User;
     public isOpen: boolean;
     public adminUrl: string;
+    public wikiUrl: string;
     public currentMonth: any;
     public config: AppConfig;
 
@@ -32,6 +33,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.adminUrl = this.config.adminUrl;
+        this.wikiUrl = this.config.wikiUrl;
         this._layoutService.sidebarToggle.subscribe(value => this.isOpen = value);
         this._authService.currentUser$.subscribe(user => {
             this.user = user;

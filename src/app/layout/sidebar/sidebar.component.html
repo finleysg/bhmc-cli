@@ -140,7 +140,10 @@
                 <a toggle-submenu><i class="zmdi zmdi-wrench"></i> Administration</a>
                 <ul>
                     <li>
-                        <a href="{{adminUrl}}" target="_blank">Django (backend) Admin</a>
+                        <a href="{{adminUrl}}" target="_blank">Admin Site</a>
+                    </li>
+                    <li>
+                        <a href="{{wikiUrl}}" target="_blank">Documentation</a>
                     </li>
                     <li [routerLinkActive]="['active']">
                         <a [routerLink]="['/admin', 'reporting']" (click)="close()">Reports</a>
