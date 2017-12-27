@@ -1,5 +1,5 @@
 <div class="block-header">
-    <h2>{{ eventDetail.name }} ({{ eventDetail.eventType }})</h2>
+    <h2>{{ eventDetail.name }} ({{ eventDetail.eventTypeName }})</h2>
     <ul class="actions" *ngIf="currentUser.isOfficer || currentUser.isBoardMember || currentUser.isProshopStaff">
         <li class="dropdown" dropdown>
             <a href (click)="false" dropdownToggle class="dropdown-toggle" aria-haspopup="true" aria-expanded="true">

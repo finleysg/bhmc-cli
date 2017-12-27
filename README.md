@@ -7,50 +7,24 @@ Manages the event calendar, communications, and event registration for club memb
 ## Pending Tasks for 2018
     
 ### Updates, Upgrades, Bug-Fixes, and Performance Enhancements
-* ~~Update the website project to use Angular CLI and WebPack~~
-* ~~Update website to Angular 5~~
-* ~~Move top-level features to lazy routes~~
 * Convert from Stripe v2 to v3 (possibly for 2019)
-* ~~Update the Contacts~~
-* ~~Update the email forward rules~~
 * Move all admin pages to a separate admin feature (small perf. optimization)
-* ~~Refactor data calls to use the new Angular HttpClient~~
-* ~~Refactor RXJS imports to use lettable operators~~
 * Split public and private event feature pages (small perf. optimization)
-* ~~Results page and detail page should be capable of linking to Golf Genius event portal~~
-  * ~~Each event (mid-week and majors) will have a separate event portal page in GG~~
-  * ~~i.e. Not just the document link that we have now~~
-* ~~It should be more obvious to our members when they are logged it to the site, especially on the phone~~
-* ~~Bug: New reg and login: should not be presented with a reg button~~
-* ~~Creation of new mid-week events should also create the signup slots~~
-* ~~Ensure new member registration obeys the config flag~~
-* ~~Identity and handle returning inactive member signup (redirect from failed login)~~
 * How to handle members with the same name? (typeaheads)
 * How can we gracefully handle a 503 from the api?
 * Scroll to top on mobile
 * Match play cannot handle multiple documents
 * Upload 2 day event teetimes?
-* Better home page link to tee times and results when creating announcements
-* Clean up Quick Links to include only our events
-* Remove "League" language (replace with ?)
-* Make home page api calls public on the back-end for guest users
-    * current events
-    * sponsors
-    * announcements
 
 ### New Season Roll-over
 * Add 2018 events
-* ~~Ensure online sign-up works for returning members~~
-* ~~Ensure online sign-up works for new members~~
 * Update season config settings (i.e. create online registration windows)
 
 ### Possible Enhancements/Features
-* ~~Make Contact page data driven (so it isn't a programmer task each year)~~
 * Photo Gallery
 * Registration for events open to non-members
 * Registration for meetings including optional meal
 * Skins online signup
-* ~~Payments: ability to choose whether or not to save a card~~
 * Payments: saving/selecting multiple cards
 * Where to display sponsors
 * Job to refund all for a rainout
@@ -63,6 +37,7 @@ Manages the event calendar, communications, and event registration for club memb
 * Possible new or improved reports/exports for Golf Genius integration
 
 ### Admin Training / Documentation
+* New season setup prodecures
 * Who can do admin tasks (roles)
 * How to upload results and teetimes (Dan)
 * How to add groups on the par 3s

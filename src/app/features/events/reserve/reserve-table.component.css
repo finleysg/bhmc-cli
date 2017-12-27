@@ -54,3 +54,24 @@
     color: transparent;
     opacity: .3;
 }
+.east9 {
+    background: url(../../../../assets/img/east.png) no-repeat;
+    background-position: 50% 0;
+    background-size: contain;
+    color: transparent;
+    opacity: .3;
+}
+.west9 {
+    background: url(../../../../assets/img/west.png) no-repeat;
+    background-position: 50% 0;
+    background-size: contain;
+    color: transparent;
+    opacity: .6;
+}
+.north9 {
+    background: url(../../../../assets/img/north.png) no-repeat;
+    background-position: 50% 0;
+    background-size: contain;
+    color: transparent;
+    opacity: .3;
+}

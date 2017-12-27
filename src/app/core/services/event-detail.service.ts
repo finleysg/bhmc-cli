@@ -98,7 +98,7 @@ export class EventDetailService {
 
     createSignupTable(eventDetail: EventDetail, course: any): EventSignupTable {
         // each table is a hierarchy: course --> rows --> slots
-        let table = new EventSignupTable(course.id, course.name.replace('League', ''));
+        let table = new EventSignupTable(course.id, course.name);
         if (eventDetail.eventType === EventType.League) {
             for (let h = 1; h <= eventDetail.holesPerRound; h++) {
                 const aGroups = eventDetail.registrations.filter((reg: EventRegistration) => {

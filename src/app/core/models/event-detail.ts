@@ -85,6 +85,28 @@ export class EventDetail {
         return startType;
     }
 
+    get eventTypeName(): string {
+        let name = 'Other';
+        if (this.eventType === EventType.League) {
+            name = 'Weekday Evening Event';
+        } else if (this.eventType === EventType.Major) {
+            name = 'Weekend Major';
+        } else if (this.eventType === EventType.Holiday) {
+            name = 'Holiday Proshop Event';
+        } else if (this.eventType === EventType.Meeting) {
+            name = 'Member Meeting';
+        } else if (this.eventType === EventType.BoardMeeting) {
+            name = 'Board Meeting';
+        } else if (this.eventType === EventType.State) {
+            name = 'MGA or MPGA Tournament';
+        } else if (this.eventType === EventType.Registration) {
+            name = 'Open Registration Period';
+        } else if (this.eventType === EventType.Deadline) {
+            name = 'Deadline';
+        }
+        return name;
+    }
+    
     isRegistered(memberId: number): boolean {
         if (!this.registrations) {
             return false;

@@ -26,13 +26,13 @@
                                     <p>
                                         <a class="btn btn-sm btn-primary" [routerLink]="['/member', 'login']">Login</a>
                                     </p>
-                                    <p *ngIf="config.acceptNewMembers">
+                                    <p *ngIf="newMemberRegistration">
                                         <button class="btn btn-sm btn-success" (click)="registerOnline()">New Member Registration</button>
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <div class="lv-item" *ngIf="user && user.isAuthenticated && !user.member.membershipIsCurrent">
+                        <div class="lv-item" *ngIf="returningMemberRegistration">
                             <div class="media">
                                 <div class="pull-left">
                                     <img class="lv-img-sm" src="../../assets/img/RegisterNow.png" alt="Register now!">
@@ -82,7 +82,7 @@
                                 <div class="pull-left">
                                     <img *ngIf="event.eventType.toString()=='Holiday Pro-shop Event'" class="lv-img-sm" src="../../assets/img/TeedUp.png" alt="Holiday proshop event">
                                     <img *ngIf="event.eventType.toString()=='Other'" class="lv-img-sm" src="../../assets/img/BallHole.png" alt="Other event">
-                                    <img *ngIf="event.eventType.toString()=='League'" class="lv-img-sm" src="../../assets/img/Swing.png" alt="League event">
+                                    <img *ngIf="event.eventType.toString()=='League'" class="lv-img-sm" src="../../assets/img/Swing.png" alt="Weekday evening event">
                                     <img *ngIf="event.eventType.toString()=='Weekend Major'" class="lv-img-sm" src="../../assets/img/RangeBucket.png" alt="Weekend major">
                                     <img *ngIf="event.eventType.toString()=='Member Meeting'" class="lv-img-sm" src="../../assets/img/Iron.png" alt="Member meeting">
                                 </div>
@@ -117,7 +117,7 @@
                         <a class="lv-item" href="http://bunkerhillsgolf.com/" target="_blank">
                             <div class="media">
                                 <div class="pull-left">
-                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Make tee times at Bunker Hills">
+                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Bunker Hills website home">
                                 </div>
                                 <div class="media-body">
                                     <div class="lv-title">Bunker Hills Home</div>
@@ -128,7 +128,7 @@
                         <a class="lv-item" href="http://mpga.net.p.hostingprod.com/" target="_blank">
                             <div class="media">
                                 <div class="pull-left">
-                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Make tee times at Bunker Hills">
+                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="MPGA website home">
                                 </div>
                                 <div class="media-body">
                                     <div class="lv-title">Minnesota Public Golf Association</div>
@@ -139,7 +139,7 @@
                         <a class="lv-item" href="http://www.mngolf.org/home" target="_blank">
                             <div class="media">
                                 <div class="pull-left">
-                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Make tee times at Bunker Hills">
+                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="MGA website home">
                                 </div>
                                 <div class="media-body">
                                     <div class="lv-title">Minnesota Golf Association</div>
@@ -150,7 +150,7 @@
                         <a class="lv-item" href="http://www.usga.org/rules/rules-and-decisions.html" target="_blank">
                             <div class="media">
                                 <div class="pull-left">
-                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Make tee times at Bunker Hills">
+                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="USGA Rules of Golf">
                                 </div>
                                 <div class="media-body">
                                     <div class="lv-title">Rules of Golf</div>
@@ -161,7 +161,7 @@
                         <a class="lv-item" href="https://www.ghin.com/default.aspx" target="_blank">
                             <div class="media">
                                 <div class="pull-left">
-                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="Make tee times at Bunker Hills">
+                                    <img class="lv-img-sm" src="../../assets/img/tee2.jpg" alt="GHIN website home">
                                 </div>
                                 <div class="media-body">
                                     <div class="lv-title">Handicaps (GHIN)</div>

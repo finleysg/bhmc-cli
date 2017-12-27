@@ -15,20 +15,20 @@ export class MajorResultsComponent implements OnInit {
     seniorChampion: Photo;
     years: number[];
     selectedYear: number;
-
+    thisYear: number;
+    
     constructor(private configService: ConfigService,
                 private documentService: DocumentService) {
     }
 
     // TODO: move date sort to a utility
-    // TODO: replace hard-coded years
     ngOnInit(): void {
-        this.years = [2016, 2015, 2014, 2013];
-        this.selectedYear = 2016;
+        this.thisYear = this.configService.config.year;
+        this.loadArchiveYears();
         this.documentService.getDocuments(DocumentType.Results, null, EventType.Major)
             .subscribe(docs => {
-                this.currentYear = docs.filter(d => d.year === this.configService.config.year);
-                this.archives = docs.filter(d => d.year !== this.configService.config.year);
+                this.currentYear = docs.filter(d => d.year === this.thisYear);
+                this.archives = docs.filter(d => d.year !== this.thisYear);
             });
         this.documentService.getPhotos(PhotoType.ClubChampion)
             .subscribe(pics => {
@@ -56,5 +56,15 @@ export class MajorResultsComponent implements OnInit {
                 });
                 if (f && f.length > 0) this.seniorChampion = f[0];
             });
+    }
+
+    loadArchiveYears(): void {
+        this.selectedYear = this.thisYear - 1;
+        this.years = [];
+        let year = 2013;
+        do {
+            this.years.push(year);
+            year += 1;
+        } while (year < this.thisYear);
     }
 }
