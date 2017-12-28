@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MemberService, PublicMember } from '../../../core';
+import { MemberService, PublicMember, EventDetail, EventDetailService } from '../../../core';
 import { SpinnerService } from '../../../shared/spinner/spinner.service';
+import { ConfigService } from '../../../app-config.service';
 
 @Component({
     moduleId: module.id,
@@ -10,18 +11,27 @@ import { SpinnerService } from '../../../shared/spinner/spinner.service';
 export class AccountReportComponent implements OnInit {
 
     public report: PublicMember[];
+    public signup: EventDetail;
 
     constructor(
         private spinnerService: SpinnerService,
+        private eventService: EventDetailService,
+        private configService: ConfigService,
         private memberService: MemberService) { }
 
     ngOnInit(): void {
         this.spinnerService.show('accounts');
         this.memberService.getMembers().subscribe(members => {
-            this.report = members
-            setTimeout(() => {
-                this.spinnerService.hide('accounts');
-            }, 500);
+            this.report = members;
+            this.eventService.getEventDetail(this.configService.config.registrationId).subscribe(event => {
+                this.signup = event;
+                this.report.forEach(m => {
+                    m.isRegistered = (this.signup.registrations.findIndex(r => r.memberId === m.id) >= 0);
+                });
+                setTimeout(() => {
+                    this.spinnerService.hide('accounts');
+                }, 500);
+            });
         });
     }
 
