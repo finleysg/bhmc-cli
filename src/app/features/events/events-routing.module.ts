@@ -18,8 +18,8 @@ import { EventReportComponent } from './reports/event-report.component';
 import { MatchplayReportComponent } from './reports/matchplay-report.component';
 import { CheckInReportComponent } from './reports/check-in-report.component';
 import { ReconciliationReportComponent } from './reports/reconciliation-report.component';
-import { CheckInComponent } from './checkin/check-in.component';
-import {EventLandingComponent} from "./event-landing.component";
+import { EventLandingComponent } from './event-landing.component';
+import { SkinsComponent } from './skins/skins.component';
 
 const routes: Routes = [
     // { path: 'test', children: [
@@ -27,7 +27,7 @@ const routes: Routes = [
     // ]},
   { path: '', component: EventLandingComponent, children: [
     { path: ':id', resolve: { eventDetail: EventDetailResolver }, children: [
-      { path: 'check-in', component: CheckInComponent },
+      { path: 'skins', component: SkinsComponent },
       { path: 'detail', component: EventComponent },
       { path: 'report', canActivate: [AuthGuard], component: EventReportComponent },
       { path: 'check-in-report', canActivate: [AuthGuard], component: CheckInReportComponent },

@@ -29,6 +29,7 @@ export class EventDetail {
     enablePayments: boolean;
     signupStart: any;
     signupEnd: any;
+    skinsEnd: any;
     registrationMaximum: number;
     portalUrl: string;
     documents: EventDocument[];
@@ -88,7 +89,7 @@ export class EventDetail {
     get eventTypeName(): string {
         let name = 'Other';
         if (this.eventType === EventType.League) {
-            name = 'Weekday Evening Event';
+            name = 'Weekday Event';
         } else if (this.eventType === EventType.Major) {
             name = 'Weekend Major';
         } else if (this.eventType === EventType.Holiday) {
@@ -106,7 +107,7 @@ export class EventDetail {
         }
         return name;
     }
-    
+
     isRegistered(memberId: number): boolean {
         if (!this.registrations) {
             return false;
@@ -121,7 +122,7 @@ export class EventDetail {
 
     getDocument(type: DocumentType): EventDocument {
         if (this.documents && this.documents.length > 0) {
-            let docs = this.documents.filter(d => d.type === type);
+            const docs = this.documents.filter(d => d.type === type);
             if (docs && docs.length === 1) {
                 return docs[0];
             }
@@ -143,7 +144,7 @@ export class EventDetail {
 
     get teeTimes(): EventDocument {
         if (this.documents) {
-            let document = this.documents.filter( e => {
+            const document = this.documents.filter( e => {
                 return e.type === DocumentType.Teetimes;
             });
             // TODO: what if there are more than one?
@@ -156,7 +157,7 @@ export class EventDetail {
 
     get results(): EventDocument {
         if (this.documents) {
-            let document = this.documents.filter( e => {
+            const document = this.documents.filter( e => {
                 return e.type === DocumentType.Results;
             });
             // TODO: what if there are more than one?
@@ -193,6 +194,7 @@ export class EventDetail {
         this.enablePayments = json.enable_payments;
         this.signupStart = moment(json.signup_start);
         this.signupEnd = moment(json.signup_end);
+        this.skinsEnd = moment(json.skins_end);
         this.registrationMaximum = json.registration_maximum;
         this.portalUrl = json.portal_url;
 

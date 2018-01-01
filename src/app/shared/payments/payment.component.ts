@@ -9,6 +9,7 @@ import { ConfigService } from '../../app-config.service';
 import { FormGroup } from '@angular/forms';
 import { CreditCardForm } from './credit-card.form';
 import { tap, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 
 // import { Stripe } from 'stripe';
 
@@ -52,6 +53,7 @@ export class PaymentComponent implements OnInit {
 
     @Input() registrationGroup: EventRegistrationGroup;
     @Input() eventDetail: EventDetail;
+    @Input() update: boolean;
     @Output() onClose = new EventEmitter<boolean>();
     @ViewChild('paymentModal') paymentModal: ModalDirective;
 
@@ -96,7 +98,7 @@ export class PaymentComponent implements OnInit {
             });
         }
         this.initSpinner();
-    };
+    }
 
     private toggleDisabledState() {
         if (this.cardForm) {
@@ -130,10 +132,10 @@ export class PaymentComponent implements OnInit {
     cancelPayment(): void {
         this.paymentModal.hide();
         this.onClose.emit(false);
-    };
+    }
 
     toggleSavedCard(): void {
-        if (!this.cardForm) return;
+        if (!this.cardForm) { return; }
         if (this.useSavedCard) {
             this.cardForm.patchValue({
                 number: this.savedCard.cardNumber,
@@ -163,7 +165,7 @@ export class PaymentComponent implements OnInit {
                 }
             }
         }
-    };
+    }
 
     private isCardValid(): boolean {
         return this.cardErrors.number === '' &&
@@ -174,7 +176,7 @@ export class PaymentComponent implements OnInit {
     quickPayment(): void {
         this.processStatus = ProcessingStatus.Processing;
         this.spinner.spin(this.spinnerElement);
-        this.registrationService.register(this.registrationGroup).subscribe(
+        this.submitRegistration(this.registrationGroup).subscribe(
             (conf: string) => {
                 this.successState(conf);
             },
@@ -182,7 +184,7 @@ export class PaymentComponent implements OnInit {
                 this.errorState(response);
             }
         );
-    };
+    }
 
     fullPayment(): void {
         this.processStatus = ProcessingStatus.Validating;
@@ -192,13 +194,20 @@ export class PaymentComponent implements OnInit {
             .then((token: string) => {
                 this.processStatus = ProcessingStatus.Processing;
                 this.registrationGroup.cardVerificationToken = token;
-                return this.registrationService.register(this.registrationGroup).toPromise();
+                return this.submitRegistration(this.registrationGroup).toPromise();
             }).then((conf: string) => {
                 this.successState(conf);
             }).catch((response: any) => {
                 this.errorState(response);
             });
-    };
+    }
+
+    submitRegistration(group: EventRegistrationGroup): Observable<string> {
+        if (this.update) {
+            return this.registrationService.registerUpdate(group);
+        }
+        return this.registrationService.register(group);
+    }
 
     successState(confirmation: string): void {
         this.spinner.stop();
@@ -207,7 +216,7 @@ export class PaymentComponent implements OnInit {
         this.messages.push(new ProcessingResult('Payment complete', 'text-success'));
         this.messages.push(new ProcessingResult('Confirmation #: ' + confirmation, 'text-success'));
         this.toaster.pop('success', 'Payment Complete', `Your payment for ${this.registrationGroup.payment.total} has been processed.`);
-    };
+    }
 
     errorState(message: any): void {
         this.spinner.stop();
@@ -223,7 +232,7 @@ export class PaymentComponent implements OnInit {
     }
 
     get currentState(): ProcessingState {
-        let state = new ProcessingState();
+        const state = new ProcessingState();
         switch (this.processStatus) {
             case ProcessingStatus.Validating:
                 state.text = 'Validating';
@@ -266,7 +275,7 @@ export class PaymentComponent implements OnInit {
     }
 
     private initSpinner() {
-        let options = {
+        const options = {
             lines: 17,
             length: 0,
             width: 10,

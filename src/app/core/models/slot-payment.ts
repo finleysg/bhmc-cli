@@ -35,29 +35,28 @@ export class SlotPayment {
             card_verification_token: this.cardVerificationToken,
             payment_code: this.paymentConfirmationCode,
             payment_amount: this.paymentAmount,
-            // payment_timestamp: this.paymentConfirmationDate.format('yyyy-MM-dd hh:mm:ss'),
             comment: this.comment
         };
     }
 
     updatePayment(event: EventDetail, registration: EventRegistration, original: EventRegistration) {
-        let fee: number = 0.0;
+        let fee = 0.0;
         let comment: string;
         if (!original.isEventFeePaid) {
             fee = event.eventFee;
-            comment = `event registration`
+            comment = `event registration`;
         }
         if (registration.isGrossSkinsFeePaid && !original.isGrossSkinsFeePaid) {
             fee += event.skinsFee;
-            comment = comment ? ', ' : '' + `gross skins`
+            comment = comment ? ', ' : '' + `gross skins`;
         }
         if (registration.isNetSkinsFeePaid && !original.isNetSkinsFeePaid) {
             fee += event.skinsFee;
-            comment = comment ? ', ' : '' + `net skins`
+            comment = comment ? ', ' : '' + `net skins`;
         }
         registration.totalFees = fee;
         this.comment = comment;
         this.paymentAmount = fee;
         this.slotId = registration.id;
-    };
+    }
 }

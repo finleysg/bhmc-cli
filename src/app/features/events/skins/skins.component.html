@@ -1,0 +1,71 @@
+<div class="block-header" *ngIf="eventDetail">
+    <h2 class="hidden-xs">{{eventDetail.name}}: Online Skins ({{ eventDetail.startDate.format('dddd, MMMM Do') }})</h2>
+    <h4 class="visible-xs">{{eventDetail.name}}: Online Skins ({{ eventDetail.startDate.format('MMM D') }})</h4>
+</div>
+<div class="row" *ngIf="group">
+    <div class="col-lg-4 col-md-6 col-sm-8 col-xs-12">
+        <div class="card event-card">
+            <div class="card-body card-padding">
+                <div class="row hidden-xs">
+                    <div class="col-sm-4 text-info">Member</div>
+                    <div class="col-sm-3 text-info">Gross Skins</div>
+                    <div class="col-sm-3 text-info">Net Skins</div>
+                    <div class="col-sm-2 text-info text-right">
+                        <strong>Total</strong>
+                    </div>
+                </div>
+                <div class="row m-t-10" *ngFor="let reg of group.registrations">
+                    <div class="col-sm-4 col-xs-12">
+                        <div class="input-group">
+                            <span class="read-only">{{ reg.memberName }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-4">
+                        <div class="checkbox">
+                            <label class="visible-xs-inline">Gross</label>
+                            <input type="checkbox" [(ngModel)]="reg.isGrossSkinsFeePaid" [disabled]="hasSkins(reg.id, 'gross')" (change)="updatePayment()">
+                            <i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-4">
+                        <div class="checkbox">
+                            <label class="visible-xs-inline">Net</label>
+                            <input type="checkbox" [(ngModel)]="reg.isNetSkinsFeePaid" [disabled]="hasSkins(reg.id, 'net')" (change)="updatePayment()">
+                            <i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-xs-4 text-right">{{ newFees(reg) | currency:'USD':'symbol-narrow' }}</div>
+                </div>
+                <div class="row m-t-15">
+                    <div class="col-sm-10 col-xs-8 text-right">
+                        <strong>Group total:</strong>
+                    </div>
+                    <div class="col-sm-2 col-xs-4 text-right">
+                        <strong>{{ payment.subtotal | currency:'USD':'symbol-narrow' }}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-10 col-xs-8 text-right">Transaction fee:</div>
+                    <div class="col-sm-2 col-xs-4 text-right">{{ payment.transactionFee | currency:'USD':'symbol-narrow' }}</div>
+                </div>
+                <div class="row m-t-5">
+                    <div class="col-sm-10 col-xs-8 text-right">
+                        <h4>Amount due:</h4>
+                    </div>
+                    <div class="col-sm-2 col-xs-4 text-right">
+                        <h4>{{ payment.total | currency:'USD':'symbol-narrow' }}</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="pull-right">
+                        <button class="btn btn-warning m-t-10" (click)="cancelSkins()">Cancel</button>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary m-r-10 m-t-10" (click)="openPayment()">Pay Now</button>
+                        <payment [update]="true" [registrationGroup]="paymentGroup" [eventDetail]="eventDetail" (onClose)="paymentComplete($event)"></payment>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

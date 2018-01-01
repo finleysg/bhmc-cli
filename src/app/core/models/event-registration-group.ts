@@ -23,12 +23,23 @@ export class EventRegistrationGroup {
     registrations: EventRegistration[];
     expires: any;
 
+    static create(user: User): EventRegistrationGroup {
+        const group = new EventRegistrationGroup();
+        const reg = new EventRegistration();
+        reg.isEventFeePaid = true;
+        reg.memberId = user.member.id;
+        reg.memberName = user.name;
+        group.registrations = [];
+        group.registrations.push(reg);
+        return group;
+    }
+
     get startingHoleName(): string {
         return `${this.startingHole}${this.startingOrder === 0 ? 'A' : 'B' }`;
     }
 
     get canRegister(): boolean {
-        return this.registrations && this.registrations.every( reg => { return reg.hasMember; });
+        return this.registrations && this.registrations.every(reg => reg.hasMember);
     }
 
     get paymentConfirmationDateFormatted(): string {
@@ -40,17 +51,6 @@ export class EventRegistrationGroup {
 
     hasExpired(): boolean {
         return this.expires.isBefore(moment());
-    }
-
-    static create(user: User): EventRegistrationGroup {
-        let group = new EventRegistrationGroup();
-        let reg = new EventRegistration();
-        reg.isEventFeePaid = true;
-        reg.memberId = user.member.id;
-        reg.memberName = user.name;
-        group.registrations = [];
-        group.registrations.push(reg);
-        return group;
     }
 
     fromJson(json: any): EventRegistrationGroup {
@@ -105,7 +105,7 @@ export class EventRegistrationGroup {
                 done = true;
             }
         });
-    };
+    }
 
     clearRegistration(registrationId: number): void {
         this.registrations.forEach(reg => {
@@ -119,7 +119,7 @@ export class EventRegistrationGroup {
                 reg.totalFees = 0.0;
             }
         });
-    };
+    }
 
 
     clearRegistrations(): void {
@@ -132,7 +132,7 @@ export class EventRegistrationGroup {
             reg.isCartFeePaid = false;
             reg.totalFees = 0.0;
         });
-    };
+    }
 
     updatePayment(event: EventDetail, useAlt: Boolean = false) {
         let subtotal = 0.0;
@@ -156,8 +156,8 @@ export class EventRegistrationGroup {
             }
         });
         this.payment.update(subtotal);
-    };
-    
+    }
+
     copyPayment(payment: SlotPayment): void {
         this.paymentConfirmationCode = payment.paymentConfirmationCode;
         this.paymentConfirmationDate = payment.paymentConfirmationDate;
