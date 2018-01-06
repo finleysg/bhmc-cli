@@ -68,10 +68,10 @@ export class EventComponent implements OnInit {
             !this.isRegistered;
     }
 
-    canOnlineSkins(): boolean {
-        return this.isRegistered &&
-            this.eventDetail.skinsEnd.isAfter();
-    }
+    // canOnlineSkins(): boolean {
+    //     return this.isRegistered &&
+    //         this.eventDetail.skinsEnd.isAfter();
+    // }
 
     register(): void {
         if (this.eventDetail.eventType === EventType.League) {

@@ -192,9 +192,9 @@ export class EventDetail {
         this.startDate = moment(json.start_date);
         this.startTime = json.start_time;
         this.enablePayments = json.enable_payments;
-        this.signupStart = moment(json.signup_start);
-        this.signupEnd = moment(json.signup_end);
-        this.skinsEnd = moment(json.skins_end);
+        this.signupStart = json.signup_start ? moment(json.signup_start) : null;
+        this.signupEnd = json.signup_end ? moment(json.signup_end) : null;
+        this.skinsEnd = json.skins_end ? moment(json.skins_end) : null;
         this.registrationMaximum = json.registration_maximum;
         this.portalUrl = json.portal_url;
 

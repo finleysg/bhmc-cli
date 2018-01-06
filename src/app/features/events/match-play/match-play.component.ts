@@ -1,7 +1,8 @@
 import { AppConfig } from '../../../app-config';
 import { ConfigService } from '../../../app-config.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { User, AuthenticationService, EventDetail, EventDocument, DocumentType, DocumentService } from '../../../core';
+import { User, AuthenticationService, EventDetail,
+    EventDocument, DocumentType, DocumentService } from '../../../core';
 import { ActivatedRoute } from '@angular/router';
 import { UploadComponent } from '../../../shared/upload/upload.component';
 import * as moment from 'moment';
@@ -37,11 +38,16 @@ export class MatchPlayComponent implements OnInit {
             .subscribe((data: { eventDetail: EventDetail }) => {
                 this.eventDetail = data.eventDetail;
                 this.application = this.eventDetail.getDocument(DocumentType.SignUp);
-                this.canRegister = this.currentUser.isAuthenticated && this.eventDetail.signupEnd.isAfter(moment()) && !this.currentUser.member.matchplayParticipant;
+                this.canRegister = true &&
+                    this.currentUser.isAuthenticated &&
+                    this.currentUser.member.membershipIsCurrent &&
+                    !this.currentUser.member.matchplayParticipant &&
+                    this.eventDetail.signupEnd.isAfter(moment()) &&
+                    this.eventDetail.signupStart.isBefore(moment());
             });
         this.documentService.getDocuments(this.documentType)
             .subscribe(docs => {
-                let current = docs.filter(d => d.year === this.configService.config.year && d.title.indexOf('Brackets') > 0);
+                const current = docs.filter(d => d.year === this.configService.config.year && d.title.indexOf('Brackets') > 0);
                 this.archives = docs.filter(d => d.year !== this.configService.config.year && d.title.indexOf('Brackets') > 0);
                 if (current && current.length > 0) {
                     this.currentBrackets = current[0];

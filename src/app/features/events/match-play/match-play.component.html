@@ -43,6 +43,7 @@
                 <div>
                     <a *ngIf="canRegister" [routerLink]="['register']" class="btn btn-success event-button m-r-10">Register Online</a>
                     <p *ngIf="currentUser.member.matchplayParticipant"><strong>You are registered for this event. Good luck!</strong></p>
+                    <a [routerLink]="['/events',config.matchPlayId, 'registered', '0']" class="btn btn-info">See Who's Registered</a>
                 </div>
                 <div class="card-body card-padding" *ngIf="currentBrackets">
                     <div class="list-group">
