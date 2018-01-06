@@ -61,6 +61,13 @@ export class BhmcDataService {
         });
     }
 
+    putApiRequest(resource: string, data: any): Observable<any> {
+        const url: string = this._apiUrl + resource + '/';
+        return this.http.put(url, JSON.stringify(data), {
+            headers: new HttpHeaders().set('Content-Type', 'application/json')
+        });
+    }
+
     patchApiRequest(resource: string, data: any): Observable<any> {
         const url: string = this._apiUrl + resource + '/';
         return this.http.patch(url, JSON.stringify(data), {

@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
     public friends: PublicMember[];
     public selectedMemberName: string;
     public expires: any;
-    public expiryMessage: string = 'Your reservation was cancelled because it was not completed within 10 minutes.';
+    public expiryMessage = 'Your reservation was cancelled because it was not completed within 10 minutes.';
     public isLeagueEvent: boolean;
     public hasSkins: boolean;
     private cancelling: boolean;
@@ -97,7 +97,7 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
 
     selectMember($event: TypeaheadMatch) {
         // The value in the match here is the member name (not an object)
-        let member = this.members.find(m => {
+        const member = this.members.find(m => {
             return m.name === $event.value;
         });
         this.add(member);
@@ -115,7 +115,7 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
                 if (this.eventDetail.eventType === EventType.Registration) {
                     this.authService.refreshUser();
                 }
-                let courseId = this.registrationGroup.courseSetupId ? this.registrationGroup.courseSetupId : 0;
+                const courseId = this.registrationGroup.courseSetupId ? this.registrationGroup.courseSetupId : 0;
                 this.router.navigate(['registered', courseId], { relativeTo: this.route.parent });
             });
         }
@@ -152,7 +152,7 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
             .then(() => {
                 return this.registrationService.cancelReservation(this.registrationGroup).subscribe(() => { return true; })
             })
-            .catch(() => { return false; });
+            .catch(() => false);
     }
 
     // Warn the user about leaving. We can't change the warning text or act if the user chooses to leave.

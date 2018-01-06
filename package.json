@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod --vc=true",
+    "build": "ng build --prod --vc=true && node update-version.js",
     "build-patch": "npm version patch && npm run build",
     "build-minor": "npm version minor && npm run build",
     "test": "ng test",
@@ -20,6 +20,10 @@
     "registration"
   ],
   "author": "Stuart Finley (finleysg@gmail.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finleysg/bhmc-cli.git"
+  },
   "dependencies": {
     "@angular/animations": "5.1.1",
     "@angular/common": "5.1.1",
@@ -46,7 +50,7 @@
     "zone.js": "0.8.18"
   },
   "devDependencies": {
-    "@angular/cli": "1.5.0",
+    "@angular/cli": "1.6.3",
     "@angular/compiler-cli": "5.1.1",
     "@angular/language-service": "^4.2.4",
     "@types/jasmine": "~2.5.53",
@@ -54,7 +58,8 @@
     "@types/lodash": "^4.14.74",
     "@types/node": "~6.0.60",
     "@types/stripe": "^3.0.0",
-    "codelyzer": "~3.1.1",
+    "codelyzer": "4.0.2",
+    "fs-extra": "4.0.2",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "~1.7.0",
@@ -64,6 +69,7 @@
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.1.2",
+    "replacestream": "4.0.3",
     "ts-node": "~3.2.0",
     "tslint": "5.7.0",
     "typescript": "2.4.2"

@@ -1,0 +1,4 @@
+input[type="checkbox"][disabled] + i.input-helper:after {
+    border-bottom: 2px solid #cccccc;
+    border-left: 2px solid #cccccc;
+}

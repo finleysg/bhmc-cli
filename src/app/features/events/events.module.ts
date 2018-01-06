@@ -20,6 +20,7 @@ import { CheckInReportComponent } from './reports/check-in-report.component';
 import { ReconciliationReportComponent } from './reports/reconciliation-report.component';
 import { CheckInComponent } from './checkin/check-in.component';
 import { EventLandingComponent } from './event-landing.component';
+import { SkinsComponent } from './skins/skins.component';
 
 @NgModule({
     imports: [
@@ -42,7 +43,8 @@ import { EventLandingComponent } from './event-landing.component';
         MatchplayReportComponent,
         CheckInReportComponent,
         ReconciliationReportComponent,
-        CheckInComponent
+        CheckInComponent,
+        SkinsComponent
     ],
     providers: [
         CanReserveGuard,

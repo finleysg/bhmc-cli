@@ -8,11 +8,9 @@ import { StripeCharge } from '../models/stripe-charge';
 import { SlotPayment } from '../models/slot-payment';
 import { EventRegistration } from '../models/event-registration';
 import { EventDetail } from '../models/event-detail';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, flatMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-
 import { merge } from 'lodash';
-// import * as _ from 'lodash';
 
 @Injectable()
 export class RegistrationService {
@@ -59,9 +57,19 @@ export class RegistrationService {
         );
     }
 
-
     register(group: EventRegistrationGroup): Observable<string> {
         return this.dataService.postApiRequest('registration/register', {'group': group.toJson()}).pipe(
+            map((data: any) => {
+                this.group = null; // start over
+                this.registrationGroupSource.next(this.group);
+                this.sessionRegistrations.push(group.eventId);
+                return new EventRegistrationGroup().fromJson(data).paymentConfirmationCode;
+            })
+        );
+    }
+
+    registerUpdate(group: EventRegistrationGroup): Observable<string> {
+        return this.dataService.putApiRequest('registration/register', {'group': group.toJson()}).pipe(
             map((data: any) => {
                 this.group = null; // start over
                 this.registrationGroupSource.next(this.group);
@@ -106,11 +114,7 @@ export class RegistrationService {
     getGroups(eventId: number): Observable<EventRegistrationGroup[]> {
         return this.dataService.getApiRequest('registration/groups', {event_id: eventId}).pipe(
             map((groups: any[]) => {
-                let regGroups: EventRegistrationGroup[] = [];
-                groups.forEach(g => {
-                    regGroups.push(new EventRegistrationGroup().fromJson(g));
-                });
-                return regGroups;
+                return groups.map(g => new EventRegistrationGroup().fromJson(g));
             })
         );
     }
@@ -118,11 +122,7 @@ export class RegistrationService {
     getOpenSlots(eventId: number): Observable<EventRegistration[]> {
         return this.dataService.getApiRequest('registrations', {event_id: eventId, is_open: true}).pipe(
             map((registrations: any) => {
-                let results: EventRegistration[] = [];
-                registrations.forEach((r: any) => {
-                    results.push(new EventRegistration().fromJson(r));
-                });
-                return results;
+                return registrations.map(r => new EventRegistration().fromJson(r));
             })
         );
     }
@@ -138,14 +138,26 @@ export class RegistrationService {
         );
     }
 
+    getRegistrationGroup(eventId: number, memberId: number): Observable<EventRegistrationGroup> {
+        return this.getRegistration(eventId, memberId).pipe(
+            flatMap((reg: EventRegistration) => {
+                if (reg) {
+                    return this.dataService.getApiRequest(`registration/groups/${reg.groupId}`).pipe(
+                        map((json: any) => {
+                            return new EventRegistrationGroup().fromJson(json);
+                        })
+                    );
+                } else {
+                    return of(new EventRegistrationGroup());
+                }
+            })
+        );
+    }
+
     getPayments(eventId: number): Observable<StripeCharge[]> {
         return this.dataService.getApiRequest(`registration/charges/${eventId}`).pipe(
             map((charges: any[]) => {
-                let eventCharges: StripeCharge[] = [];
-                charges.forEach(c => {
-                    eventCharges.push(new StripeCharge().fromJson(c));
-                });
-                return eventCharges;
+                return charges.map(c => new StripeCharge().fromJson(c));
             })
         );
     }
@@ -169,10 +181,10 @@ export class RegistrationService {
         };
         return this.dataService.postApiRequest('registration/reserve', payload).pipe(
             map((data: any) => {
-                let group = new EventRegistrationGroup().fromJson(data);
+                const group = new EventRegistrationGroup().fromJson(data);
                 group.registrations[0] = merge({}, group.registrations[0], registration);
                 group.copyPayment(payment);
-                group.notes = "Same-day registration";
+                group.notes = 'Same-day registration';
                 return this.dataService.postApiRequest('registration/register', {'group': group.toJson()});
             })
         );
@@ -188,12 +200,8 @@ export class RegistrationService {
 
     getSlotPayments(eventId: number): Observable<SlotPayment[]> {
         return this.dataService.getApiRequest('registration/slot-payments', {event_id: eventId}).pipe(
-            map((json: any[]) => {
-                let payments: SlotPayment[] = [];
-                json.forEach(p => {
-                    payments.push(new SlotPayment().fromJson(p));
-                });
-                return payments;
+            map((payments: any[]) => {
+                return payments.map(p => new SlotPayment().fromJson(p));
             })
         );
     }

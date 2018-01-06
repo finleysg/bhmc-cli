@@ -48,7 +48,7 @@ export class EventComponent implements OnInit {
                 this.teetimes = this.eventDetail.getDocument(DocumentType.Teetimes);
                 this.hasSkins = this.eventDetail.skinsType !== SkinsType.None;
                 this.isMajor = this.eventDetail.eventType === EventType.Major;
-                if (this.eventDetail.startType != StartType.NA) {
+                if (this.eventDetail.startType !== StartType.NA) {
                     this.startType = this.eventDetail.startType;
                 }
                 this.registrationService.isRegistered(this.eventDetail.id, this.currentUser.member.id)
@@ -68,6 +68,11 @@ export class EventComponent implements OnInit {
             !this.isRegistered;
     }
 
+    canOnlineSkins(): boolean {
+        return this.isRegistered &&
+            this.eventDetail.skinsEnd.isAfter();
+    }
+
     register(): void {
         if (this.eventDetail.eventType === EventType.League) {
             this.router.navigate(['reserve'], {relativeTo: this.route.parent});
@@ -80,6 +85,10 @@ export class EventComponent implements OnInit {
 
     registered(): void {
         this.router.navigate(['registered'], {relativeTo: this.route.parent});
+    }
+
+    skins(): void {
+        this.router.navigate(['skins'], {relativeTo: this.route.parent});
     }
 
     eventReport(): void {
@@ -105,7 +114,7 @@ export class EventComponent implements OnInit {
     updatePortal(): void {
         this.portalModal.open();
     }
-    
+
     checkIn(): void {
         this.router.navigate(['check-in'], {relativeTo: this.route.parent});
     }
@@ -133,7 +142,9 @@ export class EventComponent implements OnInit {
                                 this.toaster.pop('success', 'Groups Added', `${nbr} additional groups were added to the event`);
                             });
                         } else {
-                            this.toaster.pop('warning', 'No Groups Added', 'No additional groups were added to the event. Are the par 3s already full?');
+                            this.toaster.pop('warning',
+                                'No Groups Added',
+                                'No additional groups were added to the event. Are the par 3s already full?');
                         }
                     }),
                     catchError(err => {
