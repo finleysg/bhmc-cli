@@ -7,13 +7,21 @@ export class PublicMember {
     lastName: string;
     email: string;
     birthDate: any;
-    location: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
     phoneNumber: string;
     forwardTees: boolean;
     isActive: boolean;
     signupDate: any;
     isFriend: boolean; // only in client
     isRegistered: boolean; // only in client
+    formerClub: string; // derived from reg group in new member report
+
+    static getCsvHeader(): string {
+        return 'ID,Last Name,First Name,Email,Birth Date,Age,Gold Tees,Is Active,Date Joined';
+    }
 
     get name(): string {
         return `${this.firstName} ${this.lastName}`;
@@ -55,18 +63,19 @@ export class PublicMember {
         this.email = json.email;
         this.birthDate = moment(json.birth_date);
         this.signupDate = moment(json.date_joined);
-        this.location = json.city;
+        this.city = json.city;
         this.phoneNumber = json.phone_number;
         this.forwardTees = json.forward_tees;
         this.isActive = json.is_active;
+        this.address = json.address1;
+        this.city = json.city;
+        this.state = json.state;
+        this.zipCode = json.zip;
         return this;
     }
 
-    static getCsvHeader(): string {
-        return 'ID,Last Name,First Name,Email,Birth Date,Age,Gold Tees,Is Active,Date Joined';
-    }
-
     getCsvData(): string {
+        // tslint:disable-next-line:max-line-length
         return `${this.ghin},${this.lastName},${this.firstName},${this.email},${this.birthDateFormatted},${this.ageFormatted},${this.forwardTees ? 1 : 0},${this.isActive ? 1 : 0},${this.signupDateFormatted}`;
     }
 }
@@ -77,20 +86,21 @@ export class PrivateMember {
     ghin: string;
     handicap: number;
     handicapRevisionDate: string;
-    location: string;
     phoneNumber: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
     stripeCustomerId: string;
     saveLastCard: boolean;
     forwardTees: boolean;
-    address: string;
-    zipCode: string;
     membershipIsCurrent: boolean;
     matchplayParticipant: boolean;
 
     fromJson(json: any): PrivateMember {
         this.id = json.id;
         this.birthDate = moment(json.birth_date);
-        this.location = json.city;
+        this.city = json.city;
         this.phoneNumber = json.phone_number;
         this.ghin = json.ghin;
         this.handicap = json.handicap;
@@ -99,6 +109,7 @@ export class PrivateMember {
         this.saveLastCard = json.save_last_card;
         this.forwardTees = json.forward_tees;
         this.address = json.address1;
+        this.state = json.state;
         this.zipCode = json.zip;
         return this;
     }
@@ -107,7 +118,8 @@ export class PrivateMember {
     toJson(): any {
         return {
             'address1': this.address,
-            'city': this.location,
+            'city': this.city,
+            'state': this.state,
             'zip': this.zipCode,
             'birth_date': this.birthDate.format('YYYY-MM-DD'),
             'phone_number': this.phoneNumber,

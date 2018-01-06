@@ -9,19 +9,24 @@ import * as moment from 'moment';
 
 export enum SignupStepsEnum {
     NotStarted = 0,
+    PatronCard,
     EmailCheck,
     NameAndBirthdate,
+    Address,
     FormerClub,
     TeePreference,
     Credentials,
-    PatronCard,
-    Complete
+    Pay,
+    Complete,
+    DuplicateEmail,
+    DuplicateGhin,
+    Incomplete
 }
 
 @Injectable()
 export class SignupService {
 
-    private _numberOfSteps = 7;
+    private _numberOfSteps = 8;
     private _state: {
         steps: number[],
         currentStep: SignupStepsEnum,
@@ -75,115 +80,173 @@ export class SignupService {
         this._errorSource.next(this._errors);
     }
 
-    private addError(err: string): void {
+    addError(err: string): void {
         this._errors.push(err);
         this._errorSource.next(this._errors);
     }
 
     startSignup(): void {
         this.clearErrors();
-        this._state.currentStep = SignupStepsEnum.EmailCheck;
+        this._state.currentStep = SignupStepsEnum.PatronCard;
         this._currentState$.next(this._state);
     }
 
-    validateEmail(email: string): boolean {
+    gotoStep(step: number, user: NewUser = null): boolean {
+        let result = true;
         this.clearErrors();
-        const exists = this._members.findIndex(m => m.email.toLowerCase() === email.toLowerCase()) >= 0;
+        if (user) {
+            switch (<SignupStepsEnum>step) {
+                case SignupStepsEnum.EmailCheck:
+                    result = this.validateEmail(user);
+                    break;
+                case SignupStepsEnum.NameAndBirthdate:
+                    result = this.validateNameAndBirthdate(user);
+                    break;
+                case SignupStepsEnum.Address:
+                    result = this.validateAddress(user);
+                    break;
+                case SignupStepsEnum.FormerClub:
+                    result = this.validateGhin(user);
+                    break;
+                case SignupStepsEnum.TeePreference:
+                    result = this.validateTeePreference(user);
+                    break;
+                case SignupStepsEnum.Credentials:
+                    result = this.validateCredentials(user);
+                    break;
+                case SignupStepsEnum.PatronCard:
+                    // no-op
+                    break;
+                default:
+                    throw new Error(`step ${step} is not valid`);
+            }
+            if (result) {
+                this._state.currentStep = step + 1;
+            }
+        } else {
+            this._state.currentStep = step;
+        }
+        this._currentState$.next(this._state);
+        return result;
+    }
+
+    validateEmail(user: NewUser): boolean {
+        this.clearErrors();
+        const exists = this._members.findIndex(m => m.email.toLowerCase() === user.email.toLowerCase()) >= 0;
         if (!exists) {
-            this._state.userDetail.email = email.toLowerCase();
+            this._state.userDetail.email = user.email.toLowerCase();
             this._state.currentStep = SignupStepsEnum.NameAndBirthdate;
         } else {
             this._state.emailExists = true;
-            this.addError(`${email} already exists`)
+            this.addError(`${user.email} already exists`);
         }
-        this._currentState$.next(this._state);
         return exists;
     }
 
-    validateNameAndBirthdate(firstName: string, lastName: string, birthDate: string): boolean {
+    validateNameAndBirthdate(user: NewUser): boolean {
         this.clearErrors();
         let isValid = true;
-        if (!firstName) {
+        if (!user.firstName) {
             isValid = false;
             this.addError('a first name is required');
         }
-        if (!lastName) {
+        if (!user.lastName) {
             isValid = false;
             this.addError('a last name is required');
         }
-        if (!birthDate || !moment(birthDate).isValid()) {
+        if (!user.birthDate || !moment(user.birthDate).isValid()) {
             isValid = false;
             this.addError('a valid birth date is required');
         }
         if (isValid) {
-            this._state.userDetail.firstName = firstName;
-            this._state.userDetail.lastName = lastName;
-            this._state.userDetail.birthDate = birthDate;
-            this._state.currentStep = SignupStepsEnum.FormerClub;
+            this._state.userDetail.firstName = user.firstName;
+            this._state.userDetail.lastName = user.lastName;
+            this._state.userDetail.birthDate = user.birthDate;
+            this._state.currentStep = SignupStepsEnum.Address;
         }
-        this._currentState$.next(this._state);
         return isValid;
     }
 
-    validateGhin(ghin: string, formerClub: string): boolean {
+    validateGhin(user: NewUser): boolean {
         this.clearErrors();
         let isValid = true;
-        if (ghin) {
-            if (isNaN(<any>ghin - parseFloat(ghin))) {
+        if (user.noHandicap) {
+            user.ghin = '';
+            user.formerClubName = '';
+        } else {
+            if (!user.formerClubName) {
                 isValid = false;
-                this.addError('a GHIN must contain only numbers');
+                this.addError('please enter the name of the club where you last had a handicap');
+            }
+            if (!user.ghin) {
+                isValid = false;
+                this.addError('a GHIN is required');
             } else {
-                const exists = this._members.findIndex(m => +m.ghin === +ghin) >= 0;
-                if (exists) {
+                if (isNaN(<any>user.ghin - parseFloat(user.ghin))) {
                     isValid = false;
-                    this._state.ghinExists = true;
-                    this.addError(`${ghin} already exists`);
-                }
-                if (!formerClub) {
-                    isValid = false;
-                    this.addError('please provide the name of the club where you kept your handicap last year');
+                    this.addError('a GHIN must contain only numbers');
+                } else {
+                    const exists = this._members.findIndex(m => +m.ghin === +user.ghin) >= 0;
+                    if (exists) {
+                        isValid = false;
+                        this._state.ghinExists = true;
+                        this.addError(`${user.ghin} already exists`);
+                    }
                 }
             }
         }
         if (isValid) {
-            this._state.userDetail.ghin = ghin ? (+ghin).toString() : '';
-            this._state.userDetail.formerClubName = formerClub;
+            this._state.userDetail.ghin = user.ghin ? (+user.ghin).toString() : '';
+            this._state.userDetail.formerClubName = user.formerClubName;
             this._state.currentStep = SignupStepsEnum.TeePreference;
         }
-        this._currentState$.next(this._state);
         return isValid;
     }
-    
-    validateTeePreference(forward: boolean): boolean {
+
+    validateTeePreference(user: NewUser): boolean {
         this.clearErrors();
-        this._state.userDetail.forwardTees = forward;
+        this._state.userDetail.forwardTees = user.forwardTees;
         this._state.currentStep = SignupStepsEnum.Credentials;
-        this._currentState$.next(this._state);
         return true;
     }
-    
-    validateCredentials(username: string, password1: string, password2: string): boolean {
+
+    validateCredentials(user: NewUser): boolean {
         this.clearErrors();
         let isValid = true;
-        if (!username) {
+        if (!user.username) {
             isValid = false;
             this.addError('a unique username is required');
         }
-        if (!password1) {
+        if (!user.password1) {
             isValid = false;
             this.addError('a password is required');
         }
-        if (password1 !== password2) {
+        if (user.password1 !== user.password2) {
             isValid = false;
             this.addError('the passwords do not match');
         }
         if (isValid) {
             this._state.currentStep = SignupStepsEnum.PatronCard;
-            this._state.userDetail.username = username;
-            this._state.userDetail.password1 = password1;
-            this._state.userDetail.password2 = password2;
+            this._state.userDetail.username = user.username;
+            this._state.userDetail.password1 = user.password1;
+            this._state.userDetail.password2 = user.password2;
         }
-        this._currentState$.next(this._state);
+        return isValid;
+    }
+
+    validateAddress(user: NewUser): boolean {
+        this.clearErrors();
+        const isValid = !(!user.address || !user.city || !user.state || !user.zip || !user.phoneNumber);
+        if (isValid) {
+            this._state.userDetail.address = user.address;
+            this._state.userDetail.city = user.city;
+            this._state.userDetail.state = user.state;
+            this._state.userDetail.zip = user.zip;
+            this._state.userDetail.phoneNumber = user.phoneNumber;
+            this._state.currentStep = SignupStepsEnum.FormerClub;
+        } else {
+            this.addError('all of the address information is required for new members');
+        }
         return isValid;
     }
 }

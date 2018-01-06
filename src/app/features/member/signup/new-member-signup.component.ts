@@ -44,7 +44,7 @@ export class NewMemberSignupComponent implements OnInit {
         private authService: AuthenticationService,
         private toaster: ToasterService,
         private route: ActivatedRoute,
-        private location: Location, 
+        private location: Location,
         private registrationService: RegistrationService,
         private signupService: SignupService,
         private configService: ConfigService) {
@@ -58,12 +58,15 @@ export class NewMemberSignupComponent implements OnInit {
             this.steps = st.steps;
             this.currentStep = st.currentStep;
             this.newUser = st.userDetail;
+            if (<SignupStepsEnum>st.currentStep === SignupStepsEnum.Pay) {
+                this.pay();
+            }
             // cannot continue online registration
             if (st.emailExists) {
-                this.currentStep = 98;
+                this.currentStep = SignupStepsEnum.DuplicateEmail;
             }
             if (st.ghinExists) {
-                this.currentStep = 99;
+                this.currentStep = SignupStepsEnum.DuplicateGhin;
             }
         });
         this.route.data
@@ -71,13 +74,13 @@ export class NewMemberSignupComponent implements OnInit {
                 this.eventDetail = data.eventDetail;
                 this.paymentCalc = new EventPayment();
                 this.paymentCalc.update(this.eventDetail.eventFeeAlt + this.eventDetail.greensFee);
-                let signupDocs = this.eventDetail.getDocuments(DocumentType.SignUp);
+                const signupDocs = this.eventDetail.getDocuments(DocumentType.SignUp);
                 if (signupDocs) {
                     signupDocs.forEach(d => {  // TODO: better way to distinguish between the 2 signup docs
                         if (d.title === 'New Member Application') {
                             this.application = d;
                         }
-                    })
+                    });
                 }
             });
         this.group = EventRegistrationGroup.create(new User());
@@ -96,55 +99,44 @@ export class NewMemberSignupComponent implements OnInit {
         this.location.back();
     }
 
-    nextStep(step: number): void {
-        switch (step) {
-            case 2:
-                this.signupService.validateEmail(this.newUser.email);
-                break;
-            case 3:
-                this.signupService.validateNameAndBirthdate(this.newUser.firstName, this.newUser.lastName, this.newUser.birthDate);
-                break;
-            case 4:
-                this.signupService.validateGhin(this.newUser.ghin, this.newUser.formerClubName);
-                break;
-            case 5:
-                this.signupService.validateTeePreference(this.newUser.forwardTees);
-                break;
-            case 6:
-                this.signupService.validateCredentials(this.newUser.username, this.newUser.password1, this.newUser.password2);
-                break;
-            case 7:
-                this.register().then((isValid: boolean) => {
-                    if (isValid) {
-                        this.group = this.registrationService.currentGroup;
-                        this.group.registrations[0].isGreensFeePaid = this.includePatronCard; // greens fee holds patron fee in this case
-                        this.group.notes = 'NEW MEMBER REGISTRATION';
-                        if (this.newUser.formerClubName) {
-                            this.group.notes = this.group.notes + `\nFormer club: ${this.newUser.formerClubName}`;
-                        }
-                        if (this.newUser.forwardTees) {
-                            this.group.notes = this.group.notes + 'PLAYING FORWARD TEES';
-                        }
-                        this.group.updatePayment(this.eventDetail, true);
-                        this.paymentComponent.open();
-                    }
-                }).catch((err: any) => {
-                    this.toaster.pop('error', 'Account Creation Error', err);
-                });
-                break;
-        }
+    nextStep(): void {
+        // moving forward, we pass the current step, which is validated before
+        // allowing the user to move on
+        this.signupService.gotoStep(this.currentStep, this.newUser);
     }
 
-    prevStep(step: number): void {
-        this.signupService.clearErrors();
-        this.currentStep = step;
+    prevStep(step: number = null): void {
+        if (!step) {
+            step = this.currentStep - 1;
+        }
+        this.signupService.gotoStep(step);
+    }
+
+    pay(): void {
+        this.register().then((isValid: boolean) => {
+            if (isValid) {
+                this.group = this.registrationService.currentGroup;
+                this.group.registrations[0].isGreensFeePaid = this.includePatronCard; // greens fee holds patron fee in this case
+                this.group.notes = 'NEW MEMBER REGISTRATION';
+                if (this.newUser.formerClubName) {
+                    this.group.notes = this.group.notes + `\nFormer club: ${this.newUser.formerClubName}`;
+                }
+                if (this.newUser.forwardTees) {
+                    this.group.notes = this.group.notes + 'PLAYING FORWARD TEES';
+                }
+                this.group.updatePayment(this.eventDetail, true);
+                this.paymentComponent.open();
+            }
+        }).catch((err: any) => {
+            this.toaster.pop('error', 'Account Creation Error', err);
+        });
     }
 
     register(): Promise<boolean> {
         return this.authService.createAccount(this.newUser.toUser().toJson(this.newUser.password1)).pipe(
             flatMap(() => {
                 this.toaster.pop('info', 'Account Created', 'Your account has been created');
-                return this.authService.quietLogin(this.newUser.username, this.newUser.password1)
+                return this.authService.quietLogin(this.newUser.username, this.newUser.password1);
             }),
             flatMap(() => {
                 return this.registrationService.reserve(this.eventDetail.id);
@@ -155,6 +147,7 @@ export class NewMemberSignupComponent implements OnInit {
         ).toPromise();
     }
 
+    // called from the payment modal
     done(result: boolean): void {
         // remove any temporary auth token - user must log in
         if (result) {
@@ -165,7 +158,7 @@ export class NewMemberSignupComponent implements OnInit {
             this.registrationService.cancelReservation(this.group)
                 .subscribe(() => {
                     this.authService.resetUser();
-                    this.currentStep = 100; // incomplete
+                    this.currentStep = SignupStepsEnum.Incomplete;
                 });
         }
     }

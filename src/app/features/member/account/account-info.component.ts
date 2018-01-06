@@ -32,7 +32,7 @@ export class AccountInfoComponent implements OnInit {
             this.user.member.birthDate = moment(this.birthday);
             this.birthdayDisplay = this.user.member.birthDate.format('MM/DD/YYYY');
         } else {
-            this.birthdayDisplay = "";
+            this.birthdayDisplay = '';
             this.user.member.birthDate = null;
         }
         this.doUpdate(AccountUpdateType.PersonalInfo);
@@ -43,7 +43,7 @@ export class AccountInfoComponent implements OnInit {
     }
 
     doUpdate(updateType: AccountUpdateType) {
-        let partial = this.user.partialUpdateJson(updateType);
+        const partial = this.user.partialUpdateJson(updateType);
         this.authService.updateAccount(partial).subscribe(
             () => {
                 this.editInfo = false;

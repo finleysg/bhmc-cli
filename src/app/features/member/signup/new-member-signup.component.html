@@ -57,8 +57,36 @@
     <div class="col-lg-4 col-md-6 col-sm-6 wizard">
         <div class="card wizard-step" [attr.aria-expanded]="currentStep === 1" [@stepTransition]="getAnimationDirection(1)">
             <div class="card-header">
+                <h2>Patron Card</h2>
+                <small>Step {{currentStep}} of {{steps.length}}</small>
+            </div>
+            <div class="card-body card-padding">
+                <p>By registering online, you also have the option of paying for your Bunker Hills patron card. If you
+                qualify for the senior patron card rate, however, you must pay in person to get that reduced rate. Clear
+                the checkbox below to pay for your patron card in pro shop.</p>
+                <div class="form-group row">
+                    <div class="col-sm-3 col-xs-2">
+                        <div class="checkbox pull-right">
+                            <input type="checkbox" name="patronCard" #patronCard="ngModel" [(ngModel)]="includePatronCard"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-9 col-xs-10 m-t-10">
+                        Include the patron card fee: {{eventDetail.greensFee | currency:'USD':'symbol-narrow' }}
+                    </div>
+                </div>
+                <div class="row m-t-15" *ngIf="fieldErrors && fieldErrors.length">
+                    <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
+                </div>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" (click)="cancelSignup()">Cancel</button>
+                    <button class="btn btn-success" (click)="nextStep()">Next</button>
+                </div>
+            </div>
+        </div>
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 2" [@stepTransition]="getAnimationDirection(2)">
+            <div class="card-header">
                 <h2>Contact Email</h2>
-                <small>Step 1 of 7</small>
+                <small>Step {{currentStep}} of {{steps.length}}</small>
             </div>
             <div class="card-body card-padding">
                 <p>Please provide a contact email for club news and registration receipts (required).</p>
@@ -72,15 +100,15 @@
                     <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
                 </div>
                 <div class="row m-t-30">
-                    <button class="btn btn-default" (click)="cancelSignup()">Cancel</button>
-                    <button class="btn btn-success" (click)="nextStep(2)">Next</button>
+                    <button class="btn btn-default" (click)="prevStep()">Back</button>
+                    <button class="btn btn-success" (click)="nextStep()">Next</button>
                 </div>
             </div>
         </div>
-        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 2" [@stepTransition]="getAnimationDirection(2)">
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 3" [@stepTransition]="getAnimationDirection(3)">
             <div class="card-header">
                 <h2>Name and Birthdate</h2>
-                <small>Step 2 of 7</small>
+                <small>Step {{currentStep}} of {{steps.length}}</small>
             </div>
             <div class="card-body card-padding">
                 <p>We ask for your date of birth to ensure your eligibility for events such as our senior club championship (required).</p>
@@ -106,22 +134,74 @@
                     <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
                 </div>
                 <div class="row m-t-30">
-                    <button class="btn btn-default" (click)="prevStep(1)">Back</button>
-                    <button class="btn btn-success" (click)="nextStep(3)">Next</button>
+                    <button class="btn btn-default" (click)="prevStep()">Back</button>
+                    <button class="btn btn-success" (click)="nextStep()">Next</button>
                 </div>
             </div>
         </div>
-        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 3" [@stepTransition]="getAnimationDirection(3)">
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 4" [@stepTransition]="getAnimationDirection(4)">
             <div class="card-header">
-                <h2>Former Club</h2>
-                <small>Step 3 of 7</small>
+                <h2>Address</h2>
+                <small>Step {{currentStep}} of {{steps.length}}</small>
             </div>
             <div class="card-body card-padding">
-                <p>If you had handicap with another club last year, please enter the club name and your ghin (optional).</p>
+                <p>Enter your contact information (required).</p>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*Address:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="address" #address="ngModel" [(ngModel)]="newUser.address" placeholder="Address" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*City:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="city" #city="ngModel" [(ngModel)]="newUser.city" placeholder="City" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*State:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="state" #state="ngModel" [(ngModel)]="newUser.state" placeholder="State" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*Zip Code:</label>
+                    <div class="col-sm-9">
+                        <input type="tel" class="form-control" name="zip" #zip="ngModel" [(ngModel)]="newUser.zip" placeholder="00000" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">*Phone Number:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="phoneNumber" #phoneNumber="ngModel" [(ngModel)]="newUser.phoneNumber" placeholder="eg. 612-123-4567" required>
+                    </div>
+                </div>
+                <div class="row m-t-15" *ngIf="fieldErrors && fieldErrors.length">
+                    <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
+                </div>
+                <div class="row m-t-30">
+                    <button class="btn btn-default" (click)="prevStep()">Back</button>
+                    <button class="btn btn-success" (click)="nextStep()">Next</button>
+                </div>
+            </div>
+        </div>
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 5" [@stepTransition]="getAnimationDirection(5)">
+            <div class="card-header">
+                <h2>Former Club</h2>
+                <small>Step {{currentStep}} of {{steps.length}}</small>
+            </div>
+            <div class="card-body card-padding">
+                <p>Enter the club name and your ghin if any of the below are true</p>
+                <ol>
+                    <li>you played with a different club in the past</li>
+                    <li>played with the Bunker Hills men's club in the past</li>
+                    <li>had a handicap directly through the MGA</li>
+                    <li>had a handicap from a different state</li>
+                </ol>
                 <div class="form-group row">
                     <label class="col-sm-3 control-label">Former club:</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="formerClubName" #formerClubName="ngModel" [(ngModel)]="newUser.formerClubName" placeholder="Former club">
+                        <input type="text" class="form-control" name="formerClubName" #formerClubName="ngModel" [(ngModel)]="newUser.formerClubName" placeholder="Former club" required>
                         <div *ngIf="fieldErrors.club">
                             <small class="text-danger">{{ fieldErrors.club }}</small>
                         </div>
@@ -130,32 +210,42 @@
                 <div class="form-group row">
                     <label class="col-sm-3 control-label">GHIN:</label>
                     <div class="col-sm-9">
-                        <input type="tel" class="form-control" name="ghin" #ghin="ngModel" [(ngModel)]="newUser.ghin" placeholder="GHIN">
+                        <input type="tel" class="form-control" name="ghin" #ghin="ngModel" [(ngModel)]="newUser.ghin" placeholder="GHIN" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-3 col-xs-2">
+                        <div class="checkbox pull-right">
+                            <input type="checkbox" name="noHandicap" #noHandicap="ngModel" [(ngModel)]="newUser.noHandicap"><i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-9 col-xs-10 m-t-10">
+                        I have not had an official handicap before
                     </div>
                 </div>
                 <div class="row m-t-15" *ngIf="fieldErrors && fieldErrors.length">
                     <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
                 </div>
                 <div class="row m-t-30">
-                    <button class="btn btn-default" (click)="prevStep(2)">Back</button>
-                    <button class="btn btn-success" (click)="nextStep(4)">Next</button>
+                    <button class="btn btn-default" (click)="prevStep()">Back</button>
+                    <button class="btn btn-success" (click)="nextStep()">Next</button>
                 </div>
             </div>
         </div>
-        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 4" [@stepTransition]="getAnimationDirection(4)">
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 6" [@stepTransition]="getAnimationDirection(6)">
             <div class="card-header">
                 <h2>Tee Preference</h2>
-                <small>Step 4 of 7</small>
+                <small>Step {{currentStep}} of {{steps.length}}</small>
             </div>
             <div class="card-body card-padding">
                 <p>Please make sure you qualify to play the forward tees before selecting this option (see policy information).</p>
                 <div class="form-group row">
-                    <div class="col-sm-2">
+                    <div class="col-sm-3 col-xs-2">
                         <div class="checkbox pull-right">
                             <input type="checkbox" name="forwardTees" #forwardTees="ngModel" [(ngModel)]="newUser.forwardTees"><i class="input-helper"></i>
                         </div>
                     </div>
-                    <div class="col-sm-10 m-t-10">
+                    <div class="col-sm-9 col-xs-10 m-t-10">
                         I will play forward (gold) tees
                     </div>
                 </div>
@@ -163,15 +253,15 @@
                     <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
                 </div>
                 <div class="row m-t-30">
-                    <button class="btn btn-default" (click)="prevStep(3)">Back</button>
-                    <button class="btn btn-success" (click)="nextStep(5)">Next</button>
+                    <button class="btn btn-default" (click)="prevStep()">Back</button>
+                    <button class="btn btn-success" (click)="nextStep()">Next</button>
                 </div>
             </div>
         </div>
-        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 5" [@stepTransition]="getAnimationDirection(5)">
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 7" [@stepTransition]="getAnimationDirection(7)">
             <div class="card-header">
                 <h2>Account Credentials</h2>
-                <small>Step 5 of 7</small>
+                <small>Step {{currentStep}} of {{steps.length}}</small>
             </div>
             <div class="card-body card-padding">
                 <p>Your log in name (username) or email can be used to log into the website (required).</p>
@@ -197,40 +287,12 @@
                     <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
                 </div>
                 <div class="row m-t-30">
-                    <button class="btn btn-default" (click)="prevStep(4)">Back</button>
-                    <button class="btn btn-success" (click)="nextStep(6)">Next</button>
+                    <button class="btn btn-default" (click)="prevStep()">Back</button>
+                    <button class="btn btn-success" (click)="nextStep()">Next</button>
                 </div>
             </div>
         </div>
-        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 6" [@stepTransition]="getAnimationDirection(6)">
-            <div class="card-header">
-                <h2>Patron Card</h2>
-                <small>Step 6 of 7</small>
-            </div>
-            <div class="card-body card-padding">
-                <p>By registering online, you also have the option of paying for your Bunker Hills patron card. If you
-                qualify for the senior patron card rate, however, you must pay in person to get that reduced rate. Clear
-                the checkbox below to pay for your patron card in pro shop.</p>
-                <div class="form-group row">
-                    <div class="col-sm-2">
-                        <div class="checkbox pull-right">
-                            <input type="checkbox" name="patronCard" #patronCard="ngModel" [(ngModel)]="includePatronCard"><i class="input-helper"></i>
-                        </div>
-                    </div>
-                    <div class="col-sm-10 m-t-10">
-                        Include the patron card fee: {{eventDetail.greensFee | currency:'USD':'symbol-narrow' }}
-                    </div>
-                </div>
-                <div class="row m-t-15" *ngIf="fieldErrors && fieldErrors.length">
-                    <p class="text-danger" *ngFor="let err of fieldErrors">{{ err }}</p>
-                </div>
-                <div class="row m-t-30">
-                    <button class="btn btn-default" (click)="prevStep(5)">Back</button>
-                    <button class="btn btn-success" (click)="nextStep(7)">Next</button>
-                </div>
-            </div>
-        </div>
-        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 7" [@stepTransition]="getAnimationDirection(7)">
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 9" [@stepTransition]="getAnimationDirection(9)">
             <div class="card-header">
                 <h2>Registration Complete</h2>
             </div>
@@ -244,7 +306,7 @@
                 </div>
             </div>
         </div>
-        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 98" [@stepTransition]="getAnimationDirection(98)">
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 10" [@stepTransition]="getAnimationDirection(10)">
             <div class="card-header">
                 <h2>Email Already Registered</h2>
                 <small></small>
@@ -256,12 +318,12 @@
                     to reactive your account. Once your account is reactivated, you can log in and register for this season.</p>
                 <p>If you entered your email incorrectly, click the back button to edit your email and continue as a new member.</p>
                 <div class="row m-t-30">
-                    <button class="btn btn-default" (click)="prevStep(1)">Back</button>
+                    <button class="btn btn-default" (click)="prevStep(2)">Back</button>
                     <button class="btn btn-default" (click)="quitSignup()">Quit</button>
                 </div>
             </div>
         </div>
-        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 99" [@stepTransition]="getAnimationDirection(99)">
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 11" [@stepTransition]="getAnimationDirection(11)">
             <div class="card-header">
                 <h2>GHIN Already Registered</h2>
                 <small></small>
@@ -273,12 +335,12 @@
                     to reactive your account. Once your account is reactivated, you can log in and register for this season.</p>
                 <p>If you entered your ghin incorrectly, click the back button to edit your email and continue as a new member.</p>
                 <div class="row m-t-30">
-                    <button class="btn btn-default" (click)="prevStep(3)">Back</button>
+                    <button class="btn btn-default" (click)="prevStep(5)">Back</button>
                     <button class="btn btn-default" (click)="quitSignup()">Quit</button>
                 </div>
             </div>
         </div>
-        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 100" [@stepTransition]="getAnimationDirection(100)">
+        <div class="card wizard-step" [attr.aria-expanded]="currentStep === 12" [@stepTransition]="getAnimationDirection(12)">
             <div class="card-header">
                 <h2>Registration Incomplete</h2>
                 <small></small>

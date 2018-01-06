@@ -15,6 +15,11 @@ Manages the event calendar, communications, and event registration for club memb
 * Scroll to top on mobile
 * Match play cannot handle multiple documents
 * Upload 2 day event teetimes?
+* Note on the payment FAQ for opt in to remember card (announcement too)
+* ByLaw updates to the website
+* Dam Cup rules document or html on the dc page
+* Add green fees to online skins
+* $55 patron card fee
 
 ### Possible Enhancements/Features
 * Skins online signup
@@ -30,6 +35,7 @@ Manages the event calendar, communications, and event registration for club memb
 * Add Google Analytics and report on website usage
 * Payment report by users
 * Print styling - move print formatting to server for some reports
+* Greens notes to the membership
 
 ### Admin Training / Documentation
 * Who can do admin tasks (roles)
@@ -40,4 +46,5 @@ Manages the event calendar, communications, and event registration for club memb
 * How to change an event
 * How to publish home page announcements
 * How to export event signups
+* ByLaw updates
 * Full technical overview

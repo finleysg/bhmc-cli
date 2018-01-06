@@ -16,9 +16,9 @@ export class User {
     lastName: string;
     email: string;
     member: PrivateMember;
-    isAuthenticated: boolean = false;
-    isStaff: boolean = false;
-    isActive: boolean = false;
+    isAuthenticated = false;
+    isStaff = false;
+    isActive = false;
     groups: any[];
 
     constructor() {
@@ -30,7 +30,7 @@ export class User {
             return 'Guest';
         }
         return this.firstName + ' ' + this.lastName;
-    };
+    }
 
     get isBoardMember(): boolean {
         if (this.groups && this.groups.length > 0) {
@@ -52,7 +52,7 @@ export class User {
         }
         return false;
     }
-    
+
     fromJson(json: any): User {
         if (json) {
             this.id = json.id;
@@ -90,7 +90,10 @@ export class User {
                     'last_name': this.lastName,
                     'member': {
                         'birth_date': this.member.birthDate ? this.member.birthDate.format('YYYY-MM-DD') : null,
-                        'city': this.member.location
+                        'address1': this.member.address,
+                        'city': this.member.city,
+                        'state': this.member.state,
+                        'zip': this.member.zipCode
                     }
                 };
             case AccountUpdateType.ContactInfo:
@@ -118,7 +121,7 @@ export class User {
                     }
                 };
             default:
-                return {}
+                return {};
         }
     }
 }

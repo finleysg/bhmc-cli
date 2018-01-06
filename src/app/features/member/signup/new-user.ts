@@ -12,12 +12,17 @@ export class NewUser {
     password1: string;
     password2: string;
     forwardTees: boolean;
+    noHandicap: boolean;
     ghin: string;
     formerClubName: string;
     formerClubNumber: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
 
     toUser(): User {
-        let u = new User();
+        const u = new User();
         u.username = this.username;
         u.firstName = this.firstName;
         u.lastName = this.lastName;
@@ -26,6 +31,10 @@ export class NewUser {
         u.member.phoneNumber = this.phoneNumber;
         u.member.forwardTees = this.forwardTees;
         u.member.ghin = this.ghin;
+        u.member.address = this.address;
+        u.member.city = this.city;
+        u.member.state = this.state;
+        u.member.zipCode = this.zip;
         return u;
     }
 }

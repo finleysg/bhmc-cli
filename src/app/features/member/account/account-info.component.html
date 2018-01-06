@@ -1,17 +1,18 @@
 <div class="pmb-block">
     <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-comment-outline m-r-5"></i> My Public Information</h2>
+        <h2><i class="zmdi zmdi-comment-outline m-r-5"></i> My Public Profile</h2>
     </div>
     <div class="pmbb-body p-l-30">
         <div class="pmbb-view">
-            Currently, the only thing other members can see from your account are your name and email. The rest of this
-            tab is for possible future use. We'll keep you informed as this changes.
+            Currently, the only thing other members can see from your account are your name and email. The 
+            address information is for the GHIN system, and the remaining info (like handicap and a picture)
+            is just a placeholder for possible future use. We'll keep you informed as this changes.
         </div>
     </div>
 </div>
 <div class="pmb-block">
     <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-account m-r-5"></i> Basic Information</h2>
+        <h2><i class="zmdi zmdi-account m-r-5"></i> Personal Information</h2>
         <ul class="actions">
             <li>
                 <a class="clickable" (click)="editInfo = true" title="Update your personal information" *ngIf="!editInfo">
@@ -31,8 +32,20 @@
                 <dd>{{ birthdayDisplay }}</dd>
             </dl>
             <dl class="dl-horizontal">
-                <dt>Location</dt>
-                <dd>{{ user.member.location }}</dd>
+                <dt>Address</dt>
+                <dd>{{ user.member.address }}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>City</dt>
+                <dd>{{ user.member.city }}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>State</dt>
+                <dd>{{ user.member.state }}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>Zip</dt>
+                <dd>{{ user.member.zipCode }}</dd>
             </dl>
         </div>
 
@@ -58,10 +71,34 @@
                 </dd>
             </dl>
             <dl class="dl-horizontal">
-                <dt class="p-t-10">Location</dt>
+                <dt class="p-t-10">Address</dt>
                 <dd>
                     <div class="fg-line">
-                        <input [(ngModel)]="user.member.location" type="text" name="location" #location="ngModel" class="form-control" placeholder="Location">
+                        <input [(ngModel)]="user.member.address" type="text" name="address" #address="ngModel" class="form-control" placeholder="Location">
+                    </div>
+                </dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt class="p-t-10">City</dt>
+                <dd>
+                    <div class="fg-line">
+                        <input [(ngModel)]="user.member.city" type="text" name="location" #location="ngModel" class="form-control" placeholder="Location">
+                    </div>
+                </dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt class="p-t-10">State</dt>
+                <dd>
+                    <div class="fg-line">
+                        <input [(ngModel)]="user.member.state" type="text" name="state" #state="ngModel" class="form-control" placeholder="Location">
+                    </div>
+                </dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt class="p-t-10">Zip Code</dt>
+                <dd>
+                    <div class="fg-line">
+                        <input [(ngModel)]="user.member.zipCode" type="text" name="zipCode" #zipCode="ngModel" class="form-control" placeholder="Location">
                     </div>
                 </dd>
             </dl>

@@ -14,6 +14,7 @@ import { NewMemberSignupComponent } from './signup/new-member-signup.component';
 import { AccountReportComponent } from './report/account-report.component';
 import { MemberReportComponent } from './report/member-report.component';
 import { MemberLandingComponent } from './member-landing.component';
+import { NewMemberReportComponent } from './report/new-member-report.component';
 
 const routes: Routes = [
     {
@@ -32,6 +33,7 @@ const routes: Routes = [
             { path: 'reports', canActivate: [AuthGuard], children: [
                 { path: 'all-members', component: AccountReportComponent },
                 { path: 'current-members', component: MemberReportComponent },
+                { path: 'new-members', component: NewMemberReportComponent }
             ]}
         ]
     }

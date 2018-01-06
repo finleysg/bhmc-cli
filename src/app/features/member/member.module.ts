@@ -13,8 +13,9 @@ import { ChangePasswordComponent } from './account/change-password.component';
 import { NewMemberSignupComponent } from './signup/new-member-signup.component';
 import { AccountReportComponent } from './report/account-report.component';
 import { MemberReportComponent } from './report/member-report.component';
-import { MemberLandingComponent } from "./member-landing.component";
+import { MemberLandingComponent } from './member-landing.component';
 import { SignupService } from './signup/signup.service';
+import { NewMemberReportComponent } from './report/new-member-report.component';
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import { SignupService } from './signup/signup.service';
         NewMemberSignupComponent,
         AccountReportComponent,
         MemberReportComponent,
+        NewMemberReportComponent
     ],
     providers: [
         SignupService

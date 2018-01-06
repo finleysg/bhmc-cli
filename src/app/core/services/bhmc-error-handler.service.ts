@@ -9,7 +9,7 @@ import * as Raven from 'raven-js';
 
 @Injectable()
 export class BhmcErrorHandler extends ErrorHandler {
-    
+
     private errorSource: Subject<string>;
     public lastError$: Observable<string>;
     private config: AppConfig;
@@ -30,7 +30,7 @@ export class BhmcErrorHandler extends ErrorHandler {
     }
 
     setUserContext(user: User): void {
-        if (this.config.isLocal) return;
+        if (this.config.isLocal) { return; }
         if (user.isAuthenticated) {
             Raven.setUserContext({
                 username: user.name,
@@ -40,7 +40,7 @@ export class BhmcErrorHandler extends ErrorHandler {
     }
 
     clearUserContext(): void {
-        if (this.config.isLocal) return;
+        if (this.config.isLocal) { return; }
         Raven.setUserContext();
     }
 
@@ -66,7 +66,7 @@ export class BhmcErrorHandler extends ErrorHandler {
         this.errorSource.next(message);
         if (this.config.isLocal) {
             // TODO: handle text or blob responses
-            console.info(`${response.status}: ${JSON.stringify(response.error)}`)
+            console.log(`${response.status}: ${JSON.stringify(response.error)}`);
         } else {
             const options: any = {
                 level: 'error',
@@ -75,7 +75,7 @@ export class BhmcErrorHandler extends ErrorHandler {
                     'error': response.error
                 }
             };
-            Raven.captureMessage(message, options)
+            Raven.captureMessage(message, options);
         }
     }
 
@@ -89,7 +89,7 @@ export class BhmcErrorHandler extends ErrorHandler {
 
     logMessage(message: string): void {
         if (this.config.isLocal) {
-            console.info(message);
+            console.log(message);
         }
     }
 }
