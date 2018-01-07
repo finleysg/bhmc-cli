@@ -20,6 +20,8 @@ Manages the event calendar, communications, and event registration for club memb
 * Dam Cup rules document or html on the dc page
 * Add green fees to online skins
 * $55 patron card fee
+* Protect changes to past events
+* Validate group signup behavior for majors
 
 ### Possible Enhancements/Features
 * Skins online signup
