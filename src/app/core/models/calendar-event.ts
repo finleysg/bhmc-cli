@@ -18,7 +18,8 @@ export class CalendarEvent {
     signupEnd: any;
 
     eventTypeClass(): string {
-        return this.eventType.toString().replace(' ', '-').toLowerCase();
+        const eventClass = this.eventType.toString().replace(' ', '-').toLowerCase();
+        return eventClass.replace(' ', '-');
     }
 
     fromJson(json: any): CalendarEvent {

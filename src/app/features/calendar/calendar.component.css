@@ -132,11 +132,15 @@
 #calendar .other {
     background-color: #2196F3;
 }
+#calendar .open-registration-period {
+    background-color: purple;
+}
 
 #calendar .event-desc {
     color: #666;
     margin: 3px 0 7px 0;
     text-decoration: none;
+    cursor: pointer;
 }
 
 #calendar .today {

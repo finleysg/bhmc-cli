@@ -13,8 +13,9 @@
                     {{ eventDetail.signupStart.format('dddd, MMMM Do, h:mm a') }} - {{ eventDetail.signupEnd.format('dddd, MMMM Do, h:mm a') }}
                 </p>
                 <div [markdown]="eventDetail.description"></div>
-                <div *ngIf="application">
-                    <a [href]="application.url" target="_blank" class="btn btn-info event-button m-r-10">Offline Application</a>
+                <div class="m-t-20">
+                    <a *ngIf="application" [href]="application.url" target="_blank" class="btn btn-default event-button m-r-10">Offline Application</a>
+                    <button *ngIf="currentUser.member.membershipIsCurrent" class="btn btn-info" [routerLink]="['/events', config.registrationId, 'registered', '0']">See Who's Registered</button>
                 </div>
             </div>
         </div>
