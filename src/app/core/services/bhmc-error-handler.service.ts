@@ -49,7 +49,7 @@ export class BhmcErrorHandler extends ErrorHandler {
         if (this.config.isLocal) {
             super.handleError(err);
         } else {
-            Raven.captureException(err.originalError);
+            Raven.captureException(err);
         }
     }
 
