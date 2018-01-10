@@ -132,6 +132,10 @@ export class SignupService {
 
     validateEmail(user: NewUser): boolean {
         this.clearErrors();
+        if (!user.email) {
+            this.addError('an email is required');
+            return false;
+        }
         const exists = this._members.findIndex(m => m.email.toLowerCase() === user.email.toLowerCase()) >= 0;
         if (!exists) {
             this._state.userDetail.email = user.email.toLowerCase();
