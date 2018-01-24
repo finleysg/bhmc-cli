@@ -22,6 +22,7 @@ Manages the event calendar, communications, and event registration for club memb
 * $55 patron card fee
 * Protect changes to past events
 * Validate group signup behavior for majors
+* Need a way to refresh the stored user data without forcing a logout?
 
 ### Possible Enhancements/Features
 * Skins online signup

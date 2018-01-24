@@ -48,6 +48,7 @@ export class EventRegistration {
         this.forwardTees = json.member ? json.member.forward_tees : false;
         this.slotNumber = json.slot;
         this.startingOrder = json.starting_order;
+        // this.isEventFeePaid = json.is_event_fee_paid;
         this.isEventFeePaid = !!json.member; // default to true if member is present
         this.isGrossSkinsFeePaid = json.is_gross_skins_paid;
         this.isNetSkinsFeePaid = json.is_net_skins_paid;

@@ -38,17 +38,17 @@ export class MemberReportComponent implements OnInit {
                 this.registerService.getGroups(this.config.registrationId)
             ).subscribe(
                 results => {
-                    let members = results[0];
-                    let groups = results[1];
+                    const members = results[0];
+                    const groups = results[1];
                     this.summary = new EventDataSummary(this.eventDetail);
                     this.eventDetail.registrations.forEach(r => {
-                        let member = members.find((m: PublicMember) => {
-                            return m.id === r.memberId
+                        const member = members.find((m: PublicMember) => {
+                            return m.id === r.memberId;
                         });
-                        let group = groups.find((g: EventRegistrationGroup) => {
+                        const group = groups.find((g: EventRegistrationGroup) => {
                             return g.id === r.groupId;
                         });
-                        let row = EventData.create(this.eventDetail, group, r);
+                        const row = EventData.create(this.eventDetail, group, r);
                         if (member) { // TODO: no member would be some sort of bug
                             row.birthDate = member.birthDateFormatted;
                             row.age = member.ageFormatted;

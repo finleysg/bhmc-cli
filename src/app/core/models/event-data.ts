@@ -38,7 +38,7 @@ export class EventData {
     }
 
     static create(detail: EventDetail, group: EventRegistrationGroup, reg: EventRegistration): EventData {
-        let data = new EventData();
+        const data = new EventData();
         data.eventId = detail.id;
         data.eventName = detail.name;
         data.eventDate = detail.startDate.format('YYYY-MM-DD');
@@ -66,6 +66,9 @@ export class EventData {
                 data.reserved = group.paymentConfirmationDate.format('YYYY-MM-DD');
             }
             data.signedUpBy = group.registrant;
+            if (+group.payment.total === 0) {
+                data.eventFee = 0;
+            }
         } else {
             data.paymentCode = '';
             data.paymentDate = '';
