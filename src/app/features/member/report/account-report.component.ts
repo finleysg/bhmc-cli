@@ -36,10 +36,11 @@ export class AccountReportComponent implements OnInit {
     }
 
     exportCsv(): string {
-        let csv = PublicMember.getCsvHeader() + '\n';
+        let csv = 'GHIN,Last Name,First Name,Email,Birth Date,Age,Is Current,Is Active,Date Joined\n';
         if (this.report) {
             this.report.forEach(m => {
-                csv += m.getCsvData() + '\n';
+                // tslint:disable-next-line:max-line-length
+                csv += `${m.ghin},${m.lastName},${m.firstName},${m.email},${m.birthDateFormatted},${m.ageFormatted},${m.isRegistered ? 1 : 0},${m.isActive ? 1 : 0},${m.signupDateFormatted}` + '\n';
             });
         }
         return csv;

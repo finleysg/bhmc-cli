@@ -8,18 +8,18 @@ export class AppConfig {
     private _isLocal: boolean;
     private _stripePublicKey: string;
     private _ravenDsn: string;
-    private _adminUrl: string = 'https://finleysg.pythonanywhere.com/admin';
-    private _wikiUrl: string = 'https://finleysg.pythonanywhere.com/wiki';
-    private _authUrl: string = 'https://finleysg.pythonanywhere.com/rest-auth/';
-    private _apiUrl: string = 'https://finleysg.pythonanywhere.com/api/';
-    private _stripeUrl: string = 'https://dashboard.stripe.com/test/payments'; // TODO: move to settings object
+    private _adminUrl = 'https://finleysg.pythonanywhere.com/admin';
+    private _wikiUrl = 'https://finleysg.pythonanywhere.com/wiki';
+    private _authUrl = 'https://finleysg.pythonanywhere.com/rest-auth/';
+    private _apiUrl = 'https://finleysg.pythonanywhere.com/api/';
+    private _stripeUrl = 'https://dashboard.stripe.com/test/payments';
 
     constructor() {
         this._isLocal = window.location.hostname.indexOf('localhost') >= 0;
-        if (this._isLocal) {
-            this._authUrl = 'http://localhost:8000/rest-auth/';
-            this._apiUrl = 'http://localhost:8000/api/';
-        }
+        // if (this._isLocal) {
+        //     this._authUrl = 'http://localhost:8000/rest-auth/';
+        //     this._apiUrl = 'http://localhost:8000/api/';
+        // }
     }
 
     get year(): number {

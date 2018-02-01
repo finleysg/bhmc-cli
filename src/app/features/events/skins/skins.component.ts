@@ -61,14 +61,21 @@ export class SkinsComponent implements OnInit {
     return this.originalGroup.registrations.some(r => r.id === id && r.isGrossSkinsFeePaid);
   }
 
+  hasGreensFee(id: number): boolean {
+    return this.originalGroup.registrations.some(r => r.id === id && r.isGreensFeePaid);
+  }
+
   newFees(reg: EventRegistration): number {
     let fee = 0.0;
     const original: EventRegistration = this.originalGroup.registrations.find(r => r.id === reg.id);
+    if (original && reg.isGreensFeePaid && !original.isGreensFeePaid) {
+      fee += this.eventDetail.greensFee;
+    }
     if (original && reg.isGrossSkinsFeePaid && !original.isGrossSkinsFeePaid) {
-        fee += this.eventDetail.skinsFee;
+      fee += this.eventDetail.skinsFee;
     }
     if (original && reg.isNetSkinsFeePaid && !original.isNetSkinsFeePaid) {
-        fee += this.eventDetail.skinsFee;
+      fee += this.eventDetail.skinsFee;
     }
     return fee;
   }

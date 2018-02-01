@@ -66,6 +66,8 @@ export class EventData {
                 data.reserved = group.paymentConfirmationDate.format('YYYY-MM-DD');
             }
             data.signedUpBy = group.registrant;
+            // $0 event fee scenario:
+            // the club has a handful of honorary members who pay no season fee
             if (+group.payment.total === 0) {
                 data.eventFee = 0;
             }
