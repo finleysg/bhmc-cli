@@ -48,8 +48,8 @@ export class MemberReportComponent implements OnInit {
                         const group = groups.find((g: EventRegistrationGroup) => {
                             return g.id === r.groupId;
                         });
-                        const row = EventData.create(this.eventDetail, group, r);
-                        if (member) { // TODO: no member would be some sort of bug
+                        if (member && group) {
+                            const row = EventData.create(this.eventDetail, group, r);
                             row.birthDate = member.birthDateFormatted;
                             row.age = member.ageFormatted;
                             row.forwardTees = member.forwardTees;
@@ -57,9 +57,9 @@ export class MemberReportComponent implements OnInit {
                             if (row.isNewMember) {
                                 row.eventFee = this.eventDetail.eventFeeAlt;
                             }
+                            this.report.push(row);
+                            this.summary.updateByRow(row);
                         }
-                        this.report.push(row);
-                        this.summary.updateByRow(row);
                     });
                     setTimeout(() => {
                         this.spinnerService.hide('members');
