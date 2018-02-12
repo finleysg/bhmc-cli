@@ -33,7 +33,7 @@ export class AuthenticationService {
     ) {
         this.config = this.configService.config;
         if (!this._currentUser) {
-            let storedUser = this.getFromStorage('bhmc_user', true);
+            const storedUser = this.getFromStorage('bhmc_user', true);
             if (!storedUser) {
                 this._currentUser = new User();
                 this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser)); // session storage
@@ -142,7 +142,7 @@ export class AuthenticationService {
     updateAccount(partial: any): Observable<void> {
         return this.dataService.patchAuthRequest('user', partial).pipe(
             map(data => {
-                let user = new User().fromJson(data);
+                const user = new User().fromJson(data);
                 this.saveToStorage('bhmc_user', JSON.stringify(user));
                 this._currentUser = user;
                 this.currentUserSource.next(this._currentUser);
@@ -167,7 +167,7 @@ export class AuthenticationService {
                 this.currentUserSource.next(this._currentUser);
                 return;
             })
-         ).subscribe(() => {return;}); // no-op - force the call
+         ).subscribe(() => { return; }); // no-op - force the call
     }
 
     getUser(): Observable<User> {

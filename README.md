@@ -18,20 +18,17 @@ Manages the event calendar, communications, and event registration for club memb
 * Note on the payment FAQ for opt in to remember card (announcement too)
 * ByLaw updates to the website
 * Dam Cup rules document or html on the dc page
-* Add green fees to online skins
-* $55 patron card fee
 * Protect changes to past events
 * Validate group signup behavior for majors
 * Need a way to refresh the stored user data without forcing a logout?
 
 ### Possible Enhancements/Features
+* Job to deactivate those not signed up and clear from friends lists
 * Skins online signup
 * Job to refund all for a rainout
 * Consider using Golf Genius for the season long match play
-* Possible new or improved reports/exports for Golf Genius integration
 * Photo Gallery
 * Registration for events open to non-members
-* Registration for meetings including optional meal
 * Payments: saving/selecting multiple cards
 * Online check-in page for skins, same-day sign-up, and moving players
 * Forum: find partners, buy/sell, suggestions
@@ -39,6 +36,8 @@ Manages the event calendar, communications, and event registration for club memb
 * Payment report by users
 * Print styling - move print formatting to server for some reports
 * Greens notes to the membership
+* Expose the phone numbers on member directory
+* Graphs: age breakdown, number of years in the club
 
 ### Admin Training / Documentation
 * Who can do admin tasks (roles)

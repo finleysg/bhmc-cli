@@ -32,7 +32,9 @@ export class HomeComponent implements OnInit {
 
     ngOnInit(): void {
         this.config = this.configService.config;
-        this.eventService.getEventDetail(this.config.registrationId).subscribe(event => this.seasonEvent = event);
+        this.eventService.getEventDetail(this.config.registrationId).subscribe(event => {
+            this.seasonEvent = event;
+        });
         this.authService.currentUser$.subscribe(user => this.user = user);
         this.announcementService.currentAnnouncements().subscribe(a => this.announcements = a);
         this.calendarService.quickEvents().subscribe(e => this.eventList = e);

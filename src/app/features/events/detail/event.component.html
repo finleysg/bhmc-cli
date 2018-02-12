@@ -44,7 +44,7 @@
                 <h2>Event Details</h2>
                 <div class="hidden-xs">
                     <a *ngIf="canRegister()" (click)="register()" class="btn btn-warning event-button">Register Now</a>
-                    <!-- <a *ngIf="canOnlineSkins()" (click)="skins()" class="btn btn-warning event-button">Online Skins</a> -->
+                    <a *ngIf="canOnlineSkins()" (click)="skins()" class="btn btn-warning event-button">Online Skins</a>
                     <a *ngIf="eventDetail.canViewRegistrations" (click)="registered()" class="btn btn-info event-button m-r-10">Registered</a>
                     <a *ngIf="eventDetail.portalUrl" [href]="eventDetail.portalUrl" target="_blank" class="btn btn-info event-button m-r-10">Golf Genius</a>
                     <a *ngIf="teetimes" [href]="teetimes.url" target="_blank" class="btn btn-info event-button m-r-10">Tee Times</a>
@@ -52,7 +52,7 @@
                 </div>
                 <div class="visible-xs">
                     <a *ngIf="canRegister()" (click)="register()" class="btn btn-sm btn-warning event-button">Register Now</a>
-                    <!-- <a *ngIf="canOnlineSkins()" (click)="skins()" class="btn btn-sm btn-warning event-button">Online Skins</a> -->
+                    <a *ngIf="canOnlineSkins()" (click)="skins()" class="btn btn-sm btn-warning event-button">Online Skins</a>
                     <a *ngIf="eventDetail.canViewRegistrations" (click)="registered()" class="btn btn-sm btn-info event-button m-r-10">Registered</a>
                     <a *ngIf="eventDetail.portalUrl" [href]="eventDetail.portalUrl" target="_blank" class="btn btn-sm btn-info event-button m-r-10">Golf Genius</a>
                     <a *ngIf="teetimes" [href]="teetimes.url" target="_blank" class="btn btn-sm btn-info event-button m-r-10">Tee Times</a>

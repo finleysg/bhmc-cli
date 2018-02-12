@@ -41,13 +41,13 @@ export class SeasonSignupComponent implements OnInit {
         this.route.data
             .subscribe((data: { eventDetail: EventDetail }) => {
                 this.eventDetail = data.eventDetail;
-                let signupDocs = this.eventDetail.getDocuments(DocumentType.SignUp);
+                const signupDocs = this.eventDetail.getDocuments(DocumentType.SignUp);
                 if (signupDocs) {
                     signupDocs.forEach(d => {  // TODO: better way to distinguish between the 2 signup docs
                         if (d.title === 'Returning Member Application') {
                             this.application = d;
                         }
-                    })
+                    });
                 }
                 this.registrationGroup = EventRegistrationGroup.create(this.currentUser);
                 this.updatePayment();
@@ -72,8 +72,8 @@ export class SeasonSignupComponent implements OnInit {
         this.registrationService.reserve(this.eventDetail.id).pipe(
             tap(() => {
                 // preserve the registration choices made
-                let group = this.registrationService.currentGroup;
-                let registration = merge({}, group.registrations[0], this.registrationGroup.registrations[0]);
+                const group = this.registrationService.currentGroup;
+                const registration = merge({}, group.registrations[0], this.registrationGroup.registrations[0]);
                 this.paymentGroup = merge({}, group, this.registrationGroup);
                 this.paymentGroup.registrations[0] = registration;
                 this.updatePayment();

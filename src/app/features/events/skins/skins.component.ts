@@ -95,7 +95,8 @@ export class SkinsComponent implements OnInit {
     const registrations = [];
     for (let i = 0; i < this.originalGroup.registrations.length; i++) {
       const touched = (this.group.registrations[i].isNetSkinsFeePaid && !this.originalGroup.registrations[i].isNetSkinsFeePaid) ||
-        (this.group.registrations[i].isGrossSkinsFeePaid && !this.originalGroup.registrations[i].isGrossSkinsFeePaid);
+        (this.group.registrations[i].isGrossSkinsFeePaid && !this.originalGroup.registrations[i].isGrossSkinsFeePaid) ||
+        (this.group.registrations[i].isGreensFeePaid && !this.originalGroup.registrations[i].isGreensFeePaid);
       if (touched) {
         registrations.push(cloneDeep(this.group.registrations[i]));
       }
