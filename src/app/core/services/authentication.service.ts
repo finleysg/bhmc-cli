@@ -141,14 +141,10 @@ export class AuthenticationService {
 
     updateAccount(partial: any): Observable<void> {
         return this.dataService.patchAuthRequest('user', partial).pipe(
-            map(data => {
-                const user = new User().fromJson(data);
-                this.saveToStorage('bhmc_user', JSON.stringify(user));
-                this._currentUser = user;
-                this.currentUserSource.next(this._currentUser);
-                return;
+            tap(() => {
+                this.refreshUser();
             })
-         );
+        );
     }
 
     refreshUser(): void {
