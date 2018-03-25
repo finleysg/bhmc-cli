@@ -28,7 +28,7 @@ export class LeagueResultsComponent implements OnInit {
                 this.archives = docs.filter(d => d.year !== this.thisYear);
             });
     }
-    
+
     loadArchiveYears(): void {
         this.selectedYear = this.thisYear - 1;
         this.years = [];

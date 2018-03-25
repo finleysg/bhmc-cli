@@ -45,11 +45,9 @@
                     <p *ngIf="currentUser.member.matchplayParticipant"><strong>You are registered for this event. Good luck!</strong></p>
                     <a [routerLink]="['/events',config.matchPlayId, 'registered', '0']" class="btn btn-info">See Who's Registered</a>
                 </div>
-                <div class="card-body card-padding" *ngIf="currentBrackets">
+                <div class="card-body card-padding" *ngIf="eventDetail.portalUrl">
                     <div class="list-group">
-                        <a class="list-group-item text-center" [href]="currentBrackets.url" target="_blank">{{currentBrackets.title}}<br>
-                            <small>Last updated {{currentBrackets.lastUpdate.format('MMM D, YYYY h:mm A')}}</small>
-                        </a>
+                        <a class="list-group-item text-center" [href]="eventDetail.portalUrl" target="_blank">Match Play Portal</a>
                     </div>
                 </div>
                 <upload (onClose)="uploadComplete($event)" [documentType]="documentType"></upload>
