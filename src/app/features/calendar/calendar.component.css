@@ -102,6 +102,12 @@
     margin-top: 30px;
 }
 
+#calendar .canceled {
+    background-color: yellow;
+}
+#calendar .canceled > div > a {
+    color: black !important;    
+}
 #calendar .deadline {
     background-color: red;
 }

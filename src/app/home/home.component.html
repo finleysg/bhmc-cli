@@ -85,9 +85,10 @@
                                     <img *ngIf="event.eventType.toString()=='League'" class="lv-img-sm" src="../../assets/img/Swing.png" alt="Weekday evening event">
                                     <img *ngIf="event.eventType.toString()=='Weekend Major'" class="lv-img-sm" src="../../assets/img/RangeBucket.png" alt="Weekend major">
                                     <img *ngIf="event.eventType.toString()=='Member Meeting'" class="lv-img-sm" src="../../assets/img/Iron.png" alt="Member meeting">
+                                    <img *ngIf="event.eventType.toString()=='Canceled'" class="lv-img-sm" src="../../assets/img/canceled.png" alt="Event canceled">
                                 </div>
                                 <div class="media-body">
-                                    <div [class.highlighted]="event.eventType.toString()=='Deadline'" class="lv-title">{{ event.name }}</div>
+                                    <div [class.highlighted]="event.eventType.toString()=='Deadline'" class="lv-title">{{ event.name }} <span *ngIf="event.eventType.toString()=='Canceled'">- CANCELED</span></div>
                                     <small class="lv-small">{{ event.startDate.format('dddd, MMMM Do') }}</small>
                                 </div>
                             </div>

@@ -53,6 +53,8 @@ export class EventDetail {
             eventType = EventType.Registration;
         } else if (shortType === 'D') {
             eventType = EventType.Deadline;
+        } else if (shortType === 'X') {
+            eventType = EventType.Canceled;
         }
         return eventType;
     }
@@ -104,6 +106,8 @@ export class EventDetail {
             name = 'Open Registration Period';
         } else if (this.eventType === EventType.Deadline) {
             name = 'Deadline';
+        } else if (this.eventType === EventType.Canceled) {
+            name = 'Canceled';
         }
         return name;
     }
@@ -117,6 +121,7 @@ export class EventDetail {
 
     get canRegister(): boolean {
         return this.requiresRegistration &&
+               this.eventType !== EventType.Canceled &&
                this.registrationWindow === RegistrationWindowType.Registering;
     }
 
@@ -236,7 +241,8 @@ export enum EventType {
     Other = <any>'Other',
     State = <any>'State Tournament',
     Registration = <any>'Open Registration Period',
-    Deadline = <any>'Deadline'
+    Deadline = <any>'Deadline',
+    Canceled = <any>'Canceled'
 }
 
 export enum SkinsType {
