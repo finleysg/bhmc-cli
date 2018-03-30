@@ -27,17 +27,18 @@ export class NewMemberReportComponent implements OnInit {
         this.report = [];
         this.eventService.getEventDetail(this.config.registrationId).subscribe(event => {
             this.memberService.getMembers().subscribe(members => {
-                this.report = members.filter(m => m.signupDate.year() === this.currentYear);
+                const newMembers = members.filter(m => m.signupDate.year() === this.currentYear);
                 this.regService.getGroups(event.id).subscribe(groups => {
-                    this.report.forEach(r => {
-                        const reg: EventRegistration = event.registrations.find(x => x.memberId === r.id);
-                        if (reg) {
+                    event.registrations.forEach(r => {
+                        const newMember = newMembers.find(m => m.id === r.memberId);
+                        if (newMember) {
                             // the web service stuffs some strings into the new member reg notes
-                            r.formerClub = groups.find(g => g.id === reg.groupId).notes
+                            newMember.formerClub = groups.find(g => g.id === r.groupId).notes
                                 .replace('NEW MEMBER REGISTRATION', '')
                                 .replace('PLAYING FORWARD TEES', '')
                                 .replace('Former club:', '')
                                 .trim();
+                            this.report.push(newMember);
                         }
                     });
                 });
