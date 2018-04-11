@@ -44,16 +44,18 @@ export class MatchplayReportComponent implements OnInit {
                         const members: PublicMember[] = results[0];
                         const groups: EventRegistrationGroup[] = results[1];
                         this.eventDetail.registrations.forEach(r => {
-                            let member = members.find((m: PublicMember) => m.id === r.memberId);
-                            let group = groups.find((g: EventRegistrationGroup) => g.id === r.groupId);
-                            let row = EventData.create(this.eventDetail, group, r);
+                            const member = members.find((m: PublicMember) => m.id === r.memberId);
                             if (member) { // TODO: no member would be some sort of bug
+                                const group = groups.find((g: EventRegistrationGroup) => g.id === r.groupId);
+                                const row = EventData.create(this.eventDetail, group, r);
                                 row.forwardTees = member.forwardTees;
                                 row.isNewMember = member.signupDate.year() === this.config.year;
                                 row.isNetSignup = r.isNetSkinsFeePaid; // we used skins field to designate flight choice
+                                this.report.push(row);
+                                this.summary.updateByRow(row, true); // isMatchplay=true
+                            } else {
+                                console.log(`No member found for id ${r.memberId}`);
                             }
-                            this.report.push(row);
-                            this.summary.updateByRow(row, true); // isMatchplay=true
                         });
                         setTimeout(() => {
                             this.spinnerService.hide('match-play-rpt');
