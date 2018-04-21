@@ -24,6 +24,7 @@ export class EventData {
     age: string;
     isNewMember: boolean;
     isNetSignup: boolean;
+    isGrossSignup: boolean;
     forwardTees: boolean;
     reserved: string;
     eventFee: number;
@@ -109,7 +110,7 @@ export class EventData {
     }
 
     getMatchplayCsv(): string {
-        return `${this.memberGhin},${this.lastName},${this.firstName},${this.memberName},${this.email},${this.forwardTees ? 1 : 0},${this.reserved},${this.isNewMember ? 1 : 0},${this.paymentCode},${this.eventFee},${this.isNetSignup ? 0 : 1},${this.isNetSignup ? 1 : 0}`;
+        return `${this.memberGhin},${this.lastName},${this.firstName},${this.memberName},${this.email},${this.forwardTees ? 1 : 0},${this.reserved},${this.isNewMember ? 1 : 0},${this.paymentCode},${this.eventFee},${this.isGrossSignup ? 1 : 0},${this.isNetSignup ? 1 : 0}`;
     }
 }
 
