@@ -32,23 +32,28 @@ export class AuthenticationService {
         private errorHandler: BhmcErrorHandler
     ) {
         this.config = this.configService.config;
-        if (!this._currentUser) {
-            const storedUser = this.getFromStorage('bhmc_user', true);
-            if (!storedUser) {
-                this._currentUser = new User();
-                this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser)); // session storage
-            } else {
-                this._rememberUser = true;
-                this._currentUser = Object.assign(new User(), JSON.parse(storedUser));
-                if (this._currentUser.member && this._currentUser.member.birthDate) {
-                    this._currentUser.member.birthDate = moment(this._currentUser.member.birthDate);
-                }
-                this.errorHandler.setUserContext(this._currentUser);
-            }
-        }
+        // if (!this._currentUser) {
+        //     const storedUser = this.getFromStorage('bhmc_user', true);
+        //     if (!storedUser) {
+        //         this._currentUser = new User();
+        //         this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser)); // session storage
+        //     } else {
+        //         this._rememberUser = true;
+        //         this._currentUser = Object.assign(new User(), JSON.parse(storedUser));
+        //         if (this._currentUser.member && this._currentUser.member.birthDate) {
+        //             this._currentUser.member.birthDate = moment(this._currentUser.member.birthDate);
+        //         }
+        //         this.errorHandler.setUserContext(this._currentUser);
+        //     }
+        // }
+        this._currentUser = new User();
         this.currentUserSource = new BehaviorSubject(this._currentUser);
         this.currentUser$ = this.currentUserSource.asObservable();
         this.errorHandler.lastError$.subscribe(err => this.onError(err));
+        const token = this.getFromStorage('bhmc_token', true);
+        if (token) {
+            this.refreshUser();
+        }
     }
 
     get user(): User {
@@ -82,7 +87,7 @@ export class AuthenticationService {
             }),
             map(isParticipant => {
                 this._currentUser.member.matchplayParticipant = isParticipant;
-                this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser));
+                // this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser));
                 this.errorHandler.setUserContext(this._currentUser);
                 this.currentUserSource.next(this._currentUser);
                 return;
@@ -159,7 +164,7 @@ export class AuthenticationService {
             }),
             map(isParticipant => {
                 this._currentUser.member.matchplayParticipant = isParticipant;
-                this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser));
+                // this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser));
                 this.currentUserSource.next(this._currentUser);
                 return;
             })
@@ -189,7 +194,7 @@ export class AuthenticationService {
         this.removeFromStorage('bhmc_token');
         this._currentUser = new User();
         this.currentUserSource.next(this._currentUser);
-        this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser));
+        // this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser));
         this.errorHandler.clearUserContext();
     }
 
@@ -209,9 +214,7 @@ export class AuthenticationService {
     }
 
     private removeFromStorage(key: string, override: boolean = false): void {
-        if (this._rememberUser || override) {
-            localStorage.removeItem(key);
-        }
+        localStorage.removeItem(key);
         sessionStorage.removeItem(key);
     }
 }
