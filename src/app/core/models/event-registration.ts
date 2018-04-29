@@ -23,6 +23,7 @@ export class EventRegistration {
     isCartFeePaid: boolean;
     totalFees: number;
     status: string;
+    disableSkins: boolean;
 
     get hasMember(): boolean {
         return this.memberId > 0;

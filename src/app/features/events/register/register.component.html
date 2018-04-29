@@ -49,13 +49,13 @@
                     <div class="col-md-1 col-sm-1 col-xs-3">
                         <div class="checkbox">
                             <label class="visible-xs-inline">Gross</label>
-                            <input type="checkbox" [(ngModel)]="reg.isGrossSkinsFeePaid" [disabled]="!hasSkins" (change)="updatePayment()"><i class="input-helper"></i>
+                            <input type="checkbox" [(ngModel)]="reg.isGrossSkinsFeePaid" [disabled]="reg.disableSkins" (change)="updatePayment()"><i class="input-helper"></i>
                         </div>
                     </div>
                     <div class="col-md-1 col-sm-1 col-xs-3">
                         <div class="checkbox">
                             <label class="visible-xs-inline">Net</label>
-                            <input type="checkbox" [(ngModel)]="reg.isNetSkinsFeePaid" [disabled]="!hasSkins" (change)="updatePayment()"><i class="input-helper"></i>
+                            <input type="checkbox" [(ngModel)]="reg.isNetSkinsFeePaid" [disabled]="reg.disableSkins" (change)="updatePayment()"><i class="input-helper"></i>
                         </div>
                     </div>
                     <div class="col-md-1 col-sm-1 col-xs-3">

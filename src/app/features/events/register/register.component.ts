@@ -31,7 +31,7 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
     public expires: any;
     public expiryMessage = 'Your reservation was cancelled because it was not completed within 10 minutes.';
     public isLeagueEvent: boolean;
-    public hasSkins: boolean;
+    // public hasSkins: boolean;
     private cancelling: boolean;
 
     constructor(
@@ -50,10 +50,17 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
             .subscribe((data: { eventDetail: EventDetail }) => {
                 this.eventDetail = data.eventDetail;
                 this.isLeagueEvent = this.eventDetail.eventType === EventType.League;
-                this.hasSkins = this.eventDetail.skinsType !== SkinsType.None;
+                // this.hasSkins = this.eventDetail.skinsType !== SkinsType.None;
                 this.registrationGroup = this.registrationService.currentGroup;
                 this.expires = this.registrationGroup.expires;
                 this.registrationGroup.updatePayment(this.eventDetail);
+                this.registrationGroup.registrations.forEach(reg => {
+                    if (this.eventDetail.skinsType === SkinsType.None) {
+                        reg.disableSkins = true;
+                    } else if (this.eventDetail.skinsType === SkinsType.Team) {
+                        reg.disableSkins = (reg.slotNumber > 0);
+                    }
+                });
             });
         forkJoin([
             this.memberService.getRegisteredMembers(),

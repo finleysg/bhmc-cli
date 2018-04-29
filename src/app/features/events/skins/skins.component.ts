@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import {
   AuthenticationService, RegistrationService, EventDetail, EventRegistration,
-  SlotPayment, EventRegistrationGroup, EventPayment
+  SlotPayment, EventRegistrationGroup, EventPayment, SkinsType
 } from '../../../core';
 import { ToasterService } from 'angular2-toaster';
 import { cloneDeep } from 'lodash';
@@ -47,6 +47,13 @@ export class SkinsComponent implements OnInit {
         this.originalGroup = cloneDeep(group);
         this.group = group;
         this.payment = new EventPayment();
+        this.originalGroup.registrations.forEach(reg => {
+          if (this.eventDetail.skinsType === SkinsType.None) {
+            reg.disableSkins = true;
+          } else if (this.eventDetail.skinsType === SkinsType.Team) {
+            reg.disableSkins = (reg.slotNumber > 0);
+          }
+        });
       });
   }
 
@@ -56,9 +63,9 @@ export class SkinsComponent implements OnInit {
 
   hasSkins(id: number, skinsType: string): boolean {
     if (skinsType.toLowerCase() === 'net') {
-      return this.originalGroup.registrations.some(r => r.id === id && r.isNetSkinsFeePaid);
+      return this.originalGroup.registrations.some(r => r.id === id && (r.isNetSkinsFeePaid || r.disableSkins));
     }
-    return this.originalGroup.registrations.some(r => r.id === id && r.isGrossSkinsFeePaid);
+    return this.originalGroup.registrations.some(r => r.id === id && (r.isGrossSkinsFeePaid || r.disableSkins));
   }
 
   hasGreensFee(id: number): boolean {
