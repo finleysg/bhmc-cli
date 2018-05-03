@@ -11,7 +11,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 export class DirectoryComponent implements OnInit {
 
     private members: PublicMember[];
-    private friends: PublicMember[];
+    public friends: PublicMember[];
     public results: PublicMember[];
     public search: any;
 
