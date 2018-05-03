@@ -46,11 +46,12 @@ export class AuthenticationService {
         //         this.errorHandler.setUserContext(this._currentUser);
         //     }
         // }
+        const token = this.getFromStorage('bhmc_token', true);
         this._currentUser = new User();
+        this._currentUser.isAuthenticated = (token !== null && token !== undefined); // temporary - stops a redirect to login
         this.currentUserSource = new BehaviorSubject(this._currentUser);
         this.currentUser$ = this.currentUserSource.asObservable();
         this.errorHandler.lastError$.subscribe(err => this.onError(err));
-        const token = this.getFromStorage('bhmc_token', true);
         if (token) {
             this.refreshUser();
         }

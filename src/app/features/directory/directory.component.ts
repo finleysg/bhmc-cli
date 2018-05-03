@@ -28,7 +28,7 @@ export class DirectoryComponent implements OnInit {
             this.memberService.friends()
         ]).subscribe(
             results => {
-                this.members = results[0];
+                this.members = results[0].filter(m => m.isActive);
                 this.friends = results[1];
                 this.members.forEach(m => {
                     m.isFriend = this.friends.some(f => {
@@ -53,6 +53,8 @@ export class DirectoryComponent implements OnInit {
             this.memberService.removeFriend(member).subscribe(
                 () => {
                     member.isFriend = false;
+                    const fx = this.friends.findIndex(f => f.id === member.id);
+                    this.friends.splice(fx, 1);
                     this.toaster.pop('warning', 'Friends List', `${member.name} has been removed from your friends list`);
                 }
             );
@@ -60,6 +62,7 @@ export class DirectoryComponent implements OnInit {
             this.memberService.addFriend(member).subscribe(
                 () => {
                     member.isFriend = true;
+                    this.friends.push(member);
                     this.toaster.pop('success', 'Friends List', `${member.name} has been added to your friends list`);
                 }
             );
