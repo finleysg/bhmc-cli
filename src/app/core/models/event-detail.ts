@@ -205,7 +205,11 @@ export class EventDetail {
 
         if (json.documents && json.documents.length > 0) {
             this.documents = [];
-            json.documents.forEach((d: any) => this.documents.push(new EventDocument().fromJson(d)));
+            json.documents.forEach((d: any) => {
+                const doc = new EventDocument().fromJson(d);
+                doc.eventId = this.id;
+                this.documents.push(doc);
+            });
         }
 
         if (json.registrations && json.registrations.length > 0) {

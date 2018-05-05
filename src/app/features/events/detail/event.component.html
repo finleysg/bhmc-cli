@@ -65,8 +65,8 @@
                 <p *ngIf="eventDetail.eventTypeName === 'Canceled'" class="text-danger">
                     <strong>This event is canceled.</strong>
                 </p>
-                <p *ngIf="eventDetail.requiresRegistration && eventDetail.eventTypeName !== 'Canceled'">
-                    <strong>Registration ends</strong> {{ eventDetail.signupEnd.format('dddd, MMMM Do, h:mm a') }}
+                <p *ngIf="eventDetail.requiresRegistration && eventDetail.eventTypeName !== 'Canceled'"><strong>Registration open:</strong>
+                    {{ eventDetail.signupStart.format('dddd, MMMM Do, h:mm a') }} - {{ eventDetail.signupEnd.format('dddd, MMMM Do, h:mm a') }}
                 </p>
                 <p class="text-danger" *ngIf="isRegistered"><strong>You are registered for this event.</strong></p>
                 <div [markdown]="eventDetail.description"></div>
