@@ -39,7 +39,7 @@ export class EventComponent implements OnInit {
         private authService: AuthenticationService) { }
 
     ngOnInit(): void {
-        this.isRegistered = false;
+        this.isRegistered = true; // this might fix an IOS problem where *ngIf does not evaluate
         this.currentUser = this.authService.user;
         this.route.data
             .subscribe((data: {eventDetail: EventDetail}) => {
@@ -75,13 +75,15 @@ export class EventComponent implements OnInit {
     }
 
     register(): void {
-        if (this.eventDetail.eventType === EventType.League) {
-            this.router.navigate(['reserve'], {relativeTo: this.route.parent});
-        } else {
-            this.registrationService.reserve(this.eventDetail.id).subscribe(() => {
-                this.router.navigate(['register'], {relativeTo: this.route.parent});
-            });
-       }
+        if (!this.isRegistered) {
+            if (this.eventDetail.eventType === EventType.League) {
+                this.router.navigate(['reserve'], {relativeTo: this.route.parent});
+            } else {
+                this.registrationService.reserve(this.eventDetail.id).subscribe(() => {
+                    this.router.navigate(['register'], {relativeTo: this.route.parent});
+                });
+            }
+        }
     }
 
     registered(): void {
@@ -89,7 +91,9 @@ export class EventComponent implements OnInit {
     }
 
     skins(): void {
-        this.router.navigate(['skins'], {relativeTo: this.route.parent});
+        if (this.isRegistered) {
+            this.router.navigate(['skins'], {relativeTo: this.route.parent});
+        }
     }
 
     eventReport(): void {
