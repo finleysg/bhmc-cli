@@ -176,6 +176,7 @@ export class PaymentComponent implements OnInit {
     quickPayment(): void {
         this.processStatus = ProcessingStatus.Processing;
         this.spinner.spin(this.spinnerElement);
+        this.registrationGroup.cardVerificationToken = '';  // clear token if it exists - using customer id
         this.submitRegistration(this.registrationGroup).subscribe(
             (conf: string) => {
                 this.successState(conf);
