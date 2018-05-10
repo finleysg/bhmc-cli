@@ -64,11 +64,11 @@
     <div class="pmbb-body p-l-30">
         <div class="pmbb-view" *ngIf="!editPaymentInfo">
             <dl class="dl-horizontal">
-                <dt>Remember My Last Card</dt>
+                <dt>Use a Saved Card</dt>
                 <dd>{{ user.member.saveLastCard ? 'Yes' : 'No' }}</dd>
             </dl>
             <dl class="dl-horizontal">
-                <dt>Last Credit Card Used</dt>
+                <dt>Saved Card</dt>
                 <dd>{{ savedCard.id ? savedCard.description : 'n/a' }}</dd>
             </dl>
             <dl class="dl-horizontal">
@@ -81,12 +81,14 @@
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="saveLastCard" #saveLastCard="ngModel" class="form-control" [(ngModel)]="user.member.saveLastCard">
-                <i class="input-helper"></i> Remember the last card I use
+                <i class="input-helper"></i> Use a Saved Card
             </label>
         </div>
         <div class="m-t-30">
             <button type="button" class="btn btn-primary btn-sm" (click)="updatePaymentInfo()">Save</button>
+            <button type="button" class="btn btn-link btn-sm" (click)="updateCard()">Update Card</button>
             <button type="reset" class="btn btn-link btn-sm" (click)="canceled()">Cancel</button>
         </div>
     </form>
+    <app-saved-card (onClose)="cardSaved($event)"></app-saved-card>
 </div>

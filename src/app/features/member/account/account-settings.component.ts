@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToasterService } from 'angular2-toaster';
 import { SavedCard, User, AuthenticationService, AccountUpdateType, MemberService } from '../../../core';
+import { SavedCardComponent } from '../../../shared/payments/saved-card.component';
 
 @Component({
     moduleId: module.id,
@@ -10,10 +11,12 @@ import { SavedCard, User, AuthenticationService, AccountUpdateType, MemberServic
 })
 export class AccountSettingsComponent implements OnInit {
 
+    @ViewChild(SavedCardComponent) cardModal: SavedCardComponent;
     public savedCard: SavedCard;
     public user: User;
     public editIdentity: boolean;
     public editPaymentInfo: boolean;
+    private cardIsSaved: boolean;
 
     constructor(private authService: AuthenticationService,
                 private memberService: MemberService,
@@ -27,7 +30,18 @@ export class AccountSettingsComponent implements OnInit {
         this.route.data
             .subscribe((data: { savedCard: SavedCard }) => {
                 this.savedCard = data.savedCard;
+                this.cardIsSaved = this.savedCard.last4 && this.savedCard.last4.length === 4;
             });
+    }
+
+    updateCard(): void {
+        this.cardModal.open();
+    }
+
+    cardSaved(saved: boolean): void {
+        if (!this.cardIsSaved) {
+            this.cardIsSaved = saved;
+        }
     }
 
     updateIdentity(): void {
@@ -35,11 +49,15 @@ export class AccountSettingsComponent implements OnInit {
     }
 
     updatePaymentInfo(): void {
-        this.doUpdate(AccountUpdateType.PaymentInfo);
+        if (this.user.member.saveLastCard && !this.cardIsSaved) {
+            this.toaster.pop('error', 'Card Required', 'You will need to add a credit card first (Update Card button)');
+        } else {
+            this.doUpdate(AccountUpdateType.PaymentInfo);
+        }
     }
-    
+
     doUpdate(updateType: AccountUpdateType): void {
-        let partial = this.user.partialUpdateJson(updateType);
+        const partial = this.user.partialUpdateJson(updateType);
         this.authService.updateAccount(partial).subscribe(
             () => {
                 if (this.editIdentity) {

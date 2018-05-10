@@ -79,7 +79,7 @@ export class CreditCardForm {
             }
         }
         this.errorSource.next(this.errors);
-    };
+    }
 
     numberValidator = (control: FormControl): {[key: string]: boolean} => {
         const cardNumber = control.get('number');
@@ -90,7 +90,7 @@ export class CreditCardForm {
             }
         }
         return null;
-    };
+    }
 
     expiryValidator = (control: FormControl): {[key: string]: boolean} => {
         const exp = control.get('expiry');
@@ -101,7 +101,7 @@ export class CreditCardForm {
             }
         }
         return null;
-    };
+    }
 
     cvcValidator = (control: FormControl): {[key: string]: boolean} => {
         const cvc = control.get('cvc');
@@ -112,5 +112,5 @@ export class CreditCardForm {
             }
         }
         return null;
-    };
+    }
 }

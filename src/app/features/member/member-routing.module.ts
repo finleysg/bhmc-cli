@@ -20,7 +20,8 @@ const routes: Routes = [
     {
         path: '', component: MemberLandingComponent, children: [
             { path: 'login', component: LoginComponent },
-            { path: 'new-member-signup/:id', canActivate: [AnonGuard], resolve: { eventDetail: EventDetailResolver }, component: NewMemberSignupComponent },
+            { path: 'new-member-signup/:id', canActivate: [AnonGuard], resolve: { eventDetail: EventDetailResolver },
+                component: NewMemberSignupComponent },
             { path: 'reset-password', component: ResetPasswordComponent },
             { path: 'reset-password-complete', component: ResetPasswordCompleteComponent },
             { path: 'reset-password-confirm/:uid/:token', component: ResetPasswordConfirmComponent },

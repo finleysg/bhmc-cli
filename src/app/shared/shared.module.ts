@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
-import { RouterModule }  from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { SpinnerDirective } from './spinner/spinner.directive';
 import { SpinnerService } from './spinner/spinner.service';
 import { SpinnerButtonComponent } from './spinner/spinner-button.component';
@@ -23,6 +23,7 @@ import { CvcFormatDirective } from './payments/cvc-format.directive';
 import { CreditCardService } from './payments/credit-card.service';
 import { CreditCardForm } from './payments/credit-card.form';
 import { PortalComponent } from './portal/portal.component';
+import { SavedCardComponent } from './payments/saved-card.component';
 
 @NgModule({
     imports: [
@@ -48,7 +49,8 @@ import { PortalComponent } from './portal/portal.component';
         ChargeComponent,
         CreditCardFormatDirective,
         ExpiryFormatDirective,
-        CvcFormatDirective
+        CvcFormatDirective,
+        SavedCardComponent
     ],
     providers: [
         SpinnerService,
@@ -77,7 +79,8 @@ import { PortalComponent } from './portal/portal.component';
         PortalComponent,
         OfflineRegistrationComponent,
         DownloadCsvComponent,
-        ChargeComponent
+        ChargeComponent,
+        SavedCardComponent
     ]
 })
 export class SharedModule { }

@@ -1,0 +1,23 @@
+.message-pane {
+    height: 90px;
+    overflow: auto;
+}
+
+.modal-header > h3 {
+    color: #ffffff;
+}
+
+.modal-header > small {
+    color: #ffffff;
+}
+
+span#spinner-icon {
+    height: 15px;
+    width: 15px;
+}
+
+#spinner-span {
+    position: relative;
+    margin-right: 10px;
+    margin-top: -10px;
+}

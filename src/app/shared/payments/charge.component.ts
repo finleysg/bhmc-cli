@@ -6,6 +6,7 @@ import { ConfigService } from '../../app-config.service';
 
 @Component({
     moduleId: module.id,
+    // tslint:disable-next-line:component-selector
     selector: 'charge',
     templateUrl: 'charge.component.html',
     // styleUrls: ['charge.component.css']
@@ -27,22 +28,22 @@ export class ChargeComponent implements OnInit {
 
     ngOnInit() {
         this.charge = new StripeCharge();
-    };
+    }
 
     open(charge: StripeCharge): void {
         this.charge = charge;
         this.stripeUrl = `${this.config.stripeUrl}/${this.charge.id}`;
         this.chargeModal.show();
-    };
+    }
 
     opened(): void {
         if (this.charge) {
             console.log('opened');
         }
-    };
+    }
 
     close(): void {
         this.chargeModal.hide();
         this.onClose.emit(true);
-    };
+    }
 }

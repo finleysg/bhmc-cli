@@ -69,4 +69,8 @@ export class MemberService {
             })
         );
     }
+
+    saveNewCard(token: string): Observable<any> {
+        return this.dataService.postApiRequest('stripe/card', token);
+    }
 }

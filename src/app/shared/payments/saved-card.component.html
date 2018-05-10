@@ -1,0 +1,60 @@
+<div>
+<div bsModal (onShown)="onShown()" #cardModal="bs-modal" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bgm-teal">
+                <h3 class="modal-title">Enter Card Details</h3>
+                <span id="spinner-span" class="pull-right"></span>
+            </div>
+            <div class="modal-body" *ngIf="cardForm">
+                <form [formGroup]="cardForm" novalidate>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group m-t-30" [class.has-error]="cardErrors.number">
+                            <label for="number">Card Number</label>
+                            <input id="number" type="tel" class="form-control input-lg"
+                                   formControlName="number" ccNumber
+                                   placeholder="Credit Card Number">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-7">
+                        <div class="form-group fg-line" [class.has-error]="cardErrors.expiry">
+                            <label for="expiry">Exp Date</label>
+                            <input id="expiry" type="tel" class="form-control input-lg"
+                                   formControlName="expiry" ccExp
+                                   placeholder="MM/YY">
+                        </div>
+                    </div>
+                    <div class="col-xs-5 pull-right" [class.has-error]="cardErrors.cvc">
+                        <div class="form-registrationGroup fg-line">
+                            <label>CV Code</label>
+                            <input id="cvc" type="tel" class="form-control input-lg"
+                                   formControlName="cvc" ccCVC
+                                   placeholder="CVC">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 message-pane">
+                        <ul class="clist clist-error">
+                            <li *ngIf="cardErrors.number" class="text-danger">{{ cardErrors.number }}</li>
+                            <li *ngIf="cardErrors.expiry" class="text-danger">{{ cardErrors.expiry }}</li>
+                            <li *ngIf="cardErrors.cvc" class="text-danger">{{ cardErrors.cvc }}</li>
+                        </ul>
+                        <ul class="clist clist-error">
+                            <li *ngFor="let msg of messages" class="text-danger">{{ msg }}</li>
+                        </ul>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" (click)="saveCard()">Save Card</button>
+                <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
