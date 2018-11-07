@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PublicMember } from '../models/member';
 import { BhmcDataService } from './bhmc-data.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { SavedCard } from '../models/saved-card';
 import { map } from 'rxjs/operators';
 

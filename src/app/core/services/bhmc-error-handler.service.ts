@@ -3,8 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ConfigService } from '../../app-config.service';
 import { AppConfig } from '../../app-config';
 import { User } from '../models/user';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable ,  Subject } from 'rxjs';
 import * as Raven from 'raven-js';
 
 @Injectable()

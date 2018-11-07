@@ -4,8 +4,7 @@ import { Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@a
 import { EventDetail, RegistrationWindowType } from '../models/event-detail';
 import { BhmcErrorHandler } from './bhmc-error-handler.service';
 import { map, catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable ,  of } from 'rxjs';
 
 @Injectable()
 export class EventDetailResolver implements Resolve<EventDetail> {

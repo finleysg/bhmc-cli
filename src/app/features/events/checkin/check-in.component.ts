@@ -5,7 +5,7 @@ import { AuthenticationService, EventDetail, MemberService, PublicMember, EventR
 import { TypeaheadMatch, ModalDirective } from 'ngx-bootstrap';
 import { ToasterService } from 'angular2-toaster';
 import { map, tap, catchError } from 'rxjs/operators';
-import { empty } from 'rxjs/observable/empty';
+import { empty } from 'rxjs';
 import { clone } from 'lodash';
 
 @Component({
@@ -61,7 +61,7 @@ export class CheckInComponent implements OnInit {
         this.currentMember = $event.item;
         this.findRegistration($event.item);
         this.payment = new SlotPayment();
-        this.payment.paymentConfirmationCode = "Cash";
+        this.payment.paymentConfirmationCode = 'Cash';
         this.payment.recordingMemberId = this.authService.user.member.id;
         this.selectedMemberName = '';
     }

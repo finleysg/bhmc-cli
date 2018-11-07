@@ -1,6 +1,6 @@
 import { ElementRef, OnInit, OnDestroy, Input, Directive } from '@angular/core';
 import { SpinnerService } from './spinner.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 declare let Spinner: any;
 

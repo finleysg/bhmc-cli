@@ -7,7 +7,7 @@ import { ToasterService } from 'angular2-toaster';
 import { ConfigService } from '../../../app-config.service';
 import { AppConfig } from '../../../app-config';
 import { tap, catchError } from 'rxjs/operators';
-import { empty } from 'rxjs/observable/empty';
+import { empty } from 'rxjs';
 import { merge } from 'lodash';
 
 @Component({
@@ -60,6 +60,7 @@ export class SeasonSignupComponent implements OnInit {
 
     toggleNotes() {
         if (this.forwardTees) {
+            // tslint:disable-next-line:max-line-length
             this.registrationGroup.notes = this.registrationGroup.notes ? 'PLAYING FORWARD TEES\n' + this.registrationGroup.notes : 'PLAYING FORWARD TEES';
         } else {
             if (this.registrationGroup.notes) {
