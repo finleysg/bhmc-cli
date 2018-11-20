@@ -7,11 +7,12 @@ import { FormGroup } from '@angular/forms';
 import { OfflineRegistration } from './offline-registration';
 import { OfflineRegistrationForm } from './offline-registration-form.service';
 import { TypeaheadMatch } from 'ngx-bootstrap';
-import { empty } from 'rxjs/observable/empty';
+import { empty } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 
 @Component({
     moduleId: module.id,
+    // tslint:disable-next-line:component-selector
     selector: 'offline-registration',
     templateUrl: 'offline-registration.component.html',
     styleUrls: ['offline-registration.component.css']
@@ -50,7 +51,7 @@ export class OfflineRegistrationComponent implements OnInit {
 
     addPlayer($event: TypeaheadMatch): void {
         // The value in the match here is the member name (not an object)
-        let member = this.members.find(m => {
+        const member = this.members.find(m => {
             return m.name === $event.value;
         });
         this.registration.members.push(member);
@@ -68,7 +69,7 @@ export class OfflineRegistrationComponent implements OnInit {
         this.registrationService.reserve(this.eventDetail.id).pipe(
             map(() => {
                 // fill out the group and registrations
-                let group = this.registrationService.currentGroup;
+                const group = this.registrationService.currentGroup;
                 group.paymentConfirmationCode = this.registration.paymentNotes;
                 group.payment = new EventPayment();
                 group.payment.total = this.registration.paymentAmount;

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BhmcDataService } from './bhmc-data.service';
 import { PasswordReset } from '../models/password-reset';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable ,  BehaviorSubject ,  of } from 'rxjs';
 import { User } from '../models/user';
 import { Cookie } from 'ng2-cookies';
 import { MemberService } from './member.service';
@@ -10,7 +9,6 @@ import { ConfigService } from '../../app-config.service';
 import { AppConfig } from '../../app-config';
 import { BhmcErrorHandler } from './bhmc-error-handler.service';
 import { map, mergeMap, catchError, tap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 
 import * as moment from 'moment';
 

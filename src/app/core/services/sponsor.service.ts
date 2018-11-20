@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BhmcDataService } from './bhmc-data.service';
 import { Sponsor } from '../models/sponsor';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()

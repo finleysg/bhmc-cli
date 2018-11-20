@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PublicMember, MemberService } from '../../core';
 import { ToasterService } from 'angular2-toaster';
-import { forkJoin } from 'rxjs/observable/forkJoin';
+import { forkJoin } from 'rxjs';
 
 @Component({
     moduleId: module.id,

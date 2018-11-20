@@ -10,7 +10,6 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { TimerComponent } from './timer/timer.component';
-import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
 import { PaymentComponent } from './payments/payment.component';
 import { UploadComponent } from './upload/upload.component';
 import { OfflineRegistrationComponent } from './offline-register/offline-registration.component';
@@ -33,8 +32,7 @@ import { SavedCardComponent } from './payments/saved-card.component';
         RouterModule,
         TypeaheadModule.forRoot(),
         ModalModule.forRoot(),
-        BsDropdownModule.forRoot(),
-        SlimLoadingBarModule.forRoot()
+        BsDropdownModule.forRoot()
     ],
     declarations: [
         PaymentComponent,
@@ -73,7 +71,6 @@ import { SavedCardComponent } from './payments/saved-card.component';
         TypeaheadModule,
         ModalModule,
         BsDropdownModule,
-        SlimLoadingBarModule,
         PaymentComponent,
         UploadComponent,
         PortalComponent,

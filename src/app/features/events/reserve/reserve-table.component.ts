@@ -6,7 +6,7 @@ import { RegistrationSlot, SlotStatus } from '../models/registration-slot';
 import { RegistrationRow } from '../models/registration-row';
 import { ToasterService } from 'angular2-toaster';
 import { tap, catchError } from 'rxjs/operators';
-import { empty } from 'rxjs/observable/empty';
+import { empty } from 'rxjs';
 
 @Component({
     moduleId: module.id,
@@ -44,7 +44,7 @@ export class ReserveTableComponent implements OnInit {
             className = 'bgm-gray';
         }
         return className;
-    };
+    }
 
     selectSlot = (row: RegistrationRow, slot: RegistrationSlot) => {
         if (slot.canSelect) {
@@ -58,7 +58,7 @@ export class ReserveTableComponent implements OnInit {
                 });
             });
         }
-    };
+    }
 
     selectRow = (row: RegistrationRow) => {
         row.slots.forEach(s => {
@@ -74,11 +74,11 @@ export class ReserveTableComponent implements OnInit {
                 }
             });
         });
-    };
+    }
 
     register = (row: RegistrationRow) => {
         // The group created is saved on the service
-        let eventId = this.route.snapshot.parent.parent.params['id'];
+        const eventId = this.route.snapshot.parent.parent.params['id'];
         this.registrationService.reserve(eventId, row).pipe(
             tap(() => {
                 this.router.navigate(['register'], {relativeTo: this.route.parent.parent});

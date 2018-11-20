@@ -3,7 +3,7 @@ import { BhmcDataService } from '../../core/services/bhmc-data.service';
 import { ContactMessage } from './contact-message';
 import { Contact } from './contact';
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ContactService {

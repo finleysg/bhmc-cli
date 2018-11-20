@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable ,  BehaviorSubject } from 'rxjs';
 import { EventSignupTable } from '../../features/events/models/event-signup-table';
 import { EventRegistration } from '../models/event-registration';
 import { EventRegistrationGroup } from '../models/event-registration-group';

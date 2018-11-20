@@ -5,7 +5,7 @@ import { PublicMember, MemberService } from '../../../core';
 import { EventRegistrationGroup } from '../../../core/models/event-registration-group';
 import { EventDetail } from '../../../core/models/event-detail';
 import { RegistrationService } from '../../../core/services/registration.service';
-import { forkJoin } from 'rxjs/observable/forkJoin';
+import { forkJoin } from 'rxjs';
 
 @Component({
     moduleId: module.id,

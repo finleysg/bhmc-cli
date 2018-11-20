@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BhmcDataService } from './bhmc-data.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { EventDocument, DocumentType } from '../models/event-document';
 import { PhotoType, Photo } from '../models/photo';
 import { EventType, EventDetail } from '../models/event-detail';

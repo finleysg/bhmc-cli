@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BhmcDataService } from './bhmc-data.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Announcement } from '../models/announcement';
 import { map } from 'rxjs/operators';
 

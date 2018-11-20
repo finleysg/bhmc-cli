@@ -2,8 +2,7 @@ import { Calendar } from '../models/calendar';
 import { CalendarEvent } from '../models/calendar-event';
 import { BhmcDataService } from './bhmc-data.service';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable ,  Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
@@ -26,7 +25,7 @@ export class CalendarService {
                     calendar.addEvent(new CalendarEvent().fromJson(event));
                 }
                 this.currentMonthSource.next(calendar);
-            })
+            });
     }
 
     quickEvents(): Observable<CalendarEvent[]> {

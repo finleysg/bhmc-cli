@@ -8,7 +8,7 @@ import {
 import { ToasterService } from 'angular2-toaster';
 import { cloneDeep } from 'lodash';
 import { map, tap, catchError } from 'rxjs/operators';
-import { empty } from 'rxjs/observable/empty';
+import { EMPTY as empty } from 'rxjs';
 import { PaymentComponent } from '../../../shared/payments/payment.component';
 
 @Component({

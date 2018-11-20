@@ -9,7 +9,7 @@ import {SharedModule} from './shared/shared.module';
 import {BhmcErrorHandler} from './core/services/bhmc-error-handler.service';
 import {ConfigService, ConfigLoader} from './app-config.service';
 import {ReportingModule} from './features/reporting/reporting.module';
-import {HomeComponent} from "./home/home.component";
+import {HomeComponent} from './home/home.component';
 
 @NgModule({
     imports: [
@@ -19,7 +19,7 @@ import {HomeComponent} from "./home/home.component";
         BhmcCoreModule,
         SharedModule,
         LayoutModule,
-        ReportingModule,
+        ReportingModule
     ],
     declarations: [
         AppComponent,

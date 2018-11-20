@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable, throwError } from 'rxjs';
 import { BhmcErrorHandler } from './bhmc-error-handler.service';
 import { catchError } from 'rxjs/operators';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 @Injectable()
 export class InterceptorError implements HttpInterceptor {
@@ -19,7 +18,7 @@ export class InterceptorError implements HttpInterceptor {
         );
     }
 
-    handleError(err: any): Observable<any> {
+    handleError(err: any): Observable<HttpEvent<any>> {
 
         let message: string;
         if (err instanceof HttpErrorResponse) {
@@ -47,6 +46,6 @@ export class InterceptorError implements HttpInterceptor {
             message = err.message ? err.message : err.toString();
         }
 
-        return ErrorObservable.create(message);
+        return throwError(message);
     }
 }
