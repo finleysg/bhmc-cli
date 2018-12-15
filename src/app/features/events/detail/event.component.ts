@@ -126,11 +126,13 @@ export class EventComponent implements OnInit {
 
     uploadComplete(doc: EventDocument): void {
         this.eventService.refreshEventDetail().subscribe(() => {
+          if (doc) {
             if (doc.type === DocumentType.Results) {
                 this.results = doc;
             } else {
                 this.teetimes = doc;
             }
+          }
         });
     }
 
