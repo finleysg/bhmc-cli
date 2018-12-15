@@ -9,19 +9,21 @@
                 <div class="row hidden-xs">
                     <div class="col-sm-4 text-info">Member</div>
                     <div class="col-sm-2 text-info">Greens Fee</div>
+                    <div class="col-sm-2 text-info">Cart Fee</div>
                     <div class="col-sm-2 text-info">Gross Skins</div>
                     <div class="col-sm-2 text-info">Net Skins</div>
-                    <div class="col-sm-2 text-info text-right">
+                    <!-- <div class="col-sm-2 text-info text-right">
                         <strong>Total</strong>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row visible-xs">
                     <div class="col-xs-3 text-info">Greens Fee</div>
+                    <div class="col-xs-3 text-info">Cart Fee</div>
                     <div class="col-xs-3 text-info">Gross Skins</div>
                     <div class="col-xs-3 text-info">Net Skins</div>
-                    <div class="col-xs-3 text-info text-right">
+                    <!-- <div class="col-xs-3 text-info text-right">
                         <strong>Total</strong>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row m-t-15" *ngFor="let reg of group.registrations">
                     <div class="col-sm-4 col-xs-12">
@@ -33,6 +35,13 @@
                         <div class="checkbox">
                             <!-- <label class="visible-xs-inline">Greens Fee</label> -->
                             <input type="checkbox" [(ngModel)]="reg.isGreensFeePaid" [disabled]="hasGreensFee(reg.id)" (change)="updatePayment()">
+                            <i class="input-helper"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-xs-3">
+                        <div class="checkbox">
+                            <!-- <label class="visible-xs-inline">Cart Fee</label> -->
+                            <input type="checkbox" [(ngModel)]="reg.isCartFeePaid" [disabled]="hasCartFee(reg.id)" (change)="updatePayment()">
                             <i class="input-helper"></i>
                         </div>
                     </div>
@@ -50,11 +59,11 @@
                             <i class="input-helper"></i>
                         </div>
                     </div>
-                    <div class="col-sm-2 col-xs-3 text-right m-t-5">{{ newFees(reg) | currency:'USD':'symbol-narrow' }}</div>
+                    <!-- <div class="col-sm-2 col-xs-3 text-right m-t-5">{{ newFees(reg) | currency:'USD':'symbol-narrow' }}</div> -->
                 </div>
-                <div class="row m-t-15">
+                <div class="row m-t-30">
                     <div class="col-sm-10 col-xs-8 text-right">
-                        <strong>Group total:</strong>
+                        <strong>Total:</strong>
                     </div>
                     <div class="col-sm-2 col-xs-4 text-right">
                         <strong>{{ payment.subtotal | currency:'USD':'symbol-narrow' }}</strong>
