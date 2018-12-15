@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod --vc=true && node update-version.js",
+    "build": "ng build --prod && node update-version.js",
     "build-patch": "npm version patch && npm run build",
     "build-minor": "npm version minor && npm run build",
     "test": "ng test",
