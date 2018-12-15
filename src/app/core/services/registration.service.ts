@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable ,  Subject ,  of } from 'rxjs';
 import { EventRegistrationGroup } from '../models/event-registration-group';
 import { BhmcDataService } from './bhmc-data.service';
 import { RegistrationRow } from '../../features/events/models/registration-row';
@@ -9,7 +8,6 @@ import { SlotPayment } from '../models/slot-payment';
 import { EventRegistration } from '../models/event-registration';
 import { EventDetail } from '../models/event-detail';
 import { map, tap, flatMap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 import { merge } from 'lodash';
 
 @Injectable()

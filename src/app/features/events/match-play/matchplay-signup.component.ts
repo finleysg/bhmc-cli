@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentComponent } from '../../../shared/payments/payment.component';
 import { ToasterService } from 'angular2-toaster';
 import { tap, catchError } from 'rxjs/operators';
-import { empty } from 'rxjs/observable/empty';
+import { empty } from 'rxjs';
 import { merge } from 'lodash';
 
 @Component({
@@ -61,8 +61,8 @@ export class MatchPlaySignupComponent implements OnInit {
         this.registrationService.reserve(this.eventDetail.id).pipe(
             tap(() => {
                 // preserve the registration choices made
-                let group = this.registrationService.currentGroup;
-                let registration = merge({}, group.registrations[0], this.registrationGroup.registrations[0]);
+                const group = this.registrationService.currentGroup;
+                const registration = merge({}, group.registrations[0], this.registrationGroup.registrations[0]);
                 this.paymentGroup = merge({}, group, this.registrationGroup);
                 this.paymentGroup.registrations[0] = registration;
                 this.updatePayment();

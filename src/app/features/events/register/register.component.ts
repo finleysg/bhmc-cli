@@ -9,8 +9,7 @@ import { TypeaheadMatch } from 'ngx-bootstrap';
 import { PaymentComponent, ProcessingStatus } from '../../../shared/payments/payment.component';
 import { TimerComponent } from '../../../shared/timer/timer.component';
 import { tap, catchError } from 'rxjs/operators';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { empty } from 'rxjs/observable/empty';
+import { forkJoin, empty } from 'rxjs';
 
 @Component({
     moduleId: module.id,
@@ -157,7 +156,7 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
             `Are you sure you want to leave the registration page? You will not be registered,
              and your hole reservation (Wednesday events) will be canceled.`)
             .then(() => {
-                return this.registrationService.cancelReservation(this.registrationGroup).subscribe(() => { return true; })
+                return this.registrationService.cancelReservation(this.registrationGroup).subscribe(() => true);
             })
             .catch(() => false);
     }

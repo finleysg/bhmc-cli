@@ -5,7 +5,7 @@ import { AuthenticationService, User, EventDocument, DocumentType, SkinsType, St
 import { UploadComponent } from '../../../shared/upload/upload.component';
 import { ToasterService } from 'angular2-toaster';
 import { tap, catchError } from 'rxjs/operators';
-import { empty } from 'rxjs/observable/empty';
+import { empty } from 'rxjs';
 import { PortalComponent } from '../../../shared/portal/portal.component';
 
 @Component({

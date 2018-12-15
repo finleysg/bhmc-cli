@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { BhmcDataService } from '../../core/services/bhmc-data.service';
 import { Injectable } from '@angular/core';
 import { Policy, PolicyCategory } from '../models/policy';

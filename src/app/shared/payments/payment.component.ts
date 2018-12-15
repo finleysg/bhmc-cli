@@ -9,7 +9,7 @@ import { ConfigService } from '../../app-config.service';
 import { FormGroup } from '@angular/forms';
 import { CreditCardForm } from './credit-card.form';
 import { tap, catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 // import { Stripe } from 'stripe';
 

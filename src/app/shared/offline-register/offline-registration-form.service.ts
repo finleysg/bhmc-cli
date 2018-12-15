@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
+import { Observable ,  BehaviorSubject ,  Subject } from 'rxjs';
 import { OfflineRegistration } from './offline-registration';
 
 @Injectable()

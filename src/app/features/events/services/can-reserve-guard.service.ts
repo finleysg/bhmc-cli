@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router, RouterStateSnapshot, ActivatedRouteSnapshot, CanActivate } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  of } from 'rxjs';
 import { AuthenticationService, BhmcErrorHandler, RegistrationService } from '../../../core';
 import { map, catchError } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class CanReserveGuard implements CanActivate {

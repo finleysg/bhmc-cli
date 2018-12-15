@@ -1,14 +1,12 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import {
   AuthenticationService, RegistrationService, EventDetail, EventRegistration,
-  SlotPayment, EventRegistrationGroup, EventPayment, SkinsType
+  EventRegistrationGroup, EventPayment, SkinsType
 } from '../../../core';
 import { ToasterService } from 'angular2-toaster';
 import { cloneDeep } from 'lodash';
-import { map, tap, catchError } from 'rxjs/operators';
-import { empty } from 'rxjs/observable/empty';
 import { PaymentComponent } from '../../../shared/payments/payment.component';
 
 @Component({
@@ -72,6 +70,10 @@ export class SkinsComponent implements OnInit {
     return this.originalGroup.registrations.some(r => r.id === id && r.isGreensFeePaid);
   }
 
+  hasCartFee(id: number): boolean {
+    return this.originalGroup.registrations.some(r => r.id === id && r.isCartFeePaid);
+  }
+
   newFees(reg: EventRegistration): number {
     let fee = 0.0;
     const original: EventRegistration = this.originalGroup.registrations.find(r => r.id === reg.id);
@@ -83,6 +85,9 @@ export class SkinsComponent implements OnInit {
     }
     if (original && reg.isNetSkinsFeePaid && !original.isNetSkinsFeePaid) {
       fee += this.eventDetail.skinsFee;
+    }
+    if (original && reg.isCartFeePaid && !original.isCartFeePaid) {
+      fee += this.eventDetail.cartFee;
     }
     return fee;
   }
@@ -103,7 +108,8 @@ export class SkinsComponent implements OnInit {
     for (let i = 0; i < this.originalGroup.registrations.length; i++) {
       const touched = (this.group.registrations[i].isNetSkinsFeePaid && !this.originalGroup.registrations[i].isNetSkinsFeePaid) ||
         (this.group.registrations[i].isGrossSkinsFeePaid && !this.originalGroup.registrations[i].isGrossSkinsFeePaid) ||
-        (this.group.registrations[i].isGreensFeePaid && !this.originalGroup.registrations[i].isGreensFeePaid);
+        (this.group.registrations[i].isGreensFeePaid && !this.originalGroup.registrations[i].isGreensFeePaid) ||
+        (this.group.registrations[i].isCartFeePaid && !this.originalGroup.registrations[i].isCartFeePaid);
       if (touched) {
         registrations.push(cloneDeep(this.group.registrations[i]));
       }

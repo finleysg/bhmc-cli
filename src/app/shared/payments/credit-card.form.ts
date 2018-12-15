@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject ,  BehaviorSubject ,  Observable } from 'rxjs';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
 import { StripeCreditCard } from './stripe-credit-card';
 
 declare const Stripe: any;

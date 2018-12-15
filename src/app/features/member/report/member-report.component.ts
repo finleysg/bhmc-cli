@@ -4,7 +4,7 @@ import { EventDetail, PublicMember, RegistrationService, EventRegistrationGroup,
 import { AppConfig } from '../../../app-config';
 import { ConfigService } from '../../../app-config.service';
 import { SpinnerService } from '../../../shared/spinner/spinner.service';
-import { forkJoin } from 'rxjs/observable/forkJoin';
+import { forkJoin } from 'rxjs';
 
 @Component({
     moduleId: module.id,
