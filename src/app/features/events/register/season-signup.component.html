@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-xs-12" *ngIf="!currentUser.member.membershipIsCurrent">
+    <div class="col-md-6 col-xs-12" *ngIf="eventDetail.canRegister && !currentUser.member.membershipIsCurrent">
         <div class="card event-card">
             <div class="card-header">
                 <h2>Online Registration</h2>
