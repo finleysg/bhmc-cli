@@ -30,6 +30,7 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
     public expires: any;
     public expiryMessage = 'Your reservation was cancelled because it was not completed within 10 minutes.';
     public isLeagueEvent: boolean;
+    public placeholder: string;
     // public hasSkins: boolean;
     private cancelling: boolean;
 
@@ -60,6 +61,9 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
                         reg.disableSkins = (reg.slotNumber > 0);
                     }
                 });
+                if (this.eventDetail.eventType === EventType.Major) {
+                  this.placeholder = 'Add a note here to opt in to the championship flight.';
+                }
             });
         forkJoin([
             this.memberService.getRegisteredMembers(),

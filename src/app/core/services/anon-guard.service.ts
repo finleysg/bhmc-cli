@@ -1,11 +1,11 @@
 import { User } from '../models/user';
 import { AuthenticationService } from './authentication.service';
-import { Injectable }       from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
     CanActivate, Router,
     ActivatedRouteSnapshot,
     RouterStateSnapshot
-}                           from '@angular/router';
+} from '@angular/router';
 import { BhmcErrorHandler } from './bhmc-error-handler.service';
 
 @Injectable()
