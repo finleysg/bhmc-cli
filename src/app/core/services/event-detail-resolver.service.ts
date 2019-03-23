@@ -9,13 +9,25 @@ import { Observable ,  of } from 'rxjs';
 @Injectable()
 export class EventDetailResolver implements Resolve<EventDetail> {
 
+    static isReserveRoute(route: ActivatedRouteSnapshot): boolean {
+        let result = false;
+        if (route.children && 
+            route.children[0] &&
+            route.children[0].url &&
+            route.children[0].url[0] &&
+            route.children[0].url[0].path === 'reserve') {
+            result = true;
+        }
+        return result;
+    }
+
     constructor(
         private eventService: EventDetailService,
         private errorHandler: BhmcErrorHandler,
         private router: Router) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<EventDetail> {
-        let id = route.params['id'];
+        const id = route.params['id'];
         return this.eventService.getEventDetail(id).pipe(
             map(evt => {
                 if (EventDetailResolver.isReserveRoute(route)) {
@@ -35,17 +47,5 @@ export class EventDetailResolver implements Resolve<EventDetail> {
                 return of(null);
             })
         );
-    }
-    
-    static isReserveRoute(route: ActivatedRouteSnapshot): boolean {
-        let result = false;
-        if (route.children && 
-            route.children[0] &&
-            route.children[0].url &&
-            route.children[0].url[0] &&
-            route.children[0].url[0].path === 'reserve') {
-            result = true;
-        }
-        return result;
     }
 }

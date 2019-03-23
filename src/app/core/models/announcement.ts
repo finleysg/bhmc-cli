@@ -27,13 +27,13 @@ export class Announcement {
         this.text = json.text;
         this.starts = moment(json.starts);
         this.expires = moment(json.expires);
-        this.eventId = json.event_id;
-        this.eventName = json.event_name;
+        this.eventId = json.event ? json.event.id : null;
+        this.eventName = json.event ? json.event.name : null;
         this.membersOnly = json.members_only;
         this.externalUrl = json.external_url;
         this.externalUrlName = json.external_name;
-        this.documentName = json.document_name;
-        this.documentUrl = json.document_url;
+        this.documentName = json.document ? json.document.title : null;
+        this.documentUrl = json.document ? json.document.file.url : null;
         return this;
     }
 }

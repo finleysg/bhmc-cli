@@ -1,0 +1,31 @@
+<div class="block-header">
+  <h4>Drop Players</h4>
+</div>
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-sm-8 col-xs-12">
+    <div class="card event-card">
+      <div class="card-header">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="zmdi zmdi-search"></i></span>
+          <input [(ngModel)]="selectedMemberName" [typeahead]="allMembers" [typeaheadOptionField]="'name'"
+            [typeaheadOptionsLimit]="8" (typeaheadOnSelect)="findMember($event)" class="form-control input-sm"
+            placeholder="Find member...">
+        </div>
+      </div>
+      <div class="card-body card-padding" *ngIf="currentMember && registration">
+        <h3>{{currentMember.name}}</h3>
+        <h4>{{registration.fullName}}</h4>
+        <div class="checkbox">
+          <label>
+              <input type="checkbox" name="doRefund" [(ngModel)]="refund">
+              <i class="input-helper"></i> Issue a Refund
+          </label>
+        </div>
+        <p><a (click)="savePlayer()" class="btn btn-link">Confirm Drop</a></p>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-default" [routerLink]="['/manage', eventDetail.id, 'options']">Done Dropping Players</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -18,7 +18,6 @@ import { EventReportComponent } from './reports/event-report.component';
 import { MatchplayReportComponent } from './reports/matchplay-report.component';
 import { CheckInReportComponent } from './reports/check-in-report.component';
 import { ReconciliationReportComponent } from './reports/reconciliation-report.component';
-import { CheckInComponent } from './checkin/check-in.component';
 import { EventLandingComponent } from './event-landing.component';
 import { SkinsComponent } from './skins/skins.component';
 
@@ -43,7 +42,6 @@ import { SkinsComponent } from './skins/skins.component';
         MatchplayReportComponent,
         CheckInReportComponent,
         ReconciliationReportComponent,
-        CheckInComponent,
         SkinsComponent
     ],
     providers: [

@@ -1,0 +1,52 @@
+<div class="block-header">
+  <h4>Move Players</h4>
+</div>
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-sm-8 col-xs-12">
+    <div class="card event-card">
+      <div class="card-header">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="zmdi zmdi-search"></i></span>
+          <input [(ngModel)]="selectedMemberName" [typeahead]="allMembers" [typeaheadOptionField]="'name'"
+            [typeaheadOptionsLimit]="8" (typeaheadOnSelect)="findMember($event)" class="form-control input-sm"
+            placeholder="Find member...">
+        </div>
+      </div>
+      <div class="card-body card-padding" *ngIf="currentMember && registration">
+        <h3>{{currentMember.name}}</h3>
+        <h4 *ngIf="registration">From: {{registration.fullName}}</h4>
+        <p *ngIf="!selectedHole"><a (click)="findOpenHole()" class="btn btn-link">Find an open slot</a></p>
+        <h4 *ngIf="selectedHole">To: {{selectedHole.fullName}}</h4>
+        <p *ngIf="selectedHole"><a (click)="savePlayer()" class="btn btn-link">Confirm Move</a></p>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-default" [routerLink]="['/manage', eventDetail.id, 'options']">Done Moving
+          Players</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div bsModal #openHolesModal="bs-modal" class="modal fade">
+  <div class="modal-sm modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bgm-blue">
+        <h3 class="modal-title">Open Holes / Slots</h3>
+        <small *ngIf="!selectedHole">Select an open slot below</small>
+        <small *ngIf="selectedHole">Add {{currentMember.firstName}} to
+          {{selectedHole.fullName}}</small>
+      </div>
+      <div class="modal-body open-holes">
+        <div class="list-group m-t-15">
+          <a *ngFor="let hole of openHoles" class="list-group-item text-center"
+            (click)="selectHole(hole)">{{hole.fullName}}</a>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" type="button" (click)="cancelOpenHoles()">Cancel</button>
+        <button class="btn btn-relative btn-icon-text btn-primary" (click)="selectDestination()">
+          <i class="zmdi zmdi-flag"> Select Hole</i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

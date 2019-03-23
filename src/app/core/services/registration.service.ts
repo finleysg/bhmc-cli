@@ -7,7 +7,7 @@ import { StripeCharge } from '../models/stripe-charge';
 import { SlotPayment } from '../models/slot-payment';
 import { EventRegistration } from '../models/event-registration';
 import { EventDetail } from '../models/event-detail';
-import { map, tap, flatMap } from 'rxjs/operators';
+import { map, tap, flatMap, mergeMap } from 'rxjs/operators';
 import { merge } from 'lodash';
 
 @Injectable()
@@ -168,8 +168,8 @@ export class RegistrationService {
         );
     }
 
-    // Registration at the table (cash)
-    sameDayRegistration(event: EventDetail, registration: EventRegistration, payment: SlotPayment): Observable<any> {
+    // Registration by an admin (cash)
+    adminRegistration(event: EventDetail, registration: EventRegistration, payment: SlotPayment): Observable<any> {
         const payload: any = {
             event_id: event.id,
             member_id: registration.memberId,
@@ -178,14 +178,22 @@ export class RegistrationService {
             slot_ids: [registration.id]
         };
         return this.dataService.postApiRequest('registration/reserve', payload).pipe(
-            map((data: any) => {
+            mergeMap((data: any) => {
                 const group = new EventRegistrationGroup().fromJson(data);
                 group.registrations[0] = merge({}, group.registrations[0], registration);
                 group.copyPayment(payment);
-                group.notes = 'Same-day registration';
+                group.notes = 'Admin registration';
                 return this.dataService.postApiRequest('registration/register', {'group': group.toJson()});
             })
         );
+    }
+
+    dropRegistration(reg: EventRegistration, refund: boolean): Observable<any> {
+        return this.dataService.postApiRequest('registration/drop', {slot_id: reg.id, refund: refund});
+    }
+
+    moveRegistration(from: EventRegistration, to: EventRegistration): Observable<any> {
+        return this.dataService.postApiRequest('registration/move', {from: from.id, to: to.id});
     }
 
     updateRegistration(reg: EventRegistration): Observable<EventRegistration> {

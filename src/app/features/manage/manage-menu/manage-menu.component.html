@@ -1,0 +1,13 @@
+<div class="block-header">
+  <h2>Manage Players ({{ eventDetail.startDate.format('MMM D') }})</h2>
+</div>
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-sm-8 col-xs-12">
+    <div class="list-group">
+      <a class="list-group-item list-group-item-action text-success text-center" [routerLink]="['/manage', eventDetail.id, 'add']">Add Players</a>
+      <a class="list-group-item list-group-item-action text-danger text-center" [routerLink]="['/manage', eventDetail.id, 'drop']">Drop Players</a>
+      <a class="list-group-item list-group-item-action text-info text-center" [routerLink]="['/manage', eventDetail.id, 'move']">Move Players</a>
+      <a class="list-group-item list-group-item-action text-muted text-center" [routerLink]="['/events', eventDetail.id, 'detail']">Done Managing Players</a>
+    </div>
+  </div>
+</div>
