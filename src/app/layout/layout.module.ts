@@ -14,9 +14,9 @@ import { NgProgressHttpModule } from '@ngx-progressbar/http';
     imports: [
         RouterModule,
         SharedModule,
-        ToasterModule.forRoot(),
-        NgProgressModule,  //.forRoot(),
-        NgProgressHttpModule  //.forRoot()
+        NgProgressModule,
+        NgProgressHttpModule,
+        ToasterModule.forRoot()
     ],
     declarations: [
         LayoutComponent,
