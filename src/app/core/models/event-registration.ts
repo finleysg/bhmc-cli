@@ -34,8 +34,11 @@ export class EventRegistration {
     }
 
     get fullName(): string {
-        const course = this.courseName.replace('League', '').replace('9', '');
-        return `${course} ${this.startingHoleName}`;
+        if (this.courseName) {
+            const course = this.courseName.replace('League', '').replace('9', '');
+            return `${course} ${this.startingHoleName}`;
+        }
+        return '';
     }
 
     fromJson(json: any): EventRegistration {
