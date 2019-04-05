@@ -4,7 +4,6 @@ import { DocumentType, DocumentService, EventDetail, EventDocument } from '../..
 import { AppConfig } from '../../app-config';
 import { ConfigService } from '../../app-config.service';
 import { ToasterService } from 'angular2-toaster';
-import { tap, catchError } from 'rxjs/operators';
 
 declare const Spinner: any;
 
@@ -104,7 +103,7 @@ export class UploadComponent implements OnInit {
     }
 
     private createDocument(): FormData {
-        let form = new FormData();
+        const form = new FormData();
         form.append('document_type', EventDocument.getDocumentCode(this.documentType));
         form.append('year', this.configService.config.year.toString());
         form.append('title', this.documentName);
@@ -112,11 +111,12 @@ export class UploadComponent implements OnInit {
         if (this.eventDetail) {
             form.append('event', this.eventDetail.id.toString());
         }
+        form.append('display_flag', 'false');
         return form;
     }
 
     private updateDocument(): FormData {
-        let form = new FormData();
+        const form = new FormData();
         form.append('document_type', EventDocument.getDocumentCode(this.existingDocument.type));
         form.append('year', this.existingDocument.year.toString());
         form.append('title', this.existingDocument.title);
@@ -124,6 +124,7 @@ export class UploadComponent implements OnInit {
         if (this.eventDetail) {
             form.append('event', this.eventDetail.id.toString());
         }
+        form.append('display_flag', this.existingDocument.displayFlag ? this.existingDocument.displayFlag.toString() : 'false');
         return form;
     }
 
@@ -158,7 +159,7 @@ export class UploadComponent implements OnInit {
     }
 
     private initSpinner() {
-        let options = {
+        const options = {
             lines: 17,
             length: 0,
             width: 10,

@@ -1,5 +1,16 @@
 import * as moment from 'moment';
 
+export enum DocumentType {
+    Results = <any>'Event Results',
+    Teetimes = <any>'Event Tee Times',
+    SeasonPoints = <any>'Season Long Points',
+    DamCup = <any>'Dam Cup',
+    MatchPlay = <any>'Match Play',
+    Financial = <any>'Financial Statements',
+    SignUp = <any>'Sign Up',
+    Other = <any>'Other'
+}
+
 export class EventDocument {
     id: number;
     title: string;
@@ -7,18 +18,8 @@ export class EventDocument {
     type: DocumentType;
     year: number;
     eventId: number;
+    displayFlag: boolean;
     lastUpdate: any;
-
-    fromJson(json: any): EventDocument {
-        this.id = json.id;
-        this.title = json.title;
-        this.url = json.file;
-        this.eventId = json.event;
-        this.type = EventDocument.getDocumentType(json.document_type);
-        this.year = json.year;
-        this.lastUpdate = moment(json.last_update);
-        return this;
-    }
 
     static getDocumentType(shortType: string): DocumentType {
         let documentType = DocumentType.Other;
@@ -58,15 +59,17 @@ export class EventDocument {
         }
         return 'O';
     }
+
+    fromJson(json: any): EventDocument {
+        this.id = json.id;
+        this.title = json.title;
+        this.url = json.file;
+        this.eventId = json.event;
+        this.type = EventDocument.getDocumentType(json.document_type);
+        this.year = json.year;
+        this.lastUpdate = moment(json.last_update);
+        this.displayFlag = json.display_flag;
+        return this;
+    }
 }
 
-export enum DocumentType {
-    Results = <any>'Event Results',
-    Teetimes = <any>'Event Tee Times',
-    SeasonPoints = <any>'Season Long Points',
-    DamCup = <any>'Dam Cup',
-    MatchPlay = <any>'Match Play',
-    Financial = <any>'Financial Statements',
-    SignUp = <any>'Sign Up',
-    Other = <any>'Other'
-}

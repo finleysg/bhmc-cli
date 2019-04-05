@@ -45,9 +45,9 @@ export class DocumentService {
     }
 
     uploadDocument(form: FormData, id: number = 0): Observable<EventDocument> {
-        let resource = 'documents/';
+        let resource = 'documents';
         if (id > 0) {
-            resource = resource + id.toString() + '/';
+            resource = resource + '/' + id.toString();
             return this.dataService.patchForm(resource, form).pipe(
                 map((json: any) => {
                     return new EventDocument().fromJson(json);

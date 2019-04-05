@@ -12,7 +12,7 @@ export class PoliciesComponent implements OnInit {
 
     public policies: Policy[];
     public byLaws: EventDocument;
-    public statement: EventDocument;
+    public statements: EventDocument[];
     public policyName: string;
 
     constructor(private policyService: PolicyService,
@@ -25,8 +25,10 @@ export class PoliciesComponent implements OnInit {
         this.route.params.subscribe((p: Params) => this.loadPolicies(p['category']));
         this.documentService.getDocuments(DocumentType.Other)
             .subscribe(docs => {
-                const d = docs.filter(d => d.title.indexOf('Law') >= 0);
-                if (d && d.length === 1) this.byLaws = d[0];
+                const other = docs.filter(d => d.title.indexOf('Law') >= 0);
+                if (other && other.length === 1) {
+                    this.byLaws = other[0];
+                }
             });
         this.documentService.getDocuments(DocumentType.Financial)
             .subscribe(docs => {
@@ -39,24 +41,24 @@ export class PoliciesComponent implements OnInit {
                     }
                     return 0;
                 });
-                if (f && f.length > 0) this.statement = f[0];
+                this.statements = f.filter(d => d.displayFlag);
             });
     }
 
     loadPolicies(category: string): void {
         let policyCategory = PolicyCategory.ClubPolicy;
-        this.policyName = "Policies & Procedures";
+        this.policyName = 'Policies & Procedures';
         if (category === 'rules') {
-            this.policyName = "Local Rules";
+            this.policyName = 'Local Rules';
             policyCategory = PolicyCategory.LocalRule;
         } else if (category === 'handicaps') {
-            this.policyName = "Handicaps & Scoring";
+            this.policyName = 'Handicaps & Scoring';
             policyCategory = PolicyCategory.Handicaps;
         } else if (category === 'finances') {
-            this.policyName = "Financial Information";
+            this.policyName = 'Financial Information';
             policyCategory = PolicyCategory.PaymentFaq;
         } else if (category === 'new-members') {
-            this.policyName = "New Member FAQs";
+            this.policyName = 'New Member FAQs';
             policyCategory = PolicyCategory.NewMember;
         }
 
