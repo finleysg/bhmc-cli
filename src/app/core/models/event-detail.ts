@@ -2,6 +2,40 @@ import { EventRegistration } from './event-registration';
 import { DocumentType, EventDocument } from './event-document';
 import * as moment from 'moment';
 
+// No friendly name - used for logic, not display
+export enum RegistrationWindowType {
+    Future = <any>'future',
+    Registering = <any>'registration', // in the registration window
+    Pending = <any>'pending', // between signup end and the event
+    Past = <any>'past',
+    NA = <any>'n/a'
+}
+
+export enum StartType {
+    Shotgun = <any>'Shotgun',
+    Teetimes = <any>'Tee Times',
+    NA = <any>'Not Applicable'
+}
+
+export enum EventType {
+    League = <any>'League',
+    Major = <any>'Weekend Major',
+    Holiday = <any>'Holiday Pro-shop Event',
+    Meeting = <any>'Member Meeting',
+    BoardMeeting = <any>'Board Meeting',
+    Other = <any>'Other',
+    State = <any>'State Tournament',
+    Registration = <any>'Open Registration Period',
+    Deadline = <any>'Deadline',
+    Canceled = <any>'Canceled'
+}
+
+export enum SkinsType {
+    Individual = <any>'Individual',
+    Team = <any>'Team',
+    None = <any>'No Skins'
+}
+
 export class EventDetail {
     id: number;
     name: string;
@@ -116,7 +150,7 @@ export class EventDetail {
         if (!this.registrations) {
             return false;
         }
-        return this.registrations.some(r => r.memberId === memberId);
+        return this.registrations.some(r => r.memberId === memberId && r.status === 'R');
     }
 
     get canRegister(): boolean {
@@ -219,38 +253,4 @@ export class EventDetail {
 
         return this;
     }
-}
-
-// No friendly name - used for logic, not display
-export enum RegistrationWindowType {
-    Future = <any>'future',
-    Registering = <any>'registration', // in the registration window
-    Pending = <any>'pending', // between signup end and the event
-    Past = <any>'past',
-    NA = <any>'n/a'
-}
-
-export enum StartType {
-    Shotgun = <any>'Shotgun',
-    Teetimes = <any>'Tee Times',
-    NA = <any>'Not Applicable'
-}
-
-export enum EventType {
-    League = <any>'League',
-    Major = <any>'Weekend Major',
-    Holiday = <any>'Holiday Pro-shop Event',
-    Meeting = <any>'Member Meeting',
-    BoardMeeting = <any>'Board Meeting',
-    Other = <any>'Other',
-    State = <any>'State Tournament',
-    Registration = <any>'Open Registration Period',
-    Deadline = <any>'Deadline',
-    Canceled = <any>'Canceled'
-}
-
-export enum SkinsType {
-    Individual = <any>'Individual',
-    Team = <any>'Team',
-    None = <any>'No Skins'
 }
