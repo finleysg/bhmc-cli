@@ -19,7 +19,7 @@ export class AddPlayerComponent implements OnInit, OnDestroy {
 
   private readonly onDestroy = new Subject<void>();
 
-  @ViewChild('openHolesModal')
+  @ViewChild('openHolesModal', { static: true })
   public openHolesModal: ModalDirective;
 
   public eventDetail: EventDetail;

@@ -15,8 +15,8 @@ import { PortalComponent } from '../../../shared/portal/portal.component';
 })
 export class EventComponent implements OnInit {
 
-    @ViewChild(UploadComponent) resultsUpload: UploadComponent;
-    @ViewChild(PortalComponent) portalModal: PortalComponent;
+    @ViewChild(UploadComponent, { static: true }) resultsUpload: UploadComponent;
+    @ViewChild(PortalComponent, { static: true }) portalModal: PortalComponent;
 
     public eventDetail: EventDetail;
     public currentUser: User;

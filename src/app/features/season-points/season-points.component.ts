@@ -10,7 +10,7 @@ import { UploadComponent } from '../../shared/upload/upload.component';
 })
 export class SeasonPointsComponent implements OnInit {
 
-    @ViewChild(UploadComponent) uploadComponent: UploadComponent;
+    @ViewChild(UploadComponent, { static: true }) uploadComponent: UploadComponent;
 
     currentUser: User;
     archives: EventDocument[];

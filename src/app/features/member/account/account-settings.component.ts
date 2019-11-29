@@ -11,7 +11,7 @@ import { SavedCardComponent } from '../../../shared/payments/saved-card.componen
 })
 export class AccountSettingsComponent implements OnInit {
 
-    @ViewChild(SavedCardComponent) cardModal: SavedCardComponent;
+    @ViewChild(SavedCardComponent, { static: true }) cardModal: SavedCardComponent;
     public savedCard: SavedCard;
     public user: User;
     public editIdentity: boolean;

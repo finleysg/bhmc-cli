@@ -16,7 +16,7 @@ import { merge } from 'lodash';
 })
 export class SeasonSignupComponent implements OnInit {
 
-    @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
+    @ViewChild(PaymentComponent, { static: false }) paymentComponent: PaymentComponent;
 
     public registrationGroup: EventRegistrationGroup;
     public paymentGroup: EventRegistrationGroup;

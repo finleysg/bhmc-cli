@@ -21,12 +21,10 @@ import { HttpClientModule, HTTP_INTERCEPTORS, HttpClientXsrfModule } from '@angu
 import { InterceptorApi } from './services/interceptor-api.service';
 import { InterceptorAuth } from './services/interceptor-auth.service';
 import { InterceptorError } from './services/interceptor-error.service';
-import { HttpModule } from '@angular/http';
 import { AnonGuard } from './services/anon-guard.service';
 
 @NgModule({
     imports: [
-        HttpModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'csrftoken',

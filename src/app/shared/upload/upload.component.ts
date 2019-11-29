@@ -18,7 +18,7 @@ export class UploadComponent implements OnInit {
     @Input() documentType: DocumentType;
     @Input() eventDetail: EventDetail;
     @Output() onClose = new EventEmitter<EventDocument>();
-    @ViewChild('uploadModal') uploadModal: ModalDirective;
+    @ViewChild('uploadModal', { static: true }) uploadModal: ModalDirective;
 
     selectedFile: File;
     documentName: string;

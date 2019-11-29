@@ -16,7 +16,7 @@ import { PaymentComponent } from '../../../shared/payments/payment.component';
 })
 export class SkinsComponent implements OnInit {
 
-  @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
+  @ViewChild(PaymentComponent, { static: false }) paymentComponent: PaymentComponent;
 
   public eventDetail: EventDetail;
   public originalGroup: EventRegistrationGroup;

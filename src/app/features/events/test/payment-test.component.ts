@@ -13,7 +13,7 @@ import { forkJoin } from 'rxjs';
 })
 export class PaymentTestComponent implements OnInit {
 
-    @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
+    @ViewChild(PaymentComponent, { static: true }) paymentComponent: PaymentComponent;
 
     public group: EventRegistrationGroup;
     public eventDetail: EventDetail;

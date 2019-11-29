@@ -55,7 +55,7 @@ export class PaymentComponent implements OnInit {
     @Input() eventDetail: EventDetail;
     @Input() update: boolean;
     @Output() onClose = new EventEmitter<boolean>();
-    @ViewChild('paymentModal') paymentModal: ModalDirective;
+    @ViewChild('paymentModal', { static: true }) paymentModal: ModalDirective;
 
     public card: StripeCreditCard;
     public cardForm: FormGroup;

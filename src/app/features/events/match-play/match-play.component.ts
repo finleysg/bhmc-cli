@@ -14,7 +14,7 @@ import * as moment from 'moment';
 })
 export class MatchPlayComponent implements OnInit {
 
-    @ViewChild(UploadComponent) uploadComponent: UploadComponent;
+    @ViewChild(UploadComponent, { static: false }) uploadComponent: UploadComponent;
 
     public eventDetail: EventDetail;
     public currentUser: User;

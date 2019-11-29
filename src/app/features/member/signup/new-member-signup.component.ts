@@ -26,7 +26,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 })
 export class NewMemberSignupComponent implements OnInit {
 
-    @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
+    @ViewChild(PaymentComponent, { static: false }) paymentComponent: PaymentComponent;
 
     public steps: number[];
     public currentStep: SignupStepsEnum = SignupStepsEnum.NotStarted;

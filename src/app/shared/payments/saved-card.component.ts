@@ -22,7 +22,7 @@ declare const Spinner: any;
 export class SavedCardComponent implements OnInit {
 
     @Output() onClose = new EventEmitter<boolean>();
-    @ViewChild('cardModal') cardModal: ModalDirective;
+    @ViewChild('cardModal', { static: true }) cardModal: ModalDirective;
 
     public card: StripeCreditCard;
     public cardForm: FormGroup;

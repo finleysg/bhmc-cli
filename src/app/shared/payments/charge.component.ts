@@ -14,7 +14,7 @@ import { ConfigService } from '../../app-config.service';
 export class ChargeComponent implements OnInit {
 
     @Output() onClose = new EventEmitter<boolean>();
-    @ViewChild('chargeModal') chargeModal: ModalDirective;
+    @ViewChild('chargeModal', { static: true }) chargeModal: ModalDirective;
 
     public charge: StripeCharge;
     public stripeUrl: string;

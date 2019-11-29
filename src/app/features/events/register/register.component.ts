@@ -18,8 +18,8 @@ import { forkJoin, empty } from 'rxjs';
 })
 export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeactivate> {
 
-    @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
-    @ViewChild(TimerComponent) timerComponent: TimerComponent;
+    @ViewChild(PaymentComponent, { static: false }) paymentComponent: PaymentComponent;
+    @ViewChild(TimerComponent, { static: false }) timerComponent: TimerComponent;
 
     public registrationGroup: EventRegistrationGroup;
     public eventDetail: EventDetail;

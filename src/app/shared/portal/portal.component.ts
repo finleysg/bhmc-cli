@@ -16,7 +16,7 @@ export class PortalComponent implements OnInit {
 
     @Input() eventDetail: EventDetail;
     @Output() onClose = new EventEmitter<void>();
-    @ViewChild('portalModal') portalModal: ModalDirective;
+    @ViewChild('portalModal', { static: true }) portalModal: ModalDirective;
 
     private config: AppConfig;
   
