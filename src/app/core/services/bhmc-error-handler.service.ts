@@ -4,7 +4,7 @@ import { ConfigService } from '../../app-config.service';
 import { AppConfig } from '../../app-config';
 import { User } from '../models/user';
 import { Observable ,  Subject } from 'rxjs';
-import * as Raven from 'raven-js';
+import * as Sentry from '@sentry/browser';
 
 @Injectable()
 export class BhmcErrorHandler extends ErrorHandler {
@@ -21,17 +21,16 @@ export class BhmcErrorHandler extends ErrorHandler {
         this.lastError$ = this.errorSource.asObservable();
         this.config = configService.config;
         if (!this.config.isLocal) {
-            const options = { 'release': configService.config.version, 'autoBreadcrumbs': { 'xhr': false }};
-            Raven
-                .config(this.config.ravenDsn, options)
-                .install();
+            Sentry.init({
+                dsn: this.config.ravenDsn
+            });
         }
     }
 
     setUserContext(user: User): void {
         if (this.config.isLocal) { return; }
         if (user.isAuthenticated) {
-            Raven.setUserContext({
+            Sentry.setUser({
                 username: user.name,
                 email: user.email
             });
@@ -40,7 +39,7 @@ export class BhmcErrorHandler extends ErrorHandler {
 
     clearUserContext(): void {
         if (this.config.isLocal) { return; }
-        Raven.setUserContext();
+        Sentry.setUser({});
     }
 
     handleError(err: any): void {
@@ -48,7 +47,7 @@ export class BhmcErrorHandler extends ErrorHandler {
         if (this.config.isLocal) {
             super.handleError(err);
         } else {
-            Raven.captureException(err);
+            Sentry.captureException(err);
         }
     }
 
@@ -57,7 +56,7 @@ export class BhmcErrorHandler extends ErrorHandler {
         if (this.config.isLocal) {
             console.error(err.toString());
         } else {
-            Raven.captureException(err);
+            Sentry.captureException(err);
         }
     }
 
@@ -66,15 +65,6 @@ export class BhmcErrorHandler extends ErrorHandler {
         if (this.config.isLocal) {
             // TODO: handle text or blob responses
             console.log(`${response.status}: ${JSON.stringify(response.error)}`);
-        } else {
-            const options: any = {
-                level: 'error',
-                extra: {
-                    'message': response.message,
-                    'error': response.error
-                }
-            };
-            Raven.captureMessage(message, options);
         }
     }
 
@@ -82,7 +72,7 @@ export class BhmcErrorHandler extends ErrorHandler {
         if (this.config.isLocal) {
             console.warn(message);
         } else {
-            Raven.captureMessage(message, {level: 'warning'});
+            Sentry.captureMessage(message);
         }
     }
 

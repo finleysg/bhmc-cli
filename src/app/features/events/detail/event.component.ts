@@ -39,7 +39,6 @@ export class EventComponent implements OnInit {
         private authService: AuthenticationService) { }
 
     ngOnInit(): void {
-        this.isRegistered = true; // this might fix an IOS problem where *ngIf does not evaluate
         this.currentUser = this.authService.user;
         this.route.data
             .subscribe((data: {eventDetail: EventDetail}) => {
