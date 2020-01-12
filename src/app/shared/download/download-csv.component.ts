@@ -2,13 +2,14 @@ import { Component, Input, Renderer } from '@angular/core';
 
 @Component({
     moduleId: module.id,
+    // tslint:disable-next-line: component-selector
     selector: 'download-csv',
     templateUrl: 'download-csv.component.html',
     styleUrls: ['download-csv.component.css']
 })
 export class DownloadCsvComponent {
-    @Input() csvData: string;
-    @Input() filename: string;
+    @Input() csvData?: string;
+    @Input() filename?: string;
     private body: any;
 
     constructor(private renderer: Renderer) {
@@ -17,9 +18,10 @@ export class DownloadCsvComponent {
     build(): void {
         this.body = document.body;
 
-        let anchor = this.renderer.createElement(this.body, 'a');
+        const anchor = this.renderer.createElement(this.body, 'a');
         this.renderer.setElementStyle(anchor, 'visibility', 'hidden');
-        this.renderer.setElementAttribute(anchor, 'href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(this.csvData));
+        // tslint:disable-next-line: no-non-null-assertion
+        this.renderer.setElementAttribute(anchor, 'href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(this.csvData!));
         this.renderer.setElementAttribute(anchor, 'target', '_blank');
         this.renderer.setElementAttribute(anchor, 'download', this.filename);
 

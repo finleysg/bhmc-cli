@@ -15,7 +15,7 @@ export class DialogService {
             type: 'warning',
             showCancelButton: true
         });
-    };
+    }
 
     info(title: string, message: string) {
         return swal({

@@ -26,7 +26,7 @@ export class BhmcDataService {
         let params = new HttpParams();
         if (data && !BhmcDataService.isEmptyObject(data)) {
             for (const key in data) {
-                if (data.hasOwnProperty(key) && data[key] !== null) {
+                if (data.hasOwnProperty(key) && data[key] !== null && data[key] !== undefined) {
                     params = params.set(key, data[key]);
                 }
             }
@@ -39,7 +39,7 @@ export class BhmcDataService {
         let params = new HttpParams();
         if (data && !BhmcDataService.isEmptyObject(data)) {
             for (const key in data) {
-                if (data.hasOwnProperty(key) && data[key] !== null) {
+                if (data.hasOwnProperty(key) && data[key] !== null && data[key] !== undefined) {
                     params = params.set(key, data[key]);
                 }
             }
@@ -91,18 +91,4 @@ export class BhmcDataService {
         const url: string = this._apiUrl + resource + '/';
         return this.http.patch(url, data);
     }
-
-  // temp for Aimee
-
-// beg(): void {
-//     this.http.post('human', {'eyes': 'hopeful', 'sitting-pretty': true})
-//         .subscribe(
-//             (snack) => this.eat(snack),
-//             (err) => this.dismissError(err, { resumeBegging: true })
-//         );
-// }
-
-//   eat(snack: any) {}
-//   dismissError(err: any, foo: any) {}
-//   resumeBegging() {}
 }

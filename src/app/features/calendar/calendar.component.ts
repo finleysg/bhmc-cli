@@ -13,8 +13,8 @@ import { AppConfig } from '../../app-config';
 })
 export class CalendarComponent implements OnInit {
 
-    public calendar: Calendar;
-    public monthListing: any[];
+    public calendar?: Calendar;
+    public monthListing: any[] = [];
     public config: AppConfig;
     public user: User;
 

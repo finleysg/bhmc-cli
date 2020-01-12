@@ -22,7 +22,7 @@ export class CalendarService {
             .subscribe((events) => {
                 const calendar = new Calendar(year, month);
                 for (const event of events) {
-                    calendar.addEvent(new CalendarEvent().fromJson(event));
+                    calendar.addEvent(new CalendarEvent(event));
                 }
                 this.currentMonthSource.next(calendar);
             });
@@ -32,7 +32,7 @@ export class CalendarService {
         return this.dataService.getApiRequest('events/current').pipe(
             map(events => {
                 return events.map((e: any) => {
-                    return new CalendarEvent().fromJson(e);
+                    return new CalendarEvent(e);
                 });
             })
         );

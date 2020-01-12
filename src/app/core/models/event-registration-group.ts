@@ -4,32 +4,42 @@ import { EventDetail } from './event-detail';
 import { SlotPayment } from './slot-payment';
 import { PublicMember } from './member';
 import { User } from './user';
-import * as moment from 'moment';
+import moment from 'moment';
+import { isEmpty } from 'lodash';
 
 export class EventRegistrationGroup {
-    id: number;
-    eventId: number;
-    courseSetupId: number;
-    courseName: string;
-    registrantId: number;
-    registrant: string;
-    startingHole: number;
-    startingOrder: number;
-    notes: string;
-    cardVerificationToken: string;
-    paymentConfirmationCode: string;
-    paymentConfirmationDate: any;
+    id = 0;
+    eventId = 0;
+    courseSetupId?: number;
+    courseName?: string;
+    registrantId = -1;
+    registrant = '';
+    startingHole?: number;
+    startingOrder?: number;
+    notes?: string;
+    cardVerificationToken?: string;
+    paymentConfirmationCode?: string;
+    paymentConfirmationDate?: any;
     payment: EventPayment = new EventPayment();
-    registrations: EventRegistration[];
+    registrations: EventRegistration[] = [];
     expires: any;
 
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const group = this.fromJson(obj);
+            if (obj.registrations) {
+                group.registrations = obj['registrations'].map((o: any) => new EventRegistration(o));
+            }
+            Object.assign(this, group);
+        }
+    }
+
     static create(user: User): EventRegistrationGroup {
-        const group = new EventRegistrationGroup();
-        const reg = new EventRegistration();
+        const group = new EventRegistrationGroup({});
+        const reg = new EventRegistration({});
         reg.isEventFeePaid = true;
         reg.memberId = user.member.id;
         reg.memberName = user.name;
-        group.registrations = [];
         group.registrations.push(reg);
         return group;
     }
@@ -53,29 +63,29 @@ export class EventRegistrationGroup {
         return this.expires.isBefore(moment());
     }
 
-    fromJson(json: any): EventRegistrationGroup {
-        this.id = json.id;
-        this.eventId = json.event;
-        this.courseSetupId = json.course_setup;
-        this.registrantId = json.signed_up_by ? json.signed_up_by.id : -1;
-        this.registrant = json.signed_up_by ? `${json.signed_up_by.first_name} ${json.signed_up_by.last_name}` : '';
-        this.startingHole = json.starting_hole;
-        this.startingOrder = json.starting_order;
-        this.notes = json.notes;
-        this.cardVerificationToken = json.card_verification_token;
-        this.paymentConfirmationCode = json.payment_confirmation_code;
-        this.payment.total = json.payment_amount;
+    private fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.id;
+        obj.eventId = json.event;
+        obj.courseSetupId = json.course_setup;
+        obj.registrantId = json.signed_up_by ? json.signed_up_by.id : -1;
+        obj.registrant = json.signed_up_by ? `${json.signed_up_by.first_name} ${json.signed_up_by.last_name}` : '';
+        obj.startingHole = json.starting_hole;
+        obj.startingOrder = json.starting_order;
+        obj.notes = json.notes;
+        obj.cardVerificationToken = json.card_verification_token;
+        obj.paymentConfirmationCode = json.payment_confirmation_code;
+        obj.payment = {
+            total: 0
+        };
+        obj.payment.total = json.payment_amount;
         if (json.payment_confirmation_timestamp) {
-            this.paymentConfirmationDate = moment(json.payment_confirmation_timestamp);
+            obj.paymentConfirmationDate = moment(json.payment_confirmation_timestamp);
         }
         if (json.expires) {
-            this.expires = moment(json.expires);
+            obj.expires = moment(json.expires);
         }
-        if (json.slots) {
-            this.registrations = [];
-            json.slots.forEach((s: any) => this.registrations.push(new EventRegistration().fromJson(s)));
-        }
-        return this;
+        return obj;
     }
 
     toJson(): any {
@@ -120,7 +130,6 @@ export class EventRegistrationGroup {
             }
         });
     }
-
 
     clearRegistrations(): void {
         this.registrations.forEach(reg => {

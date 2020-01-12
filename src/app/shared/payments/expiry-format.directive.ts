@@ -2,6 +2,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 import { CreditCardService } from './credit-card.service';
 
 @Directive({
+    // tslint:disable-next-line: directive-selector
     selector: '[ccExp]'
 })
 export class ExpiryFormatDirective {
@@ -32,16 +33,12 @@ export class ExpiryFormatDirective {
         }
     }
 
-    // @HostListener('change', ['$event']) onChange(e: any) {
-    //     this.reformatExpiry(e);
-    // }
-
     @HostListener('input', ['$event']) onInput(e: any) {
         this.reformatExpiry(e);
     }
 
     private formatExpiry(e: any) {
-        let digit = String.fromCharCode(e.which),
+        const digit = String.fromCharCode(e.which),
             val = `${this.target.value}${digit}`;
 
         if (!/^\d+$/.test(digit)) {
@@ -53,7 +50,7 @@ export class ExpiryFormatDirective {
             } else if (/^\d\d$/.test(val)) {
                 e.preventDefault();
                 setTimeout(() => {
-                    let m1 = parseInt(val[0], 10),
+                    const m1 = parseInt(val[0], 10),
                         m2 = parseInt(val[1], 10);
                     if (m2 > 2 && m1 !== 0) {
                         this.target.value = `0${m1} / ${m2}`;
@@ -66,7 +63,7 @@ export class ExpiryFormatDirective {
     }
 
     private formatForwardSlashAndSpace(e: any) {
-        let which = String.fromCharCode(e.which),
+        const which = String.fromCharCode(e.which),
             val = this.target.value;
 
         if (!(which === '/' || which === ' ')) {
@@ -78,7 +75,7 @@ export class ExpiryFormatDirective {
     }
 
     private formatForwardExpiry(e: any) {
-        let digit = String.fromCharCode(e.which),
+        const digit = String.fromCharCode(e.which),
             val = this.target.value;
 
         if (!/^\d+$/.test(digit) && /^\d\d$/.test(val)) {
@@ -87,13 +84,13 @@ export class ExpiryFormatDirective {
     }
 
     private handleBackspace(e: any) {
-        let val = this.target.valueOf;
+        const val = this.target.valueOf;
         if ((this.target.selectionStart != null) && this.target.selectionStart !== val.length) {
             return;
         }
         if (/\d\s\/\s$/.test(val)) {
             e.preventDefault();
-            setTimeout(function () {
+            setTimeout(() => {
                 this.target.value = val.replace(/\d\s\/\s$/, '');
             });
         }

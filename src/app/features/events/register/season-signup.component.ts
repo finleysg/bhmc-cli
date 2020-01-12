@@ -16,15 +16,15 @@ import { merge } from 'lodash';
 })
 export class SeasonSignupComponent implements OnInit {
 
-    @ViewChild(PaymentComponent, { static: false }) paymentComponent: PaymentComponent;
+    @ViewChild(PaymentComponent, { static: false }) paymentComponent?: PaymentComponent;
 
-    public registrationGroup: EventRegistrationGroup;
-    public paymentGroup: EventRegistrationGroup;
-    public eventDetail: EventDetail;
+    public registrationGroup: EventRegistrationGroup = new EventRegistrationGroup({});
+    public paymentGroup?: EventRegistrationGroup;
+    public eventDetail: EventDetail = new EventDetail({});
     public currentUser: User;
     public config: AppConfig;
-    public application: EventDocument;
-    public forwardTees: boolean;
+    public application?: EventDocument;
+    public forwardTees = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -33,24 +33,28 @@ export class SeasonSignupComponent implements OnInit {
         private eventService: EventDetailService,
         private configService: ConfigService,
         private toaster: ToasterService,
-        private authService: AuthenticationService) { }
+        private authService: AuthenticationService) {
 
-    ngOnInit(): void {
         this.currentUser = this.authService.user;
         this.config = this.configService.config;
+    }
+
+    ngOnInit(): void {
         this.route.data
-            .subscribe((data: { eventDetail: EventDetail }) => {
-                this.eventDetail = data.eventDetail;
-                const signupDocs = this.eventDetail.getDocuments(DocumentType.SignUp);
-                if (signupDocs) {
-                    signupDocs.forEach(d => {  // TODO: better way to distinguish between the 2 signup docs
-                        if (d.title === 'Returning Member Application') {
-                            this.application = d;
-                        }
-                    });
+            .subscribe(data => {
+                if (data.eventDetail instanceof EventDetail) {
+                    this.eventDetail = data.eventDetail;
+                    const signupDocs = this.eventDetail.getDocuments(DocumentType.SignUp);
+                    if (signupDocs) {
+                        signupDocs.forEach(d => {  // TODO: better way to distinguish between the 2 signup docs
+                            if (d.title === 'Returning Member Application') {
+                                this.application = d;
+                            }
+                        });
+                    }
+                    this.registrationGroup = EventRegistrationGroup.create(this.currentUser);
+                    this.updatePayment();
                 }
-                this.registrationGroup = EventRegistrationGroup.create(this.currentUser);
-                this.updatePayment();
             });
     }
 
@@ -78,7 +82,9 @@ export class SeasonSignupComponent implements OnInit {
                 this.paymentGroup = merge({}, group, this.registrationGroup);
                 this.paymentGroup.registrations[0] = registration;
                 this.updatePayment();
-                this.paymentComponent.open();
+                if (this.paymentComponent) {
+                    this.paymentComponent.open();
+                }
             }),
             catchError(err => {
                 this.toaster.pop('error', 'Error', err);
@@ -100,7 +106,9 @@ export class SeasonSignupComponent implements OnInit {
                 })
             ).subscribe();
         } else {
-            this.registrationService.cancelReservation(this.paymentGroup).subscribe();
+            if (this.paymentGroup) {
+                this.registrationService.cancelReservation(this.paymentGroup).subscribe();
+            }
         }
     }
 }

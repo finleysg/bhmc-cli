@@ -1,29 +1,38 @@
+import { isEmpty } from 'lodash';
+
 // Registration record as received from the api
 export class EventRegistration {
 
-    id: number;
-    courseName: string;
-    courseSetupId: number;
-    holeNumber: number;
-    holeId: number;
-    groupId: number;
-    memberId: number;
-    memberName: string;
-    memberFirstName: string;
-    memberLastName: string;
-    memberGhin: string;
-    memberEmail: string;
-    forwardTees: boolean;
-    startingOrder: number;
-    slotNumber: number;
-    isEventFeePaid: boolean;
-    isGrossSkinsFeePaid: boolean;
-    isNetSkinsFeePaid: boolean;
-    isGreensFeePaid: boolean;
-    isCartFeePaid: boolean;
-    totalFees: number;
-    status: string;
-    disableSkins: boolean;
+    id = 0;
+    courseName?: string;
+    courseSetupId?: number;
+    holeNumber?: number;
+    holeId?: number;
+    groupId = -1;
+    memberId = 0;
+    memberName = '';
+    memberFirstName = '';
+    memberLastName = '';
+    memberGhin = '';
+    memberEmail = '';
+    forwardTees = false;
+    startingOrder = 0;
+    slotNumber = 0;
+    isEventFeePaid = false;
+    isGrossSkinsFeePaid = false;
+    isNetSkinsFeePaid = false;
+    isGreensFeePaid = false;
+    isCartFeePaid = false;
+    totalFees = 0;
+    status = '';
+    disableSkins = false;
+
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const reg = this.fromJson(obj);
+            Object.assign(this, reg);
+        }
+    }
 
     get hasMember(): boolean {
         return this.memberId > 0;
@@ -41,31 +50,32 @@ export class EventRegistration {
         return '';
     }
 
-    fromJson(json: any): EventRegistration {
-        this.id = json.id;
-        this.courseName = json.course ? json.course : 'In the Event';
-        this.courseSetupId = json.course_setup_id ? +json.course_setup_id : 0;
-        this.holeNumber = json.hole_number;
-        this.holeId = json.hole_id;
-        this.groupId = json.registration_group ? +json.registration_group : -1;
-        this.memberId = json.member ? json.member.id : -1;
-        this.memberName = json.member ? `${json.member.first_name} ${json.member.last_name}` : '';
-        this.memberFirstName = json.member ? json.member.first_name : '';
-        this.memberLastName = json.member ? json.member.last_name : '';
-        this.memberGhin = json.member ? json.member.ghin : '';
-        this.memberEmail = json.member ? json.member.email : '';
-        this.forwardTees = json.member ? json.member.forward_tees : false;
-        this.slotNumber = json.slot;
-        this.startingOrder = json.starting_order;
-        // this.isEventFeePaid = json.is_event_fee_paid;
-        this.isEventFeePaid = !!json.member; // default to true if member is present
-        this.isGrossSkinsFeePaid = json.is_gross_skins_paid;
-        this.isNetSkinsFeePaid = json.is_net_skins_paid;
-        this.isGreensFeePaid = json.is_greens_fee_paid;
-        this.isCartFeePaid = json.is_cart_fee_paid;
-        this.status = json.status;
+    private fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.id;
+        obj.courseName = json.course ? json.course : 'In the Event';
+        obj.courseSetupId = json.course_setup_id ? +json.course_setup_id : 0;
+        obj.holeNumber = json.hole_number;
+        obj.holeId = json.hole_id;
+        obj.groupId = json.registration_group ? +json.registration_group : -1;
+        obj.memberId = json.member ? json.member.id : -1;
+        obj.memberName = json.member ? `${json.member.first_name} ${json.member.last_name}` : '';
+        obj.memberFirstName = json.member ? json.member.first_name : '';
+        obj.memberLastName = json.member ? json.member.last_name : '';
+        obj.memberGhin = json.member ? json.member.ghin : '';
+        obj.memberEmail = json.member ? json.member.email : '';
+        obj.forwardTees = json.member ? json.member.forward_tees : false;
+        obj.slotNumber = json.slot;
+        obj.startingOrder = json.starting_order;
+        // obj.isEventFeePaid = json.is_event_fee_paid;
+        obj.isEventFeePaid = !!json.member; // default to true if member is present
+        obj.isGrossSkinsFeePaid = json.is_gross_skins_paid;
+        obj.isNetSkinsFeePaid = json.is_net_skins_paid;
+        obj.isGreensFeePaid = json.is_greens_fee_paid;
+        obj.isCartFeePaid = json.is_cart_fee_paid;
+        obj.status = json.status;
 
-        return this;
+        return obj;
     }
 
     toJson(): any {

@@ -7,25 +7,27 @@ import { EventType, EventDetail } from '../models/event-detail';
 import { map } from 'rxjs/operators';
 
 class DocumentFilter {
+    year?: number;
+    dtype?: string;
+    etype?: string;
+
     constructor(docType?: DocumentType, year?: number, eventType?: EventType) {
-        this.dtype = docType ? EventDocument.getDocumentCode(docType) : null;
-        this.etype = eventType ? EventDetail.getEventCode(eventType) : null;
-        this.year = year || null;
+        this.dtype = docType ? EventDocument.getDocumentCode(docType) : undefined;
+        this.etype = eventType ? EventDetail.getEventCode(eventType) : undefined;
+        this.year = year;
     }
-    year: number;
-    dtype: string;
-    etype: string;
 }
 
 class PhotoFilter {
+    year?: number;
+    ptype?: string;
+    etype?: string;
+
     constructor(picType?: PhotoType, year?: number, eventType?: EventType) {
-        this.ptype = picType ? Photo.getPhotoCode(picType) : null;
-        this.etype = eventType ? EventDetail.getEventCode(eventType) : null;
-        this.year = year || null;
+        this.ptype = picType ? Photo.getPhotoCode(picType) : undefined;
+        this.etype = eventType ? EventDetail.getEventCode(eventType) : undefined;
+        this.year = year;
     }
-    year: number;
-    ptype: string;
-    etype: string;
 }
 
 @Injectable()
@@ -38,7 +40,7 @@ export class DocumentService {
         return this.dataService.getApiRequest('documents', filter).pipe(
             map(members => {
                 return members.map((m: any) => {
-                    return new EventDocument().fromJson(m);
+                    return new EventDocument(m);
                 });
             })
         );
@@ -50,13 +52,13 @@ export class DocumentService {
             resource = resource + '/' + id.toString();
             return this.dataService.patchForm(resource, form).pipe(
                 map((json: any) => {
-                    return new EventDocument().fromJson(json);
+                    return new EventDocument(json);
                 })
             );
         }
         return this.dataService.postForm(resource, form).pipe(
             map((json: any) => {
-                return new EventDocument().fromJson(json);
+                return new EventDocument(json);
             })
         );
     }
@@ -66,7 +68,7 @@ export class DocumentService {
         return this.dataService.getApiRequest('photos', filter).pipe(
             map(pics => {
                 return pics.map((pic: any) => {
-                    return new Photo().fromJson(pic);
+                    return new Photo(pic);
                 });
             })
         );

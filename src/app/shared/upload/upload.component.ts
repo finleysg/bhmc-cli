@@ -9,26 +9,27 @@ declare const Spinner: any;
 
 @Component({
     moduleId: module.id,
+    // tslint:disable-next-line: component-selector
     selector: 'upload',
     templateUrl: 'upload.component.html',
     styleUrls: ['upload.component.css']
 })
 export class UploadComponent implements OnInit {
 
-    @Input() documentType: DocumentType;
-    @Input() eventDetail: EventDetail;
+    @Input() documentType?: DocumentType;
+    @Input() eventDetail?: EventDetail;
     @Output() onClose = new EventEmitter<EventDocument>();
-    @ViewChild('uploadModal', { static: true }) uploadModal: ModalDirective;
+    @ViewChild('uploadModal', { static: true }) uploadModal?: ModalDirective;
 
-    selectedFile: File;
-    documentName: string;
+    selectedFile?: File;
+    documentName?: string;
 
-    private existingDocument: EventDocument;
-    private titleSuffix: string;
+    private existingDocument?: EventDocument;
+    private titleSuffix?: string;
     private config: AppConfig;
     private spinner: any;
     private spinnerElement: any;
-  
+
     constructor(
         private documentService: DocumentService,
         private elementRef: ElementRef,
@@ -42,22 +43,26 @@ export class UploadComponent implements OnInit {
       this.initSpinner();
     }
 
-    open(document: EventDocument, titleSuffix: string = null): void {
+    open(document?: EventDocument, titleSuffix?: string): void {
         this.existingDocument = document;
         this.titleSuffix = titleSuffix;
         this.documentName = this.deriveDocumentTitle();
         //noinspection TypeScriptValidateTypes
-        this.uploadModal.config = {backdrop: 'static', keyboard: false};
-        this.uploadModal.show();
+        if (this.uploadModal) {
+            this.uploadModal.config = {backdrop: 'static', keyboard: false};
+            this.uploadModal.show();
+        }
     }
 
-    openType(document: EventDocument, type: DocumentType): void {
+    openType(document?: EventDocument, type?: DocumentType): void {
         this.existingDocument = document;
         this.documentType = type;
         this.documentName = this.deriveDocumentTitle();
         //noinspection TypeScriptValidateTypes
-        this.uploadModal.config = {backdrop: 'static', keyboard: false};
-        this.uploadModal.show();
+        if (this.uploadModal) {
+            this.uploadModal.config = {backdrop: 'static', keyboard: false};
+            this.uploadModal.show();
+        }
     }
 
     onShown(): void {
@@ -66,8 +71,9 @@ export class UploadComponent implements OnInit {
 
     cancelUpload(): void {
         this.clearFile();
-        this.onClose.emit(null);
-        this.uploadModal.hide();
+        this.onClose.emit();
+        // tslint:disable-next-line: no-non-null-assertion
+        this.uploadModal!.hide();
     }
 
     fileSelected($event: any): void {
@@ -75,7 +81,7 @@ export class UploadComponent implements OnInit {
     }
 
     clearFile(): void {
-        this.selectedFile = null;
+        this.selectedFile = undefined;
     }
 
     uploadDocument(): void {
@@ -91,7 +97,8 @@ export class UploadComponent implements OnInit {
         this.documentService.uploadDocument(form, id).subscribe(
             (doc: EventDocument) => {
                 this.onClose.emit(doc);
-                this.uploadModal.hide();
+                // tslint:disable-next-line: no-non-null-assertion
+                this.uploadModal!.hide();
                 this.spinner.stop();
                 this.clearFile();
             },
@@ -104,27 +111,31 @@ export class UploadComponent implements OnInit {
 
     private createDocument(): FormData {
         const form = new FormData();
-        form.append('document_type', EventDocument.getDocumentCode(this.documentType));
-        form.append('year', this.configService.config.year.toString());
-        form.append('title', this.documentName);
-        form.append('file', this.selectedFile, this.selectedFile.name);
-        if (this.eventDetail) {
-            form.append('event', this.eventDetail.id.toString());
+        if (this.selectedFile) {
+            form.append('document_type', EventDocument.getDocumentCode(this.documentType));
+            form.append('year', this.configService.config.year.toString());
+            form.append('title', this.documentName || '');
+            form.append('file', this.selectedFile, this.selectedFile.name);
+            if (this.eventDetail) {
+                form.append('event', this.eventDetail.id.toString());
+            }
+            form.append('display_flag', 'false');
         }
-        form.append('display_flag', 'false');
         return form;
     }
 
     private updateDocument(): FormData {
         const form = new FormData();
-        form.append('document_type', EventDocument.getDocumentCode(this.existingDocument.type));
-        form.append('year', this.existingDocument.year.toString());
-        form.append('title', this.existingDocument.title);
-        form.append('file', this.selectedFile, this.selectedFile.name);
-        if (this.eventDetail) {
-            form.append('event', this.eventDetail.id.toString());
+        if (this.existingDocument && this.selectedFile) {
+            form.append('document_type', EventDocument.getDocumentCode(this.existingDocument.type));
+            form.append('year', this.existingDocument.year.toString());
+            form.append('title', this.existingDocument.title);
+            form.append('file', this.selectedFile, this.selectedFile.name);
+            if (this.eventDetail) {
+                form.append('event', this.eventDetail.id.toString());
+            }
+            form.append('display_flag', this.existingDocument.displayFlag ? this.existingDocument.displayFlag.toString() : 'false');
         }
-        form.append('display_flag', this.existingDocument.displayFlag ? this.existingDocument.displayFlag.toString() : 'false');
         return form;
     }
 
@@ -140,13 +151,15 @@ export class UploadComponent implements OnInit {
                     title = `${year} Match Play Brackets`;
                     break;
                 case DocumentType.Results:
-                    title = `${this.eventDetail.startDate.format('YYYY-MM-DD')} Results (${this.eventDetail.name})`;
+                    // tslint:disable-next-line: no-non-null-assertion
+                    title = `${this.eventDetail!.startDate.format('YYYY-MM-DD')} Results (${this.eventDetail!.name})`;
                     break;
                 case DocumentType.SeasonPoints:
                     title = `${year} Season Long Points ${this.titleSuffix}`; // Net or Gross
                     break;
                 case DocumentType.Teetimes:
-                    title = `${this.eventDetail.startDate.format('YYYY-MM-DD')} ${this.eventDetail.name} Teetimes`;
+                    // tslint:disable-next-line: no-non-null-assertion
+                    title = `${this.eventDetail!.startDate.format('YYYY-MM-DD')} ${this.eventDetail!.name} Teetimes`;
                     break;
                 default:
                     title = 'unknown';

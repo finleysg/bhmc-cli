@@ -10,17 +10,16 @@ import { AppConfig } from '../../app-config';
 import { BhmcErrorHandler } from './bhmc-error-handler.service';
 import { map, mergeMap, catchError, tap } from 'rxjs/operators';
 
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Injectable()
 export class AuthenticationService {
 
-    private _rememberUser: boolean;
+    private _rememberUser = false;
     private currentUserSource: BehaviorSubject<User>;
     public currentUser$: Observable<User>;
     private _currentUser: User;
-    public redirectUrl: string;
-    public returningMember: boolean; // temporary hack
+    public redirectUrl?: string;
     private config: AppConfig;
 
     constructor(
@@ -29,23 +28,9 @@ export class AuthenticationService {
         private configService: ConfigService,
         private errorHandler: BhmcErrorHandler
     ) {
-        this.config = this.configService.config;
-        // if (!this._currentUser) {
-        //     const storedUser = this.getFromStorage('bhmc_user', true);
-        //     if (!storedUser) {
-        //         this._currentUser = new User();
-        //         this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser)); // session storage
-        //     } else {
-        //         this._rememberUser = true;
-        //         this._currentUser = Object.assign(new User(), JSON.parse(storedUser));
-        //         if (this._currentUser.member && this._currentUser.member.birthDate) {
-        //             this._currentUser.member.birthDate = moment(this._currentUser.member.birthDate);
-        //         }
-        //         this.errorHandler.setUserContext(this._currentUser);
-        //     }
-        // }
         const token = this.getFromStorage('bhmc_token', true);
-        this._currentUser = new User();
+        this.config = this.configService.config;
+        this._currentUser = new User({});
         this._currentUser.isAuthenticated = (token !== null && token !== undefined); // temporary - stops a redirect to login
         this.currentUserSource = new BehaviorSubject(this._currentUser);
         this.currentUser$ = this.currentUserSource.asObservable();
@@ -73,10 +58,10 @@ export class AuthenticationService {
             mergeMap((data: any) => {
                 if (data && data.key) {
                     this.saveToStorage('bhmc_token', data.key);
-                    return this.getUser();
                 }
+                return this.getUser();
             }),
-            mergeMap(user => {
+            mergeMap((user: User) => {
                 this._currentUser = user;
                 return this.memberService.isRegistered(this.config.registrationId, this._currentUser.member.id);
             }),
@@ -86,7 +71,6 @@ export class AuthenticationService {
             }),
             map(isParticipant => {
                 this._currentUser.member.matchplayParticipant = isParticipant;
-                // this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser));
                 this.errorHandler.setUserContext(this._currentUser);
                 this.currentUserSource.next(this._currentUser);
                 return;
@@ -163,7 +147,6 @@ export class AuthenticationService {
             }),
             map(isParticipant => {
                 this._currentUser.member.matchplayParticipant = isParticipant;
-                // this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser));
                 this.currentUserSource.next(this._currentUser);
                 return;
             })
@@ -173,11 +156,11 @@ export class AuthenticationService {
     getUser(): Observable<User> {
         return this.dataService.getAuthRequest('user').pipe(
             map((data: any) => {
-                return new User().fromJson(data);
+                return new User(data);
             }),
             catchError(() => {
                 this.removeFromStorage('bhmc_token');
-                return of(new User());
+                return of(new User({}));
             })
         );
     }
@@ -191,17 +174,16 @@ export class AuthenticationService {
     resetUser(): void {
         Cookie.delete('crsftoken');
         this.removeFromStorage('bhmc_token');
-        this._currentUser = new User();
+        this._currentUser = new User({});
         this.currentUserSource.next(this._currentUser);
-        // this.saveToStorage('bhmc_user', JSON.stringify(this._currentUser));
         this.errorHandler.clearUserContext();
     }
 
     private getFromStorage(key: string, override: boolean = false): string {
         if (this._rememberUser || override) {
-            return localStorage.getItem(key);
+            return localStorage.getItem(key) || '';
         }
-        return sessionStorage.getItem(key);
+        return sessionStorage.getItem(key) || '';
     }
 
     private saveToStorage(key: string, data: string, override: boolean = false): void {

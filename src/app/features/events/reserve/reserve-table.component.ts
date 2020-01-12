@@ -16,7 +16,7 @@ import { empty } from 'rxjs';
 export class ReserveTableComponent implements OnInit {
 
     public currentUser: User;
-    public table: EventSignupTable;
+    public table?: EventSignupTable;
 
     constructor(private eventService: EventDetailService,
                 private registrationService: RegistrationService,
@@ -24,18 +24,21 @@ export class ReserveTableComponent implements OnInit {
                 private toaster: ToasterService,
                 private router: Router,
                 private route: ActivatedRoute) {
+        this.currentUser = this.authService.user;
     }
 
     ngOnInit(): void {
-        this.currentUser = this.authService.user;
         this.route.params.subscribe((p: Params) => {
-            this.eventService.signupTable(+p['course']).subscribe(table => this.table = table);
+            const source = this.eventService.signupTable(+p['course']);
+            if (source) {
+                source.subscribe(table => this.table = table);
+            }
         });
     }
 
     // TODO: better place for this?
     slotClass(slot: RegistrationSlot): string {
-        let className = this.table.courseName.replace(' ', '').toLowerCase();
+        let className = this.table ? this.table.courseName.replace(' ', '').toLowerCase() : '';
         if (slot.selected) {
             className = 'bg-warning clickable';
         } else if (slot.status === SlotStatus.Reserved) {
@@ -47,12 +50,12 @@ export class ReserveTableComponent implements OnInit {
     }
 
     selectSlot = (row: RegistrationRow, slot: RegistrationSlot) => {
-        if (slot.canSelect) {
+        if (this.table && slot.canSelect) {
             slot.selected = !slot.selected;
             // clear any selections in a different row (TODO: move to class)
             this.table.rows.forEach(r => {
                 r.slots.forEach((s: RegistrationSlot) => {
-                    if (s.row.name !== row.name) {
+                    if (s.rowName !== row.name) {
                         s.selected = false;
                     }
                 });
@@ -61,33 +64,39 @@ export class ReserveTableComponent implements OnInit {
     }
 
     selectRow = (row: RegistrationRow) => {
-        row.slots.forEach(s => {
-            if (s.canSelect) {
-                s.selected = true;
-            }
-        });
-        // clear any selections in a different row (TODO: move to class)
-        this.table.rows.forEach(r => {
-            r.slots.forEach(s => {
-                if (s.row.name !== row.name) {
-                    s.selected = false;
+        if (this.table) {
+            row.slots.forEach(s => {
+                if (s.canSelect) {
+                    s.selected = true;
                 }
             });
-        });
+            // clear any selections in a different row (TODO: move to class)
+            this.table.rows.forEach(r => {
+                r.slots.forEach(s => {
+                    if (s.rowName !== row.name) {
+                        s.selected = false;
+                    }
+                });
+            });
+        }
     }
 
     register = (row: RegistrationRow) => {
         // The group created is saved on the service
-        const eventId = this.route.snapshot.parent.parent.params['id'];
-        this.registrationService.reserve(eventId, row).pipe(
-            tap(() => {
-                this.router.navigate(['register'], {relativeTo: this.route.parent.parent});
-            }),
-            catchError(err => {
-                this.eventService.refreshEventDetail();
-                this.toaster.pop('error', 'Reservation Failure', err);
-                return empty();
-            })
-        ).subscribe();
+        const parentRoute = this.route.snapshot.parent && this.route.snapshot.parent.parent;
+        if (parentRoute) {
+            const eventId = parentRoute.params['id'];
+            this.registrationService.reserve(eventId, row).pipe(
+                tap(() => {
+                    // tslint:disable-next-line: no-non-null-assertion
+                    this.router.navigate(['register'], {relativeTo: this.route.parent!.parent});
+                }),
+                catchError(err => {
+                    this.eventService.refreshEventDetail();
+                    this.toaster.pop('error', 'Reservation Failure', err);
+                    return empty();
+                })
+            ).subscribe();
+        }
     }
 }

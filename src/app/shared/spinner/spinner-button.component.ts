@@ -5,6 +5,7 @@ declare let Spinner: any;
 // TODO: set initial style from parent, and maybe enable outline styles
 @Component({
     moduleId: module.id,
+    // tslint:disable-next-line: component-selector
     selector: 'spinner-button',
     templateUrl: 'spinner-button.component.html',
     styleUrls: ['spinner-button.component.css']
@@ -13,15 +14,16 @@ export class SpinnerButtonComponent implements OnInit {
 
     @Output() onClick = new EventEmitter<string>();
 
-    @Input() buttonText: string;
-    @Input() sendingText: string;
-    @Input() completeText: string;
-    @Input() failureText: string;
-    public pending: boolean;
-    public sending: boolean;
-    public complete: boolean;
-    public failure: boolean;
-    public disabled: boolean;
+    @Input() buttonText?: string;
+    @Input() sendingText?: string;
+    @Input() completeText?: string;
+    @Input() failureText?: string;
+
+    public pending = true;
+    public sending = false;
+    public complete = false;
+    public failure = false;
+    public disabled = false;
     private spinner: any;
 
     constructor(private spinnerElement: ElementRef) {
@@ -74,7 +76,7 @@ export class SpinnerButtonComponent implements OnInit {
     }
 
     private initSpinner() {
-        let options = {
+        const options = {
             lines: 17,
             length: 0,
             width: 10,

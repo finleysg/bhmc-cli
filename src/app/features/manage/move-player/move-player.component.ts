@@ -18,14 +18,14 @@ export class MovePlayerComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
 
   @ViewChild('openHolesModal', { static: true })
-  public openHolesModal: ModalDirective;
+  public openHolesModal?: ModalDirective;
 
-  public eventDetail: EventDetail;
-  public allMembers: PublicMember[];
-  public selectedMemberName: string;
-  public currentMember: PublicMember;
-  public registration: EventRegistration;
-  public selectedHole: EventRegistration;
+  public eventDetail: EventDetail = new EventDetail({});
+  public allMembers: PublicMember[] = [];
+  public selectedMemberName?: string;
+  public currentMember?: PublicMember;
+  public registration?: EventRegistration;
+  public selectedHole?: EventRegistration;
   public openHoles: EventRegistration[] = [];
 
   constructor(
@@ -37,9 +37,8 @@ export class MovePlayerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.data   // .pipe(takeUntil(this.onDestroy))
-      .subscribe((data: { eventDetail: EventDetail }) => {
-        this.eventDetail = data.eventDetail;
-        console.log(this.eventDetail);
+      .subscribe(data => {
+        this.eventDetail = data.eventDetail as EventDetail;
         this.memberService.getMembers()
           .pipe(takeUntil(this.onDestroy))
           .subscribe(members => {
@@ -57,7 +56,7 @@ export class MovePlayerComponent implements OnInit, OnDestroy {
   findRegistration(member: PublicMember) {
     this.registrationService.getRegistration(this.eventDetail.id, member.id)
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((reg: EventRegistration) => {
+      .subscribe((reg: EventRegistration | undefined) => {
         if (reg) {
           this.registration = reg;
         }
@@ -71,27 +70,35 @@ export class MovePlayerComponent implements OnInit, OnDestroy {
   }
 
   selectDestination(): void {
-    this.openHolesModal.hide();
+    if (this.openHolesModal) {
+      this.openHolesModal.hide();
+    }
   }
 
   savePlayer(): void {
-    this.registrationService.moveRegistration(this.registration, this.selectedHole).pipe(
-      tap(() => {
-        this.toaster.pop('success', 'Player Moved', `${this.registration.memberName} has been moved to ${this.selectedHole.fullName}`);
-        this.clear();
-      }),
-      catchError((err: string) => {
-        this.toaster.pop('error', 'Add Player Failure', err);
-        return empty();
-      }),
-      takeUntil(this.onDestroy)
+    if (this.registration && this.selectedHole) {
+      this.registrationService.moveRegistration(this.registration, this.selectedHole).pipe(
+        tap(() => {
+          this.toaster.pop(
+            'success',
+            'Player Moved',
+            // tslint:disable-next-line: no-non-null-assertion
+            `${this.registration!.memberName} has been moved to ${this.selectedHole!.fullName}`);
+          this.clear();
+        }),
+        catchError((err: string) => {
+          this.toaster.pop('error', 'Add Player Failure', err);
+          return empty();
+        }),
+        takeUntil(this.onDestroy)
     ).subscribe();
+    }
   }
 
   clear(): void {
-    this.currentMember = null;
-    this.registration = null;
-    this.selectedHole = null;
+    this.currentMember = undefined;
+    this.registration = undefined;
+    this.selectedHole = undefined;
   }
 
   findOpenHole(): void {
@@ -99,7 +106,9 @@ export class MovePlayerComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.onDestroy))
       .subscribe(registrations => {
         this.openHoles = registrations;
-        this.openHolesModal.show();
+        if (this.openHolesModal) {
+          this.openHolesModal.show();
+        }
       });
   }
 
@@ -108,7 +117,9 @@ export class MovePlayerComponent implements OnInit, OnDestroy {
   }
 
   cancelOpenHoles(): void {
-    this.selectedHole = null;
-    this.openHolesModal.hide();
+    this.selectedHole = undefined;
+    if (this.openHolesModal) {
+      this.openHolesModal.hide();
+    }
   }
 }

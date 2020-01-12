@@ -1,29 +1,37 @@
 import {EventRegistration} from './event-registration';
 import {EventDetail} from './event-detail';
 
-import * as moment from 'moment';
+import moment from 'moment';
+import { isEmpty } from 'lodash';
 
 export class SlotPayment {
-    id: number;
-    slotId: number;
-    recordingMemberId: number;
-    cardVerificationToken: string;
-    paymentConfirmationCode: string;
+    id = 0;
+    slotId = 0;
+    recordingMemberId = 0;
+    cardVerificationToken = '';
+    paymentConfirmationCode = '';
     paymentConfirmationDate: any;
-    paymentAmount: number;
-    comment: string;
+    paymentAmount = 0;
+    comment?: string;
 
-    fromJson(json: any): SlotPayment {
-        this.id = json.id;
-        this.slotId = json.registration_slot;
-        this.recordingMemberId = json.recorded_by;
-        this.cardVerificationToken = json.card_verification_token;
-        this.paymentConfirmationCode = json.payment_confirmation_code;
-        this.paymentAmount = json.payment_amount;
-        this.paymentConfirmationDate = moment(json.payment_timestamp);
-        this.comment = json.comment;
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const payment = this.fromJson(obj);
+            Object.assign(this, payment);
+        }
+    }
 
-        return this;
+    private fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.id;
+        obj.slotId = json.registration_slot;
+        obj.recordingMemberId = json.recorded_by;
+        obj.cardVerificationToken = json.card_verification_token;
+        obj.paymentConfirmationCode = json.payment_confirmation_code;
+        obj.paymentAmount = json.payment_amount;
+        obj.paymentConfirmationDate = moment(json.payment_timestamp);
+        obj.comment = json.comment;
+        return obj;
     }
 
     toJson(): any {
@@ -41,7 +49,7 @@ export class SlotPayment {
 
     updatePayment(event: EventDetail, registration: EventRegistration, original: EventRegistration) {
         let fee = 0.0;
-        let comment: string;
+        let comment = '';
         if (!original.isEventFeePaid) {
             fee = event.eventFee;
             comment = `event registration`;

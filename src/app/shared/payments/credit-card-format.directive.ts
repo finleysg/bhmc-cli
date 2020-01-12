@@ -2,6 +2,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 import { CreditCardService } from './credit-card.service';
 
 @Directive({
+    // tslint:disable-next-line: directive-selector
     selector: '[ccNumber]'
 })
 export class CreditCardFormatDirective {
@@ -33,10 +34,6 @@ export class CreditCardFormatDirective {
     @HostListener('paste', ['$event']) onPaste(e: any) {
         this.reformatCardNumber();
     }
-
-    // @HostListener('change', ['$event']) onChange(e: any) {
-    //     this.reformatCardNumber();
-    // }
 
     @HostListener('input', ['$event']) onInput(e: any) {
         this.reformatCardNumber();
@@ -84,7 +81,7 @@ export class CreditCardFormatDirective {
     }
 
     private handleBackspace(e: any) {
-        let value = this.target.value;
+        const value = this.target.value;
         if (/\d\s$/.test(value)) {
             e.preventDefault();
             setTimeout(() => {
@@ -101,7 +98,7 @@ export class CreditCardFormatDirective {
     private reformatCardNumber() {
         setTimeout(() => {
             let val = this.cardService.replaceFullWidthChars(this.target.value);
-            val = this.cardService.formatCardNumber(val);
+            val = this.cardService.formatCardNumber(val) || '';
             this.target.selectionStart = this.target.selectionEnd = this.cardService.safeVal(val, this.target);
         });
     }

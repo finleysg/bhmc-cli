@@ -1,32 +1,34 @@
-import { RegistrationRow } from './registration-row';
-import { EventRegistration } from '../../../core';
+export enum SlotStatus {
+    Available = <any>'Available',
+    Reserved = <any>'Reserved',
+    Pending = <any>'Unavailable',
+    Unavailable = <any>'Unavailable'
+}
 
 export class RegistrationSlot {
 
-    id: number;
-    row: RegistrationRow;
-    memberId: number;
-    memberName: string;
-    status: SlotStatus;
-    selected: boolean;
-    found: boolean;
-    registration: EventRegistration;
+    id = 0;
+    rowName = '';
+    memberId = 0;
+    memberName = '';
+    status: SlotStatus = SlotStatus.Unavailable;
+    selected = false;
+    found = false;
 
-    static create(parent: RegistrationRow, slot: EventRegistration): RegistrationSlot {
-        let newSlot = new RegistrationSlot();
-        newSlot.id = slot.id;
-        newSlot.row = parent;
-        newSlot.memberId = slot.memberId;
-        newSlot.memberName = slot.memberName;
+    static create(rowName: string, slotId: number, memberId: number, memberName: string, status: string): RegistrationSlot {
+        const newSlot = new RegistrationSlot();
+        newSlot.id = slotId;
+        newSlot.rowName = rowName;
+        newSlot.memberId = memberId;
+        newSlot.memberName = memberName;
         newSlot.selected = false;
-        newSlot.registration = slot;
-        newSlot.updateStatus(slot.status);
+        newSlot.updateStatus(status);
         return newSlot;
     }
 
     isRegistered(memberId: number): boolean {
         return this.memberId === memberId;
-    };
+    }
 
     get displayText(): string {
         if (this.selected && this.status === SlotStatus.Available) {
@@ -52,11 +54,4 @@ export class RegistrationSlot {
             this.status = SlotStatus.Reserved;
         }
     }
-}
-
-export enum SlotStatus {
-    Available = <any>'Available',
-    Reserved = <any>'Reserved',
-    Pending = <any>'Unavailable',
-    Unavailable = <any>'Unavailable'
 }

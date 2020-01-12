@@ -12,7 +12,7 @@ export class PolicyService {
     loadPolicies(category: PolicyCategory): Observable<Policy> {
         return this.dataService.getApiRequest('policies').pipe(
             mergeAll(), // turn Observable<any> where any=collection into Observable
-            map((p: any) => new Policy().fromJson(p)),
+            map((p: any) => new Policy(p)),
             filter((policy: Policy) => policy.category === category)
         );
     }

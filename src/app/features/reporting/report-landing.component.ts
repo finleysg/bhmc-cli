@@ -11,17 +11,17 @@ import { CalendarService, CalendarEvent } from '../../core';
 export class ReportLandingComponent implements OnInit {
 
     config: AppConfig;
-    events: CalendarEvent[];
-    selectedEvent: CalendarEvent;
+    events: CalendarEvent[] = [];
+    selectedEvent?: CalendarEvent;
 
     constructor(
         private calendarService: CalendarService,
         private configService: ConfigService
     ) {
+        this.config = this.configService.config;
     }
 
     ngOnInit(): void {
-        this.config = this.configService.config;
         this.calendarService.quickEvents().subscribe(events => this.events = events);
     }
 

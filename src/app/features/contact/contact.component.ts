@@ -14,18 +14,18 @@ import { ConfigService } from '../../app-config.service';
 export class ContactComponent implements OnInit {
 
     config: AppConfig;
-    contact: Contact;
+    contact?: Contact;
     message: ContactMessage;
-    loading: boolean;
+    loading = false;
 
     constructor(private contactService: ContactService,
                 private toaster: ToasterService,
                 private configService: ConfigService) {
+        this.config = this.configService.config;
+        this.message = new ContactMessage();
     }
 
     ngOnInit(): void {
-        this.config = this.configService.config;
-        this.message = new ContactMessage();
         this.contactService.getContactData().subscribe(c => this.contact = c);
     }
 

@@ -2,17 +2,18 @@ import { RegistrationSlot, SlotStatus } from './registration-slot';
 
 export class RegistrationRow {
 
-    holeNumber: number;
-    holeId: number;
-    startingOrder: number;
-    slots: RegistrationSlot[];
+    holeNumber = 0;
+    holeId = 0;
+    startingOrder = 0;
+    slots: RegistrationSlot[] = [];
 
     static create(registrations: any[]): RegistrationRow {
-        let row = new RegistrationRow();
+        const row = new RegistrationRow();
         row.holeNumber = registrations[0] ? registrations[0].holeNumber : -1;
         row.holeId = registrations[0] ? registrations[0].holeId : -1;
         row.startingOrder = registrations[0] ? registrations[0].startingOrder : -1;
-        row.slots = registrations.map(reg => RegistrationSlot.create(row, reg));
+        row.slots = registrations.map(reg =>
+            RegistrationSlot.create(row.name, reg.slotId, reg.memberId, reg.memberName, reg.status));
         return row;
     }
 
@@ -36,13 +37,13 @@ export class RegistrationRow {
         return this.slots.some(slot => {
             return slot.isRegistered(memberId);
         });
-    };
+    }
 
     get hasOpenings(): boolean {
         return this.slots.some( s => {
             return s.status === SlotStatus.Available;
         });
-    };
+    }
 
     get isDisabled(): boolean {
         return !this.slots.some( s => {
@@ -51,6 +52,6 @@ export class RegistrationRow {
     }
 
     get selectedSlotIds(): number[] {
-        return this.slots.filter(s => s.selected).map(s => { return s.id; });
+        return this.slots.filter(s => s.selected).map(s => s.id);
     }
 }

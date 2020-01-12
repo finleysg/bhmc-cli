@@ -1,13 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
-import { MemberService, SavedCard, AuthenticationService } from '../../core';
+import { MemberService, AuthenticationService } from '../../core';
 import { StripeCreditCard } from './stripe-credit-card';
 import { AppConfig } from '../../app-config';
 import { ConfigService } from '../../app-config.service';
 import { FormGroup } from '@angular/forms';
 import { CreditCardForm } from './credit-card.form';
-import { tap, catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
 
 declare const Stripe: any;
@@ -22,12 +20,12 @@ declare const Spinner: any;
 export class SavedCardComponent implements OnInit {
 
     @Output() onClose = new EventEmitter<boolean>();
-    @ViewChild('cardModal', { static: true }) cardModal: ModalDirective;
+    @ViewChild('cardModal', { static: true }) cardModal?: ModalDirective;
 
-    public card: StripeCreditCard;
-    public cardForm: FormGroup;
+    public card: StripeCreditCard = new StripeCreditCard();
+    public cardForm?: FormGroup;
     public cardErrors: any;
-    public messages: string[];
+    public messages: string[] = [];
     private config: AppConfig;
     private spinner: any;
     private spinnerElement: any;
@@ -35,7 +33,6 @@ export class SavedCardComponent implements OnInit {
     constructor(
         private memberService: MemberService,
         private creditCardForm: CreditCardForm,
-        private authService: AuthenticationService,
         private elementRef: ElementRef,
         private configService: ConfigService,
         private toaster: ToasterService
@@ -59,8 +56,10 @@ export class SavedCardComponent implements OnInit {
         this.card.cvc = '';
         this.card.exp = '';
         //noinspection TypeScriptValidateTypes
-        this.cardModal.config = { backdrop: 'static', keyboard: false };
-        this.cardModal.show();
+        if (this.cardModal) {
+            this.cardModal.config = { backdrop: 'static', keyboard: false };
+            this.cardModal.show();
+        }
     }
 
     onShown(): void {
@@ -68,7 +67,9 @@ export class SavedCardComponent implements OnInit {
     }
 
     cancel(): void {
-        this.cardModal.hide();
+        if (this.cardModal) {
+            this.cardModal.hide();
+        }
         this.onClose.emit(false);
     }
 
@@ -82,7 +83,8 @@ export class SavedCardComponent implements OnInit {
                 }).then(() => {
                     this.spinner.stop();
                     this.toaster.pop('success', 'Card Saved', 'Your card has been saved.');
-                    this.cardModal.hide();
+                    // tslint:disable-next-line: no-non-null-assertion
+                    this.cardModal!.hide();
                     this.onClose.emit(true);
                 }).catch((response: any) => {
                     this.spinner.stop();

@@ -1,6 +1,7 @@
 import { EventRegistration } from './event-registration';
 import { DocumentType, EventDocument } from './event-document';
-import * as moment from 'moment';
+import moment from 'moment';
+import { isEmpty } from 'lodash';
 
 // No friendly name - used for logic, not display
 export enum RegistrationWindowType {
@@ -37,37 +38,54 @@ export enum SkinsType {
 }
 
 export class EventDetail {
-    id: number;
-    name: string;
-    description: string;
-    notes: string;
-    rounds: number;
-    holesPerRound: number;
-    eventFee: number;
-    eventFeeAlt: number;
-    skinsFee: number;
-    greensFee: number;
-    cartFee: number;
-    groupSize: number;
-    startType: StartType;
-    canSignupGroup: boolean;
-    canChooseHole: boolean;
-    registrationWindow: RegistrationWindowType;
-    externalUrl: string;
-    eventType: EventType;
-    skinsType: SkinsType;
-    seasonPoints: number;
-    requiresRegistration: boolean;
+    id = 0;
+    name = '';
+    description?: string;
+    notes?: string;
+    rounds = 0;
+    holesPerRound = 0;
+    eventFee = 0;
+    eventFeeAlt = 0;
+    skinsFee = 0;
+    greensFee = 0;
+    cartFee = 0;
+    groupSize = 0;
+    startType: StartType = StartType.NA;
+    canSignupGroup = false;
+    canChooseHole = false;
+    registrationWindow: RegistrationWindowType = RegistrationWindowType.NA;
+    externalUrl?: string;
+    eventType: EventType = EventType.Other;
+    skinsType: SkinsType = SkinsType.None;
+    seasonPoints = 0;
+    requiresRegistration = false;
     startDate: any;
-    startTime: string;
-    enablePayments: boolean;
+    startTime?: string;
+    enablePayments = false;
     signupStart: any;
     signupEnd: any;
     skinsEnd: any;
-    registrationMaximum: number;
-    portalUrl: string;
-    documents: EventDocument[];
-    registrations: EventRegistration[];
+    registrationMaximum = 0;
+    portalUrl?: string;
+    documents: EventDocument[] = [];
+    registrations: EventRegistration[] = [];
+
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const event = this.fromJson(obj);
+            if (obj.slots) {
+                event.documents = obj['documents'].map((o: any) => {
+                    const doc = new EventDocument(o);
+                    doc.eventId = obj.eventId;
+                    return doc;
+                });
+            }
+            if (obj.registrations) {
+                event.registrations = obj['registrations'].map((o: any) => new EventRegistration(o));
+            }
+            Object.assign(this, event);
+        }
+    }
 
     static getEventType(shortType: string): EventType {
         let eventType = EventType.Other;
@@ -93,7 +111,7 @@ export class EventDetail {
         return eventType;
     }
 
-    static getEventCode(eventType: EventType): string {
+    static getEventCode(eventType?: EventType): string {
         if (eventType === EventType.League) {
             return 'L';
         } else if (eventType === EventType.Major) {
@@ -159,21 +177,21 @@ export class EventDetail {
                this.registrationWindow === RegistrationWindowType.Registering;
     }
 
-    getDocument(type: DocumentType): EventDocument {
+    getDocument(type: DocumentType): EventDocument | undefined {
         if (this.documents && this.documents.length > 0) {
             const docs = this.documents.filter(d => d.type === type);
             if (docs && docs.length === 1) {
                 return docs[0];
             }
         }
-        return null;
+        return undefined;
     }
 
     getDocuments(type: DocumentType): EventDocument[] {
         if (this.documents && this.documents.length > 0) {
             return this.documents.filter(d => d.type === type);
         }
-        return null;
+        return [];
     }
 
     get canViewRegistrations(): boolean {
@@ -181,7 +199,7 @@ export class EventDetail {
                this.registrationWindow !== RegistrationWindowType.Future;
     }
 
-    get teeTimes(): EventDocument {
+    get teeTimes(): EventDocument | null {
         if (this.documents) {
             const document = this.documents.filter( e => {
                 return e.type === DocumentType.Teetimes;
@@ -191,10 +209,10 @@ export class EventDetail {
                 return document[0];
             }
         }
-        return undefined;
+        return null;
     }
 
-    get results(): EventDocument {
+    get results(): EventDocument | null {
         if (this.documents) {
             const document = this.documents.filter( e => {
                 return e.type === DocumentType.Results;
@@ -204,53 +222,40 @@ export class EventDetail {
                 return document[0];
             }
         }
-        return undefined;
+        return null;
     }
 
-    fromJson(json: any): EventDetail {
-        this.id = json.id;
-        this.name = json.name;
-        this.description = json.description;
-        this.notes = json.notes;
-        this.holesPerRound = json.holes_per_round;
-        this.eventFee = +json.event_fee;
-        this.eventFeeAlt = +json.alt_event_fee;
-        this.skinsFee = +json.skins_fee;
-        this.greensFee = +json.green_fee;
-        this.cartFee = +json.cart_fee;
-        this.groupSize = +json.group_size;
-        this.startType = EventDetail.getStartType(json.start_type);
-        this.canSignupGroup = json.can_signup_group;
-        this.canChooseHole = json.can_choose_hole;
-        this.registrationWindow = json.registration_window;
-        this.externalUrl = json.external_url;
-        this.eventType = EventDetail.getEventType(json.event_type);
-        this.skinsType = EventDetail.getSkinsType(json.skins_type);
-        this.seasonPoints = +json.season_points;
-        this.requiresRegistration = json.requires_registration;
-        this.startDate = moment(json.start_date);
-        this.startTime = json.start_time;
-        this.enablePayments = json.enable_payments;
-        this.signupStart = json.signup_start ? moment(json.signup_start) : null;
-        this.signupEnd = json.signup_end ? moment(json.signup_end) : null;
-        this.skinsEnd = json.skins_end ? moment(json.skins_end) : null;
-        this.registrationMaximum = json.registration_maximum;
-        this.portalUrl = json.portal_url;
+    fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.id;
+        obj.name = json.name;
+        obj.description = json.description;
+        obj.notes = json.notes;
+        obj.holesPerRound = json.holes_per_round;
+        obj.eventFee = +json.event_fee;
+        obj.eventFeeAlt = +json.alt_event_fee;
+        obj.skinsFee = +json.skins_fee;
+        obj.greensFee = +json.green_fee;
+        obj.cartFee = +json.cart_fee;
+        obj.groupSize = +json.group_size;
+        obj.startType = EventDetail.getStartType(json.start_type);
+        obj.canSignupGroup = json.can_signup_group;
+        obj.canChooseHole = json.can_choose_hole;
+        obj.registrationWindow = json.registration_window;
+        obj.externalUrl = json.external_url;
+        obj.eventType = EventDetail.getEventType(json.event_type);
+        obj.skinsType = EventDetail.getSkinsType(json.skins_type);
+        obj.seasonPoints = +json.season_points;
+        obj.requiresRegistration = json.requires_registration;
+        obj.startDate = moment(json.start_date);
+        obj.startTime = json.start_time;
+        obj.enablePayments = json.enable_payments;
+        obj.signupStart = json.signup_start ? moment(json.signup_start) : null;
+        obj.signupEnd = json.signup_end ? moment(json.signup_end) : null;
+        obj.skinsEnd = json.skins_end ? moment(json.skins_end) : null;
+        obj.registrationMaximum = json.registration_maximum;
+        obj.portalUrl = json.portal_url;
 
-        if (json.documents && json.documents.length > 0) {
-            this.documents = [];
-            json.documents.forEach((d: any) => {
-                const doc = new EventDocument().fromJson(d);
-                doc.eventId = this.id;
-                this.documents.push(doc);
-            });
-        }
-
-        if (json.registrations && json.registrations.length > 0) {
-            this.registrations = [];
-            json.registrations.forEach((r: any) => this.registrations.push(new EventRegistration().fromJson(r)));
-        }
-
-        return this;
+        return obj;
     }
 }

@@ -1,15 +1,29 @@
 export class PasswordReset {
-    uid: string;
-    token: string;
-    password1: string;
-    password2: string;
+    uid = '';
+    token = '';
+    password1 = '';
+    password2 = '';
 
     get isValid(): boolean {
-        return this.uid && this.token && this.password1 && this.password1 === this.password2;
+        return true &&
+            this.uid !== undefined &&
+            this.uid !== null &&
+            this.uid.length > 0 &&
+            this.token !== undefined &&
+            this.token !== null &&
+            this.token.length > 0 &&
+            this.password1 !== undefined &&
+            this.password1 !== null &&
+            this.password1.length > 0 &&
+            this.password1 === this.password2;
     }
 
     get matching(): boolean {
-        return this.password1 && this.password1 === this.password2;
+        return true &&
+            this.password1 !== undefined &&
+            this.password1 !== null &&
+            this.password1.length > 0 &&
+            this.password1 === this.password2;
     }
 
     toJson(): any {

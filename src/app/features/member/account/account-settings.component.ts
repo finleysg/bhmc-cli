@@ -11,12 +11,12 @@ import { SavedCardComponent } from '../../../shared/payments/saved-card.componen
 })
 export class AccountSettingsComponent implements OnInit {
 
-    @ViewChild(SavedCardComponent, { static: true }) cardModal: SavedCardComponent;
-    public savedCard: SavedCard;
-    public user: User;
-    public editIdentity: boolean;
-    public editPaymentInfo: boolean;
-    private cardIsSaved: boolean;
+    @ViewChild(SavedCardComponent, { static: true }) cardModal?: SavedCardComponent;
+    public savedCard?: SavedCard;
+    public user?: User;
+    public editIdentity = false;
+    public editPaymentInfo = false;
+    private cardIsSaved = false;
 
     constructor(private authService: AuthenticationService,
                 private memberService: MemberService,
@@ -28,14 +28,18 @@ export class AccountSettingsComponent implements OnInit {
     ngOnInit(): void {
         this.authService.currentUser$.subscribe(user => this.user = user);
         this.route.data
-            .subscribe((data: { savedCard: SavedCard }) => {
-                this.savedCard = data.savedCard;
-                this.cardIsSaved = this.savedCard.last4 && this.savedCard.last4.length === 4;
+            .subscribe(data => {
+                if (data.savedCard instanceof SavedCard) {
+                    this.savedCard = data.savedCard;
+                    this.cardIsSaved = this.savedCard.last4.length === 4;
+                }
             });
     }
 
     updateCard(): void {
-        this.cardModal.open();
+        if (this.cardModal) {
+            this.cardModal.open();
+        }
     }
 
     cardSaved(saved: boolean): void {
@@ -49,30 +53,34 @@ export class AccountSettingsComponent implements OnInit {
     }
 
     updatePaymentInfo(): void {
-        if (this.user.member.saveLastCard && !this.cardIsSaved) {
-            this.toaster.pop('error', 'Card Required', 'You will need to add a credit card first (Update Card button)');
-        } else {
-            this.doUpdate(AccountUpdateType.PaymentInfo);
+        if (this.user) {
+            if (this.user.member.saveLastCard && !this.cardIsSaved) {
+                this.toaster.pop('error', 'Card Required', 'You will need to add a credit card first (Update Card button)');
+            } else {
+                this.doUpdate(AccountUpdateType.PaymentInfo);
+            }
         }
     }
 
     doUpdate(updateType: AccountUpdateType): void {
-        const partial = this.user.partialUpdateJson(updateType);
-        this.authService.updateAccount(partial).subscribe(
-            () => {
-                if (this.editIdentity) {
-                    this.editIdentity = false;
-                    this.toaster.pop('success', 'Account Updated', 'Your username have been changed');
-                } else if (this.editPaymentInfo) {
-                    this.memberService.stripeSavedCard().subscribe(card => this.savedCard = card);
-                    this.editPaymentInfo = false;
-                    this.toaster.pop('success', 'Account Updated', 'Your payment preferences have been updated');
+        if (this.user) {
+            const partial = this.user.partialUpdateJson(updateType);
+            this.authService.updateAccount(partial).subscribe(
+                () => {
+                    if (this.editIdentity) {
+                        this.editIdentity = false;
+                        this.toaster.pop('success', 'Account Updated', 'Your username have been changed');
+                    } else if (this.editPaymentInfo) {
+                        this.memberService.stripeSavedCard().subscribe(card => this.savedCard = card);
+                        this.editPaymentInfo = false;
+                        this.toaster.pop('success', 'Account Updated', 'Your payment preferences have been updated');
+                    }
+                },
+                (err: string) => {
+                    this.toaster.pop('error', 'Account Error', err);
                 }
-            },
-            (err: string) => {
-                this.toaster.pop('error', 'Account Error', err);
-            }
-        );
+            );
+        }
     }
 
     changePassword(): void {

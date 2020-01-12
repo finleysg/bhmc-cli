@@ -7,15 +7,15 @@ export class SpinnerService {
     private sources: Map<string, BehaviorSubject<boolean>>;
 
     constructor() {
-        this.spinners = new Map();
-        this.sources = new Map();
+        this.spinners = new Map<string, Observable<boolean>>();
+        this.sources = new Map<string, BehaviorSubject<boolean>>();
     }
 
-    private getSpinnerSource(name: string): BehaviorSubject<boolean> {
+    private getSpinnerSource(name: string): BehaviorSubject<boolean> | undefined {
         if (this.sources.has(name)) {
             return this.sources.get(name);
         }
-        let subject = new BehaviorSubject(false);
+        const subject = new BehaviorSubject(false);
         this.sources.set(name, subject);
         this.spinners.set(name, subject.asObservable());
         return this.sources.get(name);
@@ -25,20 +25,23 @@ export class SpinnerService {
         if (this.spinners.has(name)) {
             return this.spinners.get(name);
         }
-        let subject = new BehaviorSubject(false);
+        const subject = new BehaviorSubject(false);
         this.sources.set(name, subject);
         this.spinners.set(name, subject.asObservable());
         return this.spinners.get(name);
     }
 
     show(name: string) {
-        const spinner = this.getSpinnerSource(name);
-        spinner.next(true);
+        const source = this.getSpinnerSource(name);
+        if (source) {
+            source.next(true);
+        }
     }
 
     hide(name: string) {
-        if (this.spinners.has(name)) {
-            this.sources.get(name).next(false);
+        const source = this.getSpinnerSource(name);
+        if (source) {
+            source.next(false);
         }
     }
 

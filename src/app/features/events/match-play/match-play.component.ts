@@ -1,8 +1,10 @@
 import { AppConfig } from '../../../app-config';
 import { ConfigService } from '../../../app-config.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { User, AuthenticationService, EventDetail,
-    EventDocument, DocumentType, DocumentService } from '../../../core';
+import {
+    User, AuthenticationService, EventDetail,
+    EventDocument, DocumentType, DocumentService
+} from '../../../core';
 import { ActivatedRoute } from '@angular/router';
 import { UploadComponent } from '../../../shared/upload/upload.component';
 import * as moment from 'moment';
@@ -14,36 +16,39 @@ import * as moment from 'moment';
 })
 export class MatchPlayComponent implements OnInit {
 
-    @ViewChild(UploadComponent, { static: false }) uploadComponent: UploadComponent;
+    @ViewChild(UploadComponent, { static: false }) uploadComponent?: UploadComponent;
 
-    public eventDetail: EventDetail;
+    public eventDetail: EventDetail = new EventDetail({});
     public currentUser: User;
-    public application: EventDocument;
-    public canRegister: boolean;
+    public application?: EventDocument;
+    public canRegister = false;
     public config: AppConfig;
-    public archives: EventDocument[]; // TODO: do we have past season results?
-    public currentBrackets: EventDocument;
+    public archives: EventDocument[] = [];
+    public currentBrackets?: EventDocument;
     public documentType: DocumentType = DocumentType.MatchPlay;
 
     constructor(private route: ActivatedRoute,
-                private configService: ConfigService,
-                private documentService: DocumentService,
-                private authService: AuthenticationService) {
+        private configService: ConfigService,
+        private documentService: DocumentService,
+        private authService: AuthenticationService) {
+
+        this.currentUser = this.authService.user;
+        this.config = this.configService.config;
     }
 
     ngOnInit(): void {
-        this.currentUser = this.authService.user;
-        this.config = this.configService.config;
         this.route.data
-            .subscribe((data: { eventDetail: EventDetail }) => {
-                this.eventDetail = data.eventDetail;
-                this.application = this.eventDetail.getDocument(DocumentType.SignUp);
-                this.canRegister = true &&
-                    this.currentUser.isAuthenticated &&
-                    this.currentUser.member.membershipIsCurrent &&
-                    !this.currentUser.member.matchplayParticipant &&
-                    this.eventDetail.signupEnd.isAfter(moment()) &&
-                    this.eventDetail.signupStart.isBefore(moment());
+            .subscribe(data => {
+                if (data.eventDetail instanceof EventDetail) {
+                    this.eventDetail = data.eventDetail;
+                    this.application = this.eventDetail.getDocument(DocumentType.SignUp);
+                    this.canRegister = true &&
+                        this.currentUser.isAuthenticated &&
+                        this.currentUser.member.membershipIsCurrent &&
+                        !this.currentUser.member.matchplayParticipant &&
+                        this.eventDetail.signupEnd.isAfter(moment()) &&
+                        this.eventDetail.signupStart.isBefore(moment());
+                }
             });
         this.documentService.getDocuments(this.documentType)
             .subscribe(docs => {
@@ -56,7 +61,9 @@ export class MatchPlayComponent implements OnInit {
     }
 
     uploadBrackets(): void {
-        this.uploadComponent.open(this.currentBrackets);
+        if (this.uploadComponent) {
+            this.uploadComponent.open(this.currentBrackets);
+        }
     }
 
     uploadComplete(result: EventDocument): void {

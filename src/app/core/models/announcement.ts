@@ -1,19 +1,26 @@
-import * as moment from 'moment';
+import moment from 'moment';
+import { isEmpty } from 'lodash';
 
 export class Announcement {
-    id: number;
-    title: string;
-    text: string;
+    id = 0;
+    title = '';
+    text = '';
     starts: any;
     expires: any;
-    eventId: number;
-    eventName: string;
-    membersOnly: boolean;
-    externalUrl: string;
-    externalUrlName: string;
-    documentName: string;
-    documentUrl: string;
+    eventId?: number;
+    eventName?: string;
+    membersOnly = false;
+    externalUrl?: string;
+    externalUrlName?: string;
+    documentName?: string;
+    documentUrl?: string;
 
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const announcement = this.fromJson(obj);
+            Object.assign(this, announcement);
+        }
+    }
     isVisible(isAuth: boolean): boolean {
         if (isAuth) {
             return true;
@@ -21,19 +28,20 @@ export class Announcement {
         return !this.membersOnly;
     }
 
-    fromJson(json: any): Announcement {
-        this.id = json.id;
-        this.title = json.title;
-        this.text = json.text;
-        this.starts = moment(json.starts);
-        this.expires = moment(json.expires);
-        this.eventId = json.event ? json.event.id : null;
-        this.eventName = json.event ? json.event.name : null;
-        this.membersOnly = json.members_only;
-        this.externalUrl = json.external_url;
-        this.externalUrlName = json.external_name;
-        this.documentName = json.document ? json.document.title : null;
-        this.documentUrl = json.document ? json.document.file.url : null;
-        return this;
+    private fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.id;
+        obj.title = json.title;
+        obj.text = json.text;
+        obj.starts = moment(json.starts);
+        obj.expires = moment(json.expires);
+        obj.eventId = json.event ? json.event.id : null;
+        obj.eventName = json.event ? json.event.name : null;
+        obj.membersOnly = json.members_only;
+        obj.externalUrl = json.external_url;
+        obj.externalUrlName = json.external_name;
+        obj.documentName = json.document ? json.document.title : null;
+        obj.documentUrl = json.document ? json.document.file.url : null;
+        return obj;
     }
 }

@@ -14,8 +14,9 @@ export class CreditCardForm {
     public form$: Observable<FormGroup>;
     public errors$: Observable<any>;
 
-    private cardForm: FormGroup;
-    private messages = {
+    private cardForm?: FormGroup;
+
+    private messages: {[index: string]: any} = {
         'number': {
             'required': 'A card number is required',
             'invalid': 'The card number is invalid'
@@ -29,7 +30,7 @@ export class CreditCardForm {
             'invalid': 'The CV code is invalid'
         }
     };
-    private errors = {
+    private errors: {[index: string]: any} = {
         'number': '',
         'expiry': '',
         'cvc': ''
@@ -59,18 +60,22 @@ export class CreditCardForm {
     }
 
     updateValue(card: StripeCreditCard): void {
-        Object.assign(card, this.cardForm.value);
-        card.exp = this.cardForm.value.expiry.replace(' ', '')
+        if (this.cardForm) {
+            Object.assign(card, this.cardForm.value);
+            card.exp = this.cardForm.value.expiry.replace(' ', '');
+        }
     }
 
     onStatusChanged(): void {
         if (!this.cardForm) { return; }
         const form = this.cardForm;
+        // tslint:disable-next-line: forin
         for (const field in this.errors) {
             this.errors[field] = '';
             const control = form.get(field);
             if (control && control.dirty && !control.valid) {
                 const messages = this.messages[field];
+                // tslint:disable-next-line: forin
                 for (const key in control.errors) {
                     this.errors[field] += messages[key] + ' ';
                 }
@@ -79,7 +84,7 @@ export class CreditCardForm {
         this.errorSource.next(this.errors);
     }
 
-    numberValidator = (control: FormControl): {[key: string]: boolean} => {
+    numberValidator = (control: FormControl): {[key: string]: boolean} | null => {
         const cardNumber = control.get('number');
         if (cardNumber && cardNumber.value) {
             const valid = this.stripe.card.validateCardNumber(cardNumber.value);
@@ -90,7 +95,7 @@ export class CreditCardForm {
         return null;
     }
 
-    expiryValidator = (control: FormControl): {[key: string]: boolean} => {
+    expiryValidator = (control: FormControl): {[key: string]: boolean} | null => {
         const exp = control.get('expiry');
         if (exp && exp.value) {
             const valid = this.stripe.card.validateExpiry(exp.value);
@@ -101,7 +106,7 @@ export class CreditCardForm {
         return null;
     }
 
-    cvcValidator = (control: FormControl): {[key: string]: boolean} => {
+    cvcValidator = (control: FormControl): {[key: string]: boolean} | null => {
         const cvc = control.get('cvc');
         if (cvc && cvc.value) {
             const valid = this.stripe.card.validateCVC(cvc.value);

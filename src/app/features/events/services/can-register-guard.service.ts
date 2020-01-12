@@ -33,7 +33,8 @@ export class CanRegisterGuard implements CanActivate {
         }
 
         if (!result) {
-            const eventId = (route.parent.url[1]) ? route.parent.url[1].path : '';
+            // tslint:disable-next-line: no-non-null-assertion
+            const eventId = (route.parent!.url[1]) ? route.parent!.url[1].path : '';
             if (eventId) {
                 this.router.navigate(['/events', eventId, 'detail']);
             } else {

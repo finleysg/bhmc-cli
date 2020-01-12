@@ -16,12 +16,12 @@ export class DropPlayerComponent implements OnInit, OnDestroy {
 
   private readonly onDestroy = new Subject<void>();
 
-  public eventDetail: EventDetail;
-  public allMembers: PublicMember[];
-  public selectedMemberName: string;
-  public currentMember: PublicMember;
-  public registration: EventRegistration;
-  public refund: boolean;
+  public eventDetail: EventDetail = new EventDetail({});
+  public allMembers: PublicMember[] = [];
+  public selectedMemberName?: string;
+  public currentMember?: PublicMember;
+  public registration?: EventRegistration;
+  public refund = false;
 
   constructor(
     private registrationService: RegistrationService,
@@ -32,9 +32,8 @@ export class DropPlayerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.data.pipe(takeUntil(this.onDestroy))
-      .subscribe((data: { eventDetail: EventDetail }) => {
-        this.eventDetail = data.eventDetail;
-        console.log(this.eventDetail);
+      .subscribe(data => {
+        this.eventDetail = data.eventDetail as EventDetail;
         this.memberService.getMembers()
           .pipe(takeUntil(this.onDestroy))
           .subscribe(members => {
@@ -51,7 +50,7 @@ export class DropPlayerComponent implements OnInit, OnDestroy {
   findRegistration(member: PublicMember) {
     this.registrationService.getRegistration(this.eventDetail.id, member.id)
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((reg: EventRegistration) => this.registration = reg);
+      .subscribe((reg: EventRegistration | undefined) => this.registration = reg);
   }
 
   findMember($event: TypeaheadMatch): void {
@@ -61,22 +60,25 @@ export class DropPlayerComponent implements OnInit, OnDestroy {
   }
 
   savePlayer(): void {
-    this.registrationService.dropRegistration(this.registration, this.refund).pipe(
-      tap(() => {
-        this.toaster.pop('success', 'Player Dropped', `${this.registration.memberName} has been removed from the event`);
-        this.clear();
-      }),
-      catchError((err: string) => {
-        this.toaster.pop('error', 'Drop Player Failure', err);
-        return empty();
-      }),
-      takeUntil(this.onDestroy)
-    ).subscribe();
+    if (this.registration) {
+      this.registrationService.dropRegistration(this.registration, this.refund).pipe(
+        tap(() => {
+          // tslint:disable-next-line: no-non-null-assertion
+          this.toaster.pop('success', 'Player Dropped', `${this.registration!.memberName} has been removed from the event`);
+          this.clear();
+        }),
+        catchError((err: string) => {
+          this.toaster.pop('error', 'Drop Player Failure', err);
+          return empty();
+        }),
+        takeUntil(this.onDestroy)
+      ).subscribe();
+    }
   }
 
   clear(): void {
-    this.currentMember = null;
-    this.registration = null;
+    this.currentMember = undefined;
+    this.registration = undefined;
     this.refund = false;
   }
 }

@@ -9,7 +9,7 @@ import { EventDetail } from '../../../core';
 })
 export class ManageMenuComponent implements OnInit {
 
-  eventDetail: EventDetail;
+  eventDetail?: EventDetail;
 
   constructor(
     private route: ActivatedRoute
@@ -17,6 +17,6 @@ export class ManageMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data
-        .subscribe((data: {eventDetail: EventDetail}) => { this.eventDetail = data.eventDetail; });
+        .subscribe(data => { this.eventDetail = data.eventDetail; });
   }
 }

@@ -12,22 +12,25 @@ import { RegistrationSlot, SlotStatus } from '../models/registration-slot';
 export class ReadonlyTableComponent implements OnInit {
 
     public currentUser: User;
-    public table: EventSignupTable;
+    public table?: EventSignupTable;
 
     constructor(private eventService: EventDetailService,
                 private authService: AuthenticationService,
                 private route: ActivatedRoute) {
+        this.currentUser = this.authService.user;
     }
 
     ngOnInit(): void {
-        this.currentUser = this.authService.user;
         this.route.params.subscribe((p: Params) => {
-            this.eventService.signupTable(+p['course']).subscribe(table => this.table = table);
+            const source = this.eventService.signupTable(+p['course']);
+            if (source) {
+                source.subscribe(table => this.table = table);
+            }
         });
     }
 
     slotClass(slot: RegistrationSlot): string {
-        let className = this.table.courseName.replace(' ', '').toLowerCase();
+        let className = this.table ? this.table.courseName.replace(' ', '').toLowerCase() : '';
         if (slot.selected) {
             className = 'bg-warning';
         } else if (slot.status === SlotStatus.Reserved) {
@@ -36,5 +39,5 @@ export class ReadonlyTableComponent implements OnInit {
             className = 'bg-danger';
         }
         return className;
-    };
+    }
 }

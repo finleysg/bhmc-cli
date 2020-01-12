@@ -13,7 +13,7 @@ export class InterceptorAuth implements HttpInterceptor {
         if (!token) {
             token = sessionStorage.getItem('bhmc_token');
         }
-        
+
         const request = !token ? req.clone() : req.clone({ 
             headers: req.headers.set('Authorization', `Token ${token}`)
         });

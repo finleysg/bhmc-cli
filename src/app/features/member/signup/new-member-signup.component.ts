@@ -26,19 +26,19 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 })
 export class NewMemberSignupComponent implements OnInit {
 
-    @ViewChild(PaymentComponent, { static: false }) paymentComponent: PaymentComponent;
+    @ViewChild(PaymentComponent, { static: false }) paymentComponent?: PaymentComponent;
 
-    public steps: number[];
+    public steps: number[] = [];
     public currentStep: SignupStepsEnum = SignupStepsEnum.NotStarted;
-    public newUser: NewUser;
-    public fieldErrors: string[];
-    public eventDetail: EventDetail;
-    public group: EventRegistrationGroup;
-    public paymentCalc: EventPayment;
-    public application: EventDocument;
+    public newUser: NewUser = new NewUser();
+    public fieldErrors: string[] = [];
+    public eventDetail: EventDetail = new EventDetail({});
+    public group?: EventRegistrationGroup;
+    public paymentCalc?: EventPayment;
+    public application?: EventDocument;
     public config: AppConfig;
     public includePatronCard = true;
-    public registered: boolean;
+    public registered = false;
 
     constructor(
         private authService: AuthenticationService,
@@ -48,10 +48,11 @@ export class NewMemberSignupComponent implements OnInit {
         private registrationService: RegistrationService,
         private signupService: SignupService,
         private configService: ConfigService) {
+
+        this.config = this.configService.config;
     }
 
     ngOnInit(): void {
-        this.config = this.configService.config;
         this.signupService.init();
         this.signupService.errors$.subscribe(errors => this.fieldErrors = errors);
         this.signupService.currentState.subscribe(st => {
@@ -70,20 +71,22 @@ export class NewMemberSignupComponent implements OnInit {
             }
         });
         this.route.data
-            .subscribe((data: { eventDetail: EventDetail }) => {
-                this.eventDetail = data.eventDetail;
-                this.paymentCalc = new EventPayment();
-                this.paymentCalc.update(this.eventDetail.eventFeeAlt + this.eventDetail.greensFee);
-                const signupDocs = this.eventDetail.getDocuments(DocumentType.SignUp);
-                if (signupDocs) {
-                    signupDocs.forEach(d => {  // TODO: better way to distinguish between the 2 signup docs
-                        if (d.title === 'New Member Application') {
-                            this.application = d;
-                        }
-                    });
+            .subscribe(data => {
+                if (data.eventDetail && data.eventDetail instanceof EventDetail) {
+                    this.eventDetail = data.eventDetail;
+                    this.paymentCalc = new EventPayment();
+                    this.paymentCalc.update(this.eventDetail.eventFeeAlt + this.eventDetail.greensFee);
+                    const signupDocs = this.eventDetail.getDocuments(DocumentType.SignUp);
+                    if (signupDocs) {
+                        signupDocs.forEach(d => {  // TODO: better way to distinguish between the 2 signup docs
+                            if (d.title === 'New Member Application') {
+                                this.application = d;
+                            }
+                        });
+                    }
                 }
             });
-        this.group = EventRegistrationGroup.create(new User());
+        this.group = EventRegistrationGroup.create(new User({}));
     }
 
     startSignup(): void {
@@ -105,7 +108,7 @@ export class NewMemberSignupComponent implements OnInit {
         this.signupService.gotoStep(this.currentStep, this.newUser);
     }
 
-    prevStep(step: number = null): void {
+    prevStep(step: number = 0): void {
         if (!step) {
             step = this.currentStep - 1;
         }
@@ -125,7 +128,9 @@ export class NewMemberSignupComponent implements OnInit {
                     this.group.notes = this.group.notes + 'PLAYING FORWARD TEES';
                 }
                 this.group.updatePayment(this.eventDetail, true);
-                this.paymentComponent.open();
+                if (this.paymentComponent) {
+                    this.paymentComponent.open();
+                }
             }
         }).catch((err: any) => {
             this.toaster.pop('error', 'Account Creation Error', err);
@@ -136,10 +141,12 @@ export class NewMemberSignupComponent implements OnInit {
         return this.authService.createAccount(this.newUser.toUser().toJson(this.newUser.password1)).pipe(
             flatMap(() => {
                 this.toaster.pop('info', 'Account Created', 'Your account has been created');
-                return this.authService.quietLogin(this.newUser.username, this.newUser.password1);
+                // tslint:disable-next-line: no-non-null-assertion
+                return this.authService.quietLogin(this.newUser!.username, this.newUser!.password1);
             }),
             flatMap(() => {
-                return this.registrationService.reserve(this.eventDetail.id);
+                // tslint:disable-next-line: no-non-null-assertion
+                return this.registrationService.reserve(this.eventDetail!.id);
             }),
             map(() => {
                 return true;
@@ -155,11 +162,13 @@ export class NewMemberSignupComponent implements OnInit {
             this.registered = true;
             this.currentStep = SignupStepsEnum.Complete;
         } else {
-            this.registrationService.cancelReservation(this.group)
-                .subscribe(() => {
-                    this.authService.resetUser();
-                    this.currentStep = SignupStepsEnum.Incomplete;
-                });
+            if (this.group) {
+                this.registrationService.cancelReservation(this.group)
+                    .subscribe(() => {
+                        this.authService.resetUser();
+                        this.currentStep = SignupStepsEnum.Incomplete;
+                    });
+            }
         }
     }
 

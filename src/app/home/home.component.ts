@@ -14,11 +14,11 @@ import {RegistrationWindowType} from '../core/models/event-detail';
 export class HomeComponent implements OnInit {
 
     public config: AppConfig;
-    public announcements: Announcement[];
-    public eventList: CalendarEvent[];
-    public user: User;
-    public seasonEvent: EventDetail;
-    public sponsors: Sponsor[];
+    public announcements: Announcement[] = [];
+    public eventList: CalendarEvent[] = [];
+    public user?: User;
+    public seasonEvent: EventDetail = new EventDetail({});
+    public sponsors: Sponsor[] = [];
 
     constructor(
         private authService: AuthenticationService,
@@ -28,10 +28,10 @@ export class HomeComponent implements OnInit {
         private sponsorService: SponsorService,
         private eventService: EventDetailService,
         private configService: ConfigService) {
-    }
+            this.config = this.configService.config;
+        }
 
     ngOnInit(): void {
-        this.config = this.configService.config;
         this.eventService.getEventDetail(this.config.registrationId).subscribe(event => {
             this.seasonEvent = event;
         });
@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
     }
 
     registerOnline(): void {
-        if (this.user.isAuthenticated) {
+        if (this.user && this.user.isAuthenticated) {
             this.router.navigate(['/events', this.config.registrationId, 'season-signup']);
         } else {
             this.router.navigate(['/member', 'new-member-signup', this.config.registrationId]);
@@ -50,23 +50,24 @@ export class HomeComponent implements OnInit {
     }
 
     getPassword(): void {
-        this.authService.returningMember = true;
         this.router.navigate(['/member', 'reset-password']);
     }
 
     get returningMemberRegistration(): boolean {
-        return this.seasonEvent &&
+        const isReturningMember = true &&
             this.seasonEvent.registrationWindow === RegistrationWindowType.Registering &&
             this.user &&
             this.user.isAuthenticated &&
             !this.user.member.membershipIsCurrent;
+        return isReturningMember || false;
     }
 
     get newMemberRegistration(): boolean {
-        return this.seasonEvent &&
+        const isNewMember = true &&
             this.seasonEvent.registrationWindow === RegistrationWindowType.Registering &&
             this.config.acceptNewMembers &&
             this.user &&
             !this.user.isAuthenticated;
+        return isNewMember || false;
     }
 }

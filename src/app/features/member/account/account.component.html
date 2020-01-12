@@ -1,8 +1,8 @@
-<div class="block-header">
+<div class="block-header" *ngIf="user">
     <h2>{{user.name}}</h2>
 </div>
 
-<div class="card" id="profile-main">
+<div class="card" id="profile-main" *ngIf="user">
     <div class="pm-overview c-overflow">
         <div class="pmo-pic">
             <div class="p-relative">

@@ -12,8 +12,6 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { TimerComponent } from './timer/timer.component';
 import { PaymentComponent } from './payments/payment.component';
 import { UploadComponent } from './upload/upload.component';
-import { OfflineRegistrationComponent } from './offline-register/offline-registration.component';
-import { OfflineRegistrationForm } from './offline-register/offline-registration-form.service';
 import { DownloadCsvComponent } from './download/download-csv.component';
 import { ChargeComponent } from './payments/charge.component';
 import { CreditCardFormatDirective } from './payments/credit-card-format.directive';
@@ -42,7 +40,6 @@ import { SavedCardComponent } from './payments/saved-card.component';
         TimerComponent,
         UploadComponent,
         PortalComponent,
-        OfflineRegistrationComponent,
         DownloadCsvComponent,
         ChargeComponent,
         CreditCardFormatDirective,
@@ -52,7 +49,6 @@ import { SavedCardComponent } from './payments/saved-card.component';
     ],
     providers: [
         SpinnerService,
-        OfflineRegistrationForm,
         CreditCardService,
         CreditCardForm,
     ],
@@ -74,7 +70,6 @@ import { SavedCardComponent } from './payments/saved-card.component';
         PaymentComponent,
         UploadComponent,
         PortalComponent,
-        OfflineRegistrationComponent,
         DownloadCsvComponent,
         ChargeComponent,
         SavedCardComponent

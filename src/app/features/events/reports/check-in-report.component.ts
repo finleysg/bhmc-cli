@@ -11,8 +11,8 @@ import { SpinnerService } from '../../../shared/spinner/spinner.service';
 })
 export class CheckInReportComponent implements OnInit {
 
-    public tables: EventSignupTable[];
-    public eventDetail: EventDetail;
+    public tables: EventSignupTable[] = [];
+    public eventDetail: EventDetail = new EventDetail({});
 
     constructor(private eventService: EventDetailService,
                 private spinnerService: SpinnerService,
@@ -22,16 +22,21 @@ export class CheckInReportComponent implements OnInit {
     ngOnInit(): void {
         this.spinnerService.show('check-in');
         this.route.data
-            .subscribe((data: {eventDetail: EventDetail}) => {
+            .subscribe(data => {
+                if (data.eventDetail instanceof EventDetail) {
                 this.tables = [];
-                this.eventDetail = data.eventDetail;
-                let courses = this.eventService.eventCourses(this.eventDetail);
-                courses.forEach(course => {
-                    this.eventService.signupTable(course.id).subscribe(table => this.tables.push(table));
-                });
-                setTimeout(() => {
-                    this.spinnerService.hide('check-in');
-                }, 500);
+                    this.eventDetail = data.eventDetail;
+                    const courses = this.eventService.eventCourses(this.eventDetail);
+                    courses.forEach(course => {
+                        const source = this.eventService.signupTable(course.id);
+                        if (source) {
+                            source.subscribe(table => this.tables.push(table));
+                        }
+                    });
+                    setTimeout(() => {
+                        this.spinnerService.hide('check-in');
+                    }, 500);
+                }
         });
     }
 }

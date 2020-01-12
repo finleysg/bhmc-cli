@@ -14,7 +14,7 @@ export class MemberService {
         return this.dataService.getApiRequest('members').pipe(
             map( members => {
                 return members.map((m: any) => {
-                    return new PublicMember().fromJson(m);
+                    return new PublicMember(m);
                 });
             })
         );
@@ -24,7 +24,7 @@ export class MemberService {
         return this.dataService.getApiRequest('members', {'registered': true}).pipe(
             map( members => {
                 return members.map((m: any) => {
-                    return new PublicMember().fromJson(m);
+                    return new PublicMember(m);
                 });
             })
         );
@@ -40,7 +40,7 @@ export class MemberService {
 
     getMember(id: number): Observable<PublicMember> {
         return this.dataService.getApiRequest(`members/${id}`).pipe(
-            map( m => new PublicMember().fromJson(m) )
+            map( m => new PublicMember(m) )
         );
     }
 
@@ -48,7 +48,7 @@ export class MemberService {
         return this.dataService.getApiRequest('friends').pipe(
             map( members => {
                 return members.map((m: any) => {
-                    return new PublicMember().fromJson(m);
+                    return new PublicMember(m);
                 });
             })
         );
@@ -65,7 +65,7 @@ export class MemberService {
     stripeSavedCard(): Observable<SavedCard> {
         return this.dataService.getApiRequest('stripe/details').pipe(
             map(data => {
-                return new SavedCard().fromJson(data);
+                return new SavedCard(data);
             })
         );
     }

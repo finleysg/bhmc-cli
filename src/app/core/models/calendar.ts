@@ -1,5 +1,5 @@
 import { CalendarEvent } from './calendar-event';
-import * as moment from 'moment';
+import moment from 'moment';
 
 export class Day {
     name: string;
@@ -30,94 +30,55 @@ export class Calendar {
     private weeks: any[];
     private firstDay: any;
 
-    constructor (year: number, monthName: string) {
-        const monthNumber = Calendar.getMonth(monthName);
-        this.firstDay = moment([year, monthNumber, 1])
-        const sunday = this.findSunday(monthNumber, year);
-        this.weeks = this.buildMonth(sunday, this.firstDay);
-    }
-
-    private findSunday(month: number, year: number) {
-        let start = moment([year, month, 1]),
-            dow = start.day();
-        while (dow > 0) {
-            start.add(-1, 'd');
-            dow = start.day();
-        }
-        return start;
-    }
-
-    private buildMonth(start: any, currentMonth: any) {
-        let weeks: any[] = [];
-        let done = false, date = start.clone(), monthIndex = date.month(), count = 0;
-        while (!done) {
-            weeks.push({ days: this.buildWeek(date.clone(), currentMonth) });
-            date.add(1, 'w');
-            done = count++ > 2 && monthIndex !== date.month();
-            monthIndex = date.month();
-        }
-        return weeks;
-    }
-
-    private buildWeek(date: any, month: any) {
-        let days: Day[] = [];
-        for (var i = 0; i < 7; i++) {
-            days.push(new Day(date, month));
-            date = date.clone();
-            date.add(1, 'd');
-        }
-        return days;
-    }
-
     static getMonth(name: string, zeroBased: boolean = true): number {
         let m = 0;
         switch(name.toLowerCase()) {
-            case "january":
-            case "jan":
+            case 'january':
+            case 'jan':
                 m = 0;
                 break;
-            case "february":
-            case "feb":
+            case 'february':
+            case 'feb':
                 m = 1;
                 break;
-            case "march":
-            case "mar":
+            case 'march':
+            case 'mar':
                 m = 2;
                 break;
-            case "april":
-            case "apr":
+            case 'april':
+            case 'apr':
                 m = 3;
                 break;
-            case "may":
-            case "may":
+            case 'may':
+            case 'may':
                 m = 4;
                 break;
-            case "june":
-            case "jun":
+            case 'june':
+            case 'jun':
                 m = 5;
                 break;
-            case "july":
-            case "jul":
+            case 'july':
+            case 'jul':
                 m = 6;
                 break;
-            case "august":
-            case "aug":
+            case 'august':
+            case 'aug':
                 m = 7;
                 break;
-            case "september":
-            case "sep":
+            case 'september':
+            case 'sep':
                 m = 8;
                 break;
-            case "october":
-            case "oct":
+            case 'october':
+            case 'oct':
                 m = 9;
                 break;
-            case "november":
-            case "nov":
+            case 'november':
+            case 'nov':
                 m = 10;
                 break;
-            case "december":
-            case "dec":
+            case 'december':
+            case 'dec':
                 m = 11;
                 break;
         }
@@ -132,7 +93,7 @@ export class Calendar {
         if (!zeroBased) {
             nbr -= 1;
         }
-        switch(nbr) {
+        switch (nbr) {
             case 0:
                 name = 'January';
                 break;
@@ -173,6 +134,46 @@ export class Calendar {
         return name;
     }
 
+    constructor (year: number, monthName: string) {
+        const monthNumber = Calendar.getMonth(monthName);
+        this.firstDay = moment([year, monthNumber, 1])
+        const sunday = this.findSunday(monthNumber, year);
+        this.weeks = this.buildMonth(sunday, this.firstDay);
+    }
+
+    private findSunday(month: number, year: number) {
+        const start = moment([year, month, 1]);
+        let dow = start.day();
+        while (dow > 0) {
+            start.add(-1, 'd');
+            dow = start.day();
+        }
+        return start;
+    }
+
+    private buildMonth(start: any, currentMonth: any) {
+        const weeks: any[] = [];
+        const startDate = start.clone();
+        let done = false, monthIndex = startDate.month(), count = 0;
+        while (!done) {
+            weeks.push({ days: this.buildWeek(startDate.clone(), currentMonth) });
+            startDate.add(1, 'w');
+            done = count++ > 2 && monthIndex !== startDate.month();
+            monthIndex = startDate.month();
+        }
+        return weeks;
+    }
+
+    private buildWeek(date: any, month: any) {
+        const days: Day[] = [];
+        for (let i = 0; i < 7; i++) {
+            days.push(new Day(date, month));
+            date = date.clone();
+            date.add(1, 'd');
+        }
+        return days;
+    }
+
     addEvent(event: CalendarEvent): void {
         for (const week of this.weeks) {
             for (const day of week.days) {
@@ -204,7 +205,7 @@ export class Calendar {
     }
 
     nextMonth(): any {
-        let mth = this.firstDay.clone().add(1, 'months');
+        const mth = this.firstDay.clone().add(1, 'months');
         return {
             year: mth.year(),
             month: mth.format('MMMM')
@@ -212,7 +213,7 @@ export class Calendar {
     }
 
     lastMonth(): any {
-        let mth = this.firstDay.clone().subtract(1, 'months');
+        const mth = this.firstDay.clone().subtract(1, 'months');
         return {
             year: mth.year(),
             month: mth.format('MMMM')

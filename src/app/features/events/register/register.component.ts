@@ -18,21 +18,20 @@ import { forkJoin, empty } from 'rxjs';
 })
 export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeactivate> {
 
-    @ViewChild(PaymentComponent, { static: false }) paymentComponent: PaymentComponent;
-    @ViewChild(TimerComponent, { static: false }) timerComponent: TimerComponent;
+    @ViewChild(PaymentComponent, { static: false }) paymentComponent?: PaymentComponent;
+    @ViewChild(TimerComponent, { static: false }) timerComponent?: TimerComponent;
 
-    public registrationGroup: EventRegistrationGroup;
-    public eventDetail: EventDetail;
+    public registrationGroup: EventRegistrationGroup = new EventRegistrationGroup({});
+    public eventDetail: EventDetail = new EventDetail({});
     public currentUser: User;
-    public members: PublicMember[];
-    public friends: PublicMember[];
-    public selectedMemberName: string;
+    public members: PublicMember[] = [];
+    public friends: PublicMember[] = [];
+    public selectedMemberName?: string;
     public expires: any;
     public expiryMessage = 'Your reservation was cancelled because it was not completed within 10 minutes.';
-    public isLeagueEvent: boolean;
-    public placeholder: string;
-    // public hasSkins: boolean;
-    private cancelling: boolean;
+    public isLeagueEvent = false;
+    public placeholder?: string;
+    private cancelling = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -42,27 +41,30 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
         private eventService: EventDetailService,
         private registrationService: RegistrationService,
         private memberService: MemberService,
-        private authService: AuthenticationService) { }
+        private authService: AuthenticationService) {
+
+        this.currentUser = this.authService.user;
+    }
 
     ngOnInit(): void {
-        this.currentUser = this.authService.user;
         this.route.data
-            .subscribe((data: { eventDetail: EventDetail }) => {
-                this.eventDetail = data.eventDetail;
-                this.isLeagueEvent = this.eventDetail.eventType === EventType.League;
-                // this.hasSkins = this.eventDetail.skinsType !== SkinsType.None;
-                this.registrationGroup = this.registrationService.currentGroup;
-                this.expires = this.registrationGroup.expires;
-                this.registrationGroup.updatePayment(this.eventDetail);
-                this.registrationGroup.registrations.forEach(reg => {
-                    if (this.eventDetail.skinsType === SkinsType.None) {
-                        reg.disableSkins = true;
-                    } else if (this.eventDetail.skinsType === SkinsType.Team) {
-                        reg.disableSkins = (reg.slotNumber > 0);
+            .subscribe(data => {
+                if (data.eventDetail instanceof EventDetail) {
+                    this.eventDetail = data.eventDetail;
+                    this.isLeagueEvent = this.eventDetail.eventType === EventType.League;
+                    this.registrationGroup = this.registrationService.currentGroup;
+                    this.expires = this.registrationGroup.expires;
+                    this.registrationGroup.updatePayment(this.eventDetail);
+                    this.registrationGroup.registrations.forEach(reg => {
+                        if (this.eventDetail.skinsType === SkinsType.None) {
+                            reg.disableSkins = true;
+                        } else if (this.eventDetail.skinsType === SkinsType.Team) {
+                            reg.disableSkins = (reg.slotNumber > 0);
+                        }
+                    });
+                    if (this.eventDetail.eventType === EventType.Major) {
+                        this.placeholder = 'Add a note here to opt in to the championship flight.';
                     }
-                });
-                if (this.eventDetail.eventType === EventType.Major) {
-                  this.placeholder = 'Add a note here to opt in to the championship flight.';
                 }
             });
         forkJoin([
@@ -110,17 +112,23 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
         const member = this.members.find(m => {
             return m.name === $event.value;
         });
-        this.add(member);
-        this.selectedMemberName = '';
+        if (member) {
+            this.add(member);
+            this.selectedMemberName = '';
+        }
     }
 
     openPayment(): void {
-        this.paymentComponent.open();
+        if (this.paymentComponent) {
+            this.paymentComponent.open();
+        }
     }
 
     paymentComplete(result: boolean): void {
         if (result) {
-            this.timerComponent.stop();
+            if (this.timerComponent) {
+                this.timerComponent.stop();
+            }
             this.eventService.refreshEventDetail().subscribe(() => {
                 if (this.eventDetail.eventType === EventType.Registration) {
                     this.authService.refreshUser();
@@ -133,25 +141,27 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
 
     cancelReservation(): void {
         // Guard against cancelling a paid registration
-        if (this.paymentComponent.processStatus !== ProcessingStatus.Complete) {
-            this.cancelling = true;
-            this.timerComponent.stop();
-            this.registrationService.cancelReservation(this.registrationGroup).pipe(
-                tap(() => {
-                    this.eventService.refreshEventDetail().subscribe(() => {
-                        this.location.back();
-                    });
-                }),
-                catchError((err: string) => {
-                    this.cancelling = false;
-                    return empty();
-                })
-            ).subscribe();
+        if (this.paymentComponent && this.timerComponent) {
+            if (this.paymentComponent.processStatus !== ProcessingStatus.Complete) {
+                this.cancelling = true;
+                this.timerComponent.stop();
+                this.registrationService.cancelReservation(this.registrationGroup).pipe(
+                    tap(() => {
+                        this.eventService.refreshEventDetail().subscribe(() => {
+                            this.location.back();
+                        });
+                    }),
+                    catchError((err: string) => {
+                        this.cancelling = false;
+                        return empty();
+                    })
+                ).subscribe();
+            }
         }
     }
 
     canDeactivate(): Promise<boolean> | boolean {
-        if (this.cancelling || this.paymentComponent.processStatus === ProcessingStatus.Complete) {
+        if (this.cancelling || (this.paymentComponent && this.paymentComponent.processStatus === ProcessingStatus.Complete)) {
             this.cancelling = false;
             return true;
         }
@@ -168,6 +178,10 @@ export class RegisterComponent implements OnInit, CanDeactivate<CanComponentDeac
     // Warn the user about leaving. We can't change the warning text or act if the user chooses to leave.
     @HostListener('window:beforeunload')
     onBeforeUnload(): boolean {
-        return (this.cancelling || this.paymentComponent.processStatus === ProcessingStatus.Complete);
+        if (this.cancelling || (this.paymentComponent && this.paymentComponent.processStatus === ProcessingStatus.Complete)) {
+            this.cancelling = false;
+            return true;
+        }
+        return false;
     }
 }

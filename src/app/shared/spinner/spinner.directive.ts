@@ -4,20 +4,23 @@ import { Subscription } from 'rxjs';
 
 declare let Spinner: any;
 
+// tslint:disable-next-line: directive-selector
 @Directive({ selector: '[bhmc-spinner]' })
 export class SpinnerDirective implements OnInit, OnDestroy {
 
     private spinner: any;
     private element: any;
-    private subscription: Subscription;
+    private subscription?: Subscription;
+    private spinnerName: string;
 
-    @Input('bhmc-spinner') name: string;
-    @Input() scale: number = 0.5; // Scales overall size of the spinner
-    @Input() color: string = '#008000'; // #rgb or #rrggbb or array of colors
+    @Input('bhmc-spinner') name?: string;
+    @Input() scale = 0.5; // Scales overall size of the spinner
+    @Input() color = '#008000'; // #rgb or #rrggbb or array of colors
 
     constructor(private spinnerElement: ElementRef,
                 private spinnerService: SpinnerService) {
         this.element = spinnerElement.nativeElement;
+        this.spinnerName = this.name || 'spinner';
     }
 
     ngOnInit() {
@@ -26,7 +29,7 @@ export class SpinnerDirective implements OnInit, OnDestroy {
     }
 
     private initSpinner() {
-        let options = {
+        const options = {
             lines: 17,
             length: 0,
             width: 10,
@@ -45,7 +48,7 @@ export class SpinnerDirective implements OnInit, OnDestroy {
     }
 
     private createServiceSubscription() {
-        this.subscription = this.spinnerService.getSpinner(this.name).subscribe((show: boolean) => {
+        this.subscription = this.spinnerService.getSpinner(this.spinnerName).subscribe((show: boolean) => {
             if (show) {
                 this.spinner.spin(this.element);
             } else {
@@ -55,7 +58,9 @@ export class SpinnerDirective implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
-        this.spinnerService.remove(this.name);
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
+        this.spinnerService.remove(this.spinnerName);
     }
 }

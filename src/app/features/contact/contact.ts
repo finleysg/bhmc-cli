@@ -1,20 +1,20 @@
 export class Contact {
-    presidentName: string;
-    presidentPhone: string;
-    presidentEmail: string = 'president@bhmc.org';
-    vicePresidentName: string;
-    vicePresidentPhone: string;
-    vicePresidentEmail: string = 'vice-president@bhmc.org';
-    secretaryName: string;
-    secretaryPhone: string;
-    secretaryEmail: string = 'secretary@bhmc.org';
-    treasurerName: string;
-    treasurerPhone: string;
-    treasurerEmail: string = 'treasurer@bhmc.org';
-    directorsText: string;
-    committeesText: string;
-    staffText: string;
-    
+    presidentName?: string;
+    presidentPhone?: string;
+    presidentEmail = 'president@bhmc.org';
+    vicePresidentName?: string;
+    vicePresidentPhone?: string;
+    vicePresidentEmail = 'vice-president@bhmc.org';
+    secretaryName?: string;
+    secretaryPhone?: string;
+    secretaryEmail = 'secretary@bhmc.org';
+    treasurerName?: string;
+    treasurerPhone?: string;
+    treasurerEmail = 'treasurer@bhmc.org';
+    directorsText?: string;
+    committeesText?: string;
+    staffText?: string;
+
     fromJson(json: any): Contact {
         this.presidentName = json.president_name;
         this.presidentPhone = json.president_phone;

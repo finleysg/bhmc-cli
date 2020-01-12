@@ -9,15 +9,14 @@ import { ConfigService } from '../../app-config.service';
     // tslint:disable-next-line:component-selector
     selector: 'charge',
     templateUrl: 'charge.component.html',
-    // styleUrls: ['charge.component.css']
 })
 export class ChargeComponent implements OnInit {
 
     @Output() onClose = new EventEmitter<boolean>();
-    @ViewChild('chargeModal', { static: true }) chargeModal: ModalDirective;
+    @ViewChild('chargeModal', { static: true }) chargeModal?: ModalDirective;
 
-    public charge: StripeCharge;
-    public stripeUrl: string;
+    public charge: StripeCharge = new StripeCharge({});
+    public stripeUrl?: string;
     private config: AppConfig;
 
     constructor(
@@ -27,13 +26,15 @@ export class ChargeComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.charge = new StripeCharge();
+        this.charge = new StripeCharge({});
     }
 
     open(charge: StripeCharge): void {
         this.charge = charge;
         this.stripeUrl = `${this.config.stripeUrl}/${this.charge.id}`;
-        this.chargeModal.show();
+        if (this.chargeModal) {
+            this.chargeModal.show();
+        }
     }
 
     opened(): void {
@@ -43,7 +44,9 @@ export class ChargeComponent implements OnInit {
     }
 
     close(): void {
-        this.chargeModal.hide();
+        if (this.chargeModal) {
+            this.chargeModal.hide();
+        }
         this.onClose.emit(true);
     }
 }

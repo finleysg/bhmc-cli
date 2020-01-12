@@ -4,15 +4,12 @@ import { Observable ,  BehaviorSubject } from 'rxjs';
 @Injectable()
 export class LayoutService {
 
- // private storage = localStorage;
   private _layoutToggleSource = new BehaviorSubject<number>(1);
   public layoutToggle: Observable<number> = this._layoutToggleSource.asObservable();
   private _sidebarToggleSource = new BehaviorSubject<boolean>(false);
   public sidebarToggle: Observable<boolean> = this._sidebarToggleSource.asObservable();
 
   constructor() {
-    // this.layoutType = $localStorage['layout-type'];
-    // if (!this.layoutType) this.layoutType = 1;
   }
 
   toggleSidebar() {
@@ -33,6 +30,5 @@ export class LayoutService {
 
   updateLayout(value: number) {
     this._layoutToggleSource.next(value);
-    // this.storage['layout-type'] = layoutType;
   }
 }

@@ -9,9 +9,12 @@ export class StripeCreditCard {
 
     constructor () {
         this.stripe = Stripe;
+        this.number = '';
+        this.exp = '';
+        this.cvc = '';
     }
 
-    createToken() {
+    createToken(): Promise<string> {
         return new Promise((resolve, reject) => {
             this.stripe.card.createToken({
                 number: this.number,

@@ -97,21 +97,21 @@ export class CreditCardService {
         return target.selectionStart !== null && target.selectionStart !== target.selectionEnd;
     }
 
-    cardType(cardNumber: string): string {
+    cardType(cardNumber: string): string | undefined {
         if (!cardNumber) {
             return cardNumber;
         }
 
-        let card = this.cardFromNumber(cardNumber);
+        const card = this.cardFromNumber(cardNumber);
 
         if (card !== null && typeof card !== 'undefined') {
             return card.type;
         } else {
-            return null;
+            return undefined;
         }
     }
 
-    formatCardNumber(cardNumber: string): string {
+    formatCardNumber(cardNumber: string): string | undefined {
         let card: any,
             groups: any,
             upperLength: number;
@@ -127,7 +127,7 @@ export class CreditCardService {
         cardNumber = cardNumber.slice(0, upperLength);
 
         if (card.format.global) {
-            let matches = cardNumber.match(card.format);
+            const matches = cardNumber.match(card.format);
             if (matches != null) {
                 return matches.join(' ');
             }
@@ -145,8 +145,8 @@ export class CreditCardService {
 
     safeVal(value: any, target: any): any {
         let cursor: any = null,
-            last = target.value,
             result: any = false;
+        const last = target.value;
 
         try {
             cursor = target.selectionStart;
@@ -161,9 +161,9 @@ export class CreditCardService {
             }
 
             if (last !== value) {
-                let prevPair = last.slice(cursor - 1, +cursor + 1 || 9e9),
-                    currPair = value.slice(cursor - 1, +cursor + 1 || 9e9),
-                    digit = value[cursor];
+                const prevPair = last.slice(cursor - 1, +cursor + 1 || 9e9),
+                      currPair = value.slice(cursor - 1, +cursor + 1 || 9e9),
+                      digit = value[cursor];
 
                 if (/\d/.test(digit) && prevPair === (`${digit} `) && currPair === (` ${digit}`)) {
                     cursor = cursor + 1;
@@ -216,12 +216,12 @@ export class CreditCardService {
             str = '';
         }
 
+        const fullWidth = '\uff10\uff11\uff12\uff13\uff14\uff15\uff16\uff17\uff18\uff19',
+            halfWidth = '0123456789',
+            chars = str.split('');
         let chr: string,
             idx: number,
-            fullWidth = '\uff10\uff11\uff12\uff13\uff14\uff15\uff16\uff17\uff18\uff19',
-            halfWidth = '0123456789',
-            value = '',
-            chars = str.split('');
+            value = '';
 
         for (let i = 0; i < chars.length; i++) {
             chr = chars[i];
@@ -235,8 +235,8 @@ export class CreditCardService {
     }
 
     formatExpiry(expiry: string): string {
-        let parts = expiry.match(/^\D*(\d{1,2})(\D+)?(\d{1,4})?/),
-            mon: string,
+        const parts = expiry.match(/^\D*(\d{1,2})(\D+)?(\d{1,4})?/);
+        let mon: string,
             sep: string,
             year: string;
 
@@ -263,19 +263,17 @@ export class CreditCardService {
     }
 
     restrictCvc(key: number, target: any): boolean {
-        let digit = String.fromCharCode(key);
+        const digit = String.fromCharCode(key);
         if (!/^\d+$/.test(digit) || this.hasTextSelected(target)) {
             return false;
         }
-        let val = `${target.value}${digit}`;
+        const val = `${target.value}${digit}`;
         return val.length <= 4;
     }
 
     luhnCheck(cardNumber: string): boolean {
-        let digit: number,
-            digits = cardNumber.split('').reverse(),
-            odd = true,
-            sum = 0;
+        let digit: number, odd = true, sum = 0;
+        const digits = cardNumber.split('').reverse();
 
         for (let i = 0; i < digits.length; i++) {
             digit = parseInt(digits[i], 10);

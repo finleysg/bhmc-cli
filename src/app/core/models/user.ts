@@ -1,4 +1,5 @@
 import { PrivateMember } from './member';
+import { isEmpty } from 'lodash';
 
 export enum AccountUpdateType {
     PersonalInfo,
@@ -10,19 +11,22 @@ export enum AccountUpdateType {
 
 export class User {
 
-    id: number;
-    username: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    member: PrivateMember;
+    id = 0;
+    username = '';
+    firstName = '';
+    lastName = '';
+    email = '';
+    member = new PrivateMember({});
     isAuthenticated = false;
     isStaff = false;
     isActive = false;
-    groups: any[];
+    groups?: any[];
 
-    constructor() {
-        this.member = new PrivateMember();
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const user = this.fromJson(obj);
+            Object.assign(this, user);
+        }
     }
 
     get name(): string {
@@ -53,20 +57,19 @@ export class User {
         return false;
     }
 
-    fromJson(json: any): User {
-        if (json) {
-            this.id = json.id;
-            this.username = json.username;
-            this.firstName = json.first_name;
-            this.lastName = json.last_name;
-            this.email = json.email;
-            this.isAuthenticated = json.is_authenticated;
-            this.isStaff = json.is_staff;
-            this.isActive = json.is_active;
-            this.groups = json.groups;
-            this.member = new PrivateMember().fromJson(json.member);
-        }
-        return this;
+    private fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.id;
+        obj.username = json.username;
+        obj.firstName = json.first_name;
+        obj.lastName = json.last_name;
+        obj.email = json.email;
+        obj.isAuthenticated = json.is_authenticated;
+        obj.isStaff = json.is_staff;
+        obj.isActive = json.is_active;
+        obj.groups = json.groups;
+        obj.member = new PrivateMember(json.member);
+        return obj;
     }
 
     // used only to create new accounts

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService, PasswordReset } from '../../../core';
 import { ToasterService } from 'angular2-toaster';
@@ -8,20 +8,16 @@ import { ToasterService } from 'angular2-toaster';
     templateUrl: 'change-password.component.html'
 })
 
-export class ChangePasswordComponent implements OnInit {
+export class ChangePasswordComponent {
 
-    model: PasswordReset;
-    loading: boolean;
+    model: PasswordReset = new PasswordReset();
+    loading = false;
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private toaster: ToasterService,
         private authService: AuthenticationService) { }
-
-    ngOnInit() {
-        this.model = new PasswordReset();
-    }
 
     updatePassword() {
         if (this.model.matching) {

@@ -10,26 +10,26 @@ import { UploadComponent } from '../../shared/upload/upload.component';
 })
 export class DamCupComponent implements OnInit {
 
-    @ViewChild(UploadComponent, { static: true }) uploadComponent: UploadComponent;
+    @ViewChild(UploadComponent, { static: true }) uploadComponent?: UploadComponent;
 
     currentUser: User;
-    archives: EventDocument[];
+    archives: EventDocument[] = [];
     documentType: DocumentType = DocumentType.DamCup;
     teamType: PhotoType = PhotoType.DamCupTeam;
-    currentTeam: Photo;
+    currentTeam?: Photo;
 
-    currentStandings: EventDocument;
+    currentStandings?: EventDocument;
 
     constructor(private configService: ConfigService,
                 private authService: AuthenticationService,
                 private documentService: DocumentService) {
+        this.currentUser = this.authService.user;
     }
 
     ngOnInit(): void {
-        this.currentUser = this.authService.user;
         this.documentService.getDocuments(this.documentType)
             .subscribe(docs => {
-                let current = docs.filter(d => d.year === this.configService.config.year);
+                const current = docs.filter(d => d.year === this.configService.config.year);
                 this.archives = docs.filter(d => d.year !== this.configService.config.year);
                 if (current && current.length > 0) {
                     this.currentStandings = current[0];
@@ -46,12 +46,16 @@ export class DamCupComponent implements OnInit {
                     }
                     return 0;
                 });
-                if (f && f.length > 0) this.currentTeam = f[0];
-            })
+                if (f && f.length > 0) {
+                    this.currentTeam = f[0];
+                }
+            });
     }
 
     showTodo(): void {
-        this.uploadComponent.open(this.currentStandings);
+        if (this.uploadComponent) {
+            this.uploadComponent.open(this.currentStandings);
+        }
     }
 
     uploadComplete(result: EventDocument): void {

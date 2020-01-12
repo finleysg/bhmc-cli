@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PublicMember, MemberService, EventDetailService, EventRegistration, RegistrationService } from '../../../core';
+import { PublicMember, MemberService, EventDetailService, RegistrationService } from '../../../core';
 import { AppConfig } from '../../../app-config';
 import { ConfigService } from '../../../app-config.service';
 
@@ -9,9 +9,9 @@ import { ConfigService } from '../../../app-config.service';
 })
 export class NewMemberReportComponent implements OnInit {
 
-    public report: PublicMember[];
+    public report: PublicMember[] = [];
     public config: AppConfig;
-    public currentYear: number;
+    public currentYear = 0;
 
     constructor(
         private memberService: MemberService,
@@ -33,11 +33,14 @@ export class NewMemberReportComponent implements OnInit {
                         const newMember = newMembers.find(m => m.id === r.memberId);
                         if (newMember) {
                             // the web service stuffs some strings into the new member reg notes
-                            newMember.formerClub = groups.find(g => g.id === r.groupId).notes
-                                .replace('NEW MEMBER REGISTRATION', '')
-                                .replace('PLAYING FORWARD TEES', '')
-                                .replace('Former club:', '')
-                                .trim();
+                            const currentGroup = groups.find(g => g.id === r.groupId);
+                            if (currentGroup && currentGroup.notes) {
+                                newMember.formerClub = currentGroup.notes
+                                    .replace('NEW MEMBER REGISTRATION', '')
+                                    .replace('PLAYING FORWARD TEES', '')
+                                    .replace('Former club:', '')
+                                    .trim();
+                            }
                             this.report.push(newMember);
                         }
                     });

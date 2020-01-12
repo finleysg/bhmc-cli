@@ -9,8 +9,8 @@ import { SavedCard, User, AuthenticationService } from '../../../core';
 })
 export class AccountComponent implements OnInit {
 
-    savedCard: SavedCard;
-    user: User;
+    savedCard?: SavedCard;
+    user?: User;
 
     constructor(private router: Router,
                 private authService: AuthenticationService,

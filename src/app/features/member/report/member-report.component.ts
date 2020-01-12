@@ -13,9 +13,9 @@ import { forkJoin } from 'rxjs';
 })
 export class MemberReportComponent implements OnInit {
 
-    public eventDetail: EventDetail;
-    public report: EventData[];
-    public summary: EventDataSummary;
+    public eventDetail?: EventDetail;
+    public report: EventData[] = [];
+    public summary?: EventDataSummary;
     public config: AppConfig;
 
     constructor(
@@ -40,8 +40,9 @@ export class MemberReportComponent implements OnInit {
                 results => {
                     const members = results[0];
                     const groups = results[1];
-                    this.summary = new EventDataSummary(this.eventDetail);
-                    this.eventDetail.registrations.forEach(r => {
+                    this.summary = new EventDataSummary(evt);
+                    // tslint:disable-next-line: no-non-null-assertion
+                    this.eventDetail!.registrations.forEach(r => {
                         const member = members.find((m: PublicMember) => {
                             return m.id === r.memberId;
                         });
@@ -49,16 +50,19 @@ export class MemberReportComponent implements OnInit {
                             return g.id === r.groupId;
                         });
                         if (member && group) {
-                            const row = EventData.create(this.eventDetail, group, r);
+                            // tslint:disable-next-line: no-non-null-assertion
+                            const row = EventData.create(this.eventDetail!, group, r);
                             row.birthDate = member.birthDateFormatted;
                             row.age = member.ageFormatted;
                             row.forwardTees = member.forwardTees;
                             row.isNewMember = member.signupDate.year() === this.config.year;
                             if (row.isNewMember) {
-                                row.eventFee = this.eventDetail.eventFeeAlt;
+                                // tslint:disable-next-line: no-non-null-assertion
+                                row.eventFee = this.eventDetail!.eventFeeAlt;
                             }
                             this.report.push(row);
-                            this.summary.updateByRow(row);
+                            // tslint:disable-next-line: no-non-null-assertion
+                            this.summary!.updateByRow(row);
                         }
                     });
                     setTimeout(() => {

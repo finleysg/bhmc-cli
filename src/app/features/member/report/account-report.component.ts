@@ -10,8 +10,8 @@ import { ConfigService } from '../../../app-config.service';
 })
 export class AccountReportComponent implements OnInit {
 
-    public report: PublicMember[];
-    public signup: EventDetail;
+    public report: PublicMember[] = [];
+    public signup?: EventDetail;
 
     constructor(
         private spinnerService: SpinnerService,
@@ -26,7 +26,8 @@ export class AccountReportComponent implements OnInit {
             this.eventService.getEventDetail(this.configService.config.registrationId).subscribe(event => {
                 this.signup = event;
                 this.report.forEach(m => {
-                    m.isRegistered = (this.signup.registrations.findIndex(r => r.memberId === m.id) >= 0);
+                    // tslint:disable-next-line: no-non-null-assertion
+                    m.isRegistered = (this.signup!.registrations.findIndex(r => r.memberId === m.id) >= 0);
                 });
                 setTimeout(() => {
                     this.spinnerService.hide('accounts');

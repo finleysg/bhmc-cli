@@ -4,7 +4,7 @@ import { NewUser } from './new-user';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../../../app-config.service';
 import { MemberService, PublicMember } from '../../../core';
-import * as moment from 'moment';
+import moment from 'moment';
 
 export enum SignupStepsEnum {
     NotStarted = 0,
@@ -22,22 +22,30 @@ export enum SignupStepsEnum {
     Incomplete
 }
 
+interface SignupState {
+    steps: number[];
+    currentStep: SignupStepsEnum;
+    userDetail: NewUser;
+    emailExists: boolean;
+    ghinExists: boolean;
+}
+
 @Injectable()
 export class SignupService {
 
     private _numberOfSteps = 8;
-    private _state: {
-        steps: number[],
-        currentStep: SignupStepsEnum,
-        userDetail: NewUser,
-        emailExists: boolean,
-        ghinExists: boolean
+    private _state: SignupState = {
+        steps: [],
+        currentStep: SignupStepsEnum.NotStarted,
+        userDetail: new NewUser(),
+        emailExists: false,
+        ghinExists: false
     };
     private _currentState$: BehaviorSubject<any>;
     private _errorSource: BehaviorSubject<string[]>;
     private _apiUrl: string;
-    private _members: PublicMember[];
-    private _errors: string[];
+    private _members: PublicMember[] = [];
+    private _errors: string[] = [];
     errors$: Observable<string[]>;
 
     constructor(
@@ -47,7 +55,8 @@ export class SignupService {
     ) {
         this._apiUrl = configService.config.apiUrl;
         this._currentState$ = new BehaviorSubject({});
-        this._errorSource = new BehaviorSubject([]);
+        this._errorSource = new BehaviorSubject<string[]>([]);
+        this.errors$ = this._errorSource.asObservable();
         this.init();
     }
 
@@ -68,7 +77,6 @@ export class SignupService {
             this._state.steps.push(i + 1);
         }
         this._currentState$.next(this._state);
-        this.errors$ = this._errorSource.asObservable();
         this.clearErrors();
     }
 
@@ -90,7 +98,7 @@ export class SignupService {
         this._currentState$.next(this._state);
     }
 
-    gotoStep(step: number, user: NewUser = null): boolean {
+    gotoStep(step: number, user: NewUser = new NewUser()): boolean {
         let result = true;
         this.clearErrors();
         if (user) {
@@ -189,7 +197,8 @@ export class SignupService {
                     isValid = false;
                     this.addError('a GHIN must contain only numbers');
                 } else {
-                    const exists = this._members.findIndex(m => +m.ghin === +user.ghin) >= 0;
+                    // tslint:disable-next-line: no-non-null-assertion
+                    const exists = this._members.findIndex(m => +m.ghin === +user.ghin!) >= 0;
                     if (exists) {
                         isValid = false;
                         this._state.ghinExists = true;

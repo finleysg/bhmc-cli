@@ -5,7 +5,6 @@ import { PublicMember, MemberService } from '../../../core';
 import { EventRegistrationGroup } from '../../../core/models/event-registration-group';
 import { EventDetail } from '../../../core/models/event-detail';
 import { RegistrationService } from '../../../core/services/registration.service';
-import { forkJoin } from 'rxjs';
 
 @Component({
     moduleId: module.id,
@@ -13,11 +12,11 @@ import { forkJoin } from 'rxjs';
 })
 export class PaymentTestComponent implements OnInit {
 
-    @ViewChild(PaymentComponent, { static: true }) paymentComponent: PaymentComponent;
+    @ViewChild(PaymentComponent, { static: true }) paymentComponent?: PaymentComponent;
 
-    public group: EventRegistrationGroup;
-    public eventDetail: EventDetail;
-    public members: PublicMember[];
+    public group: EventRegistrationGroup = new EventRegistrationGroup({});
+    public eventDetail: EventDetail = new EventDetail({});
+    public members: PublicMember[] = [];
 
     constructor(
         private eventService: EventDetailService,
@@ -50,12 +49,13 @@ export class PaymentTestComponent implements OnInit {
 
     cancel() {
         this.registrationService.cancelReservation(this.group).subscribe( () => {
-            this.group = new EventRegistrationGroup();
+            this.group = new EventRegistrationGroup({});
         });
     }
 
     pay() {
-        this.paymentComponent.open();
+        // tslint:disable-next-line: no-non-null-assertion
+        this.paymentComponent!.open();
     }
 
     done(result: boolean): void {
@@ -63,9 +63,9 @@ export class PaymentTestComponent implements OnInit {
     }
 
     private getRandomMember(): PublicMember {
-        let min = Math.ceil(100);
-        let max = Math.floor(0);
-        let id = Math.floor(Math.random() * (max - min)) + min;
+        const min = Math.ceil(100);
+        const max = Math.floor(0);
+        const id = Math.floor(Math.random() * (max - min)) + min;
         return this.members[id];
     }
 }

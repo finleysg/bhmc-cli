@@ -1,23 +1,31 @@
-import * as moment from 'moment';
+import moment from 'moment';
+import { isEmpty } from 'lodash';
 
 export class PublicMember {
-    id: number;
-    ghin: string;
-    firstName: string;
-    lastName: string;
-    email: string;
+    id = 0;
+    ghin = '';
+    firstName = '';
+    lastName = '';
+    email = '';
     birthDate: any;
-    address: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    phoneNumber: string;
-    forwardTees: boolean;
-    isActive: boolean;
+    address?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    phoneNumber?: string;
+    forwardTees = false;
+    isActive = false;
     signupDate: any;
-    isFriend: boolean; // only in client
-    isRegistered: boolean; // only in client
-    formerClub: string; // derived from reg group in new member report
+    isFriend = false; // only in client
+    isRegistered = false; // only in client
+    formerClub = ''; // derived from reg group in new member report
+
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const member = this.fromJson(obj);
+            Object.assign(this, member);
+        }
+    }
 
     static getCsvHeader(): string {
         return 'ID,Last Name,First Name,Email,Birth Date,Age,Gold Tees,Is Active,Date Joined';
@@ -55,23 +63,24 @@ export class PublicMember {
         return '';
     }
 
-    fromJson(json: any): PublicMember {
-        this.id = json.id;
-        this.ghin = json.ghin;
-        this.firstName = json.first_name;
-        this.lastName = json.last_name;
-        this.email = json.email;
-        this.birthDate = moment(json.birth_date);
-        this.signupDate = moment(json.date_joined);
-        this.city = json.city;
-        this.phoneNumber = json.phone_number;
-        this.forwardTees = json.forward_tees;
-        this.isActive = json.is_active;
-        this.address = json.address1;
-        this.city = json.city;
-        this.state = json.state;
-        this.zipCode = json.zip;
-        return this;
+    private fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.id;
+        obj.ghin = json.ghin;
+        obj.firstName = json.first_name;
+        obj.lastName = json.last_name;
+        obj.email = json.email;
+        obj.birthDate = moment(json.birth_date);
+        obj.signupDate = moment(json.date_joined);
+        obj.city = json.city;
+        obj.phoneNumber = json.phone_number;
+        obj.forwardTees = json.forward_tees;
+        obj.isActive = json.is_active;
+        obj.address = json.address1;
+        obj.city = json.city;
+        obj.state = json.state;
+        obj.zipCode = json.zip;
+        return obj;
     }
 
     getCsvData(): string {
@@ -81,37 +90,45 @@ export class PublicMember {
 }
 
 export class PrivateMember {
-    id: number;
+    id = 0;
     birthDate: any;
-    ghin: string;
-    handicap: number;
-    handicapRevisionDate: string;
-    phoneNumber: string;
-    address: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    stripeCustomerId: string;
-    saveLastCard: boolean;
-    forwardTees: boolean;
-    membershipIsCurrent: boolean;
-    matchplayParticipant: boolean;
+    ghin = '';
+    handicap = 0;
+    handicapRevisionDate?: string;
+    phoneNumber?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    stripeCustomerId?: string;
+    saveLastCard = false;
+    forwardTees = false;
+    membershipIsCurrent = false;
+    matchplayParticipant = false;
 
-    fromJson(json: any): PrivateMember {
-        this.id = json.id;
-        this.birthDate = moment(json.birth_date);
-        this.city = json.city;
-        this.phoneNumber = json.phone_number;
-        this.ghin = json.ghin;
-        this.handicap = json.handicap;
-        this.handicapRevisionDate = json.handicap_revision_date;
-        this.stripeCustomerId = json.stripe_customer_id;
-        this.saveLastCard = json.save_last_card;
-        this.forwardTees = json.forward_tees;
-        this.address = json.address1;
-        this.state = json.state;
-        this.zipCode = json.zip;
-        return this;
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const member = this.fromJson(obj);
+            Object.assign(this, member);
+        }
+    }
+
+    private fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.id;
+        obj.birthDate = moment(json.birth_date);
+        obj.city = json.city;
+        obj.phoneNumber = json.phone_number;
+        obj.ghin = json.ghin;
+        obj.handicap = json.handicap;
+        obj.handicapRevisionDate = json.handicap_revision_date;
+        obj.stripeCustomerId = json.stripe_customer_id;
+        obj.saveLastCard = json.save_last_card;
+        obj.forwardTees = json.forward_tees;
+        obj.address = json.address1;
+        obj.state = json.state;
+        obj.zipCode = json.zip;
+        return obj;
     }
 
     // used only for new account creation

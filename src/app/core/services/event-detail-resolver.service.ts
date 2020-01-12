@@ -7,37 +7,37 @@ import { map, catchError } from 'rxjs/operators';
 import { Observable ,  of } from 'rxjs';
 
 @Injectable()
-export class EventDetailResolver implements Resolve<EventDetail> {
+export class EventDetailResolver implements Resolve<EventDetail | null> {
 
-    static isReserveRoute(route: ActivatedRouteSnapshot): boolean {
-        let result = false;
-        if (route.children && 
-            route.children[0] &&
-            route.children[0].url &&
-            route.children[0].url[0] &&
-            route.children[0].url[0].path === 'reserve') {
-            result = true;
-        }
-        return result;
-    }
+    // static isReserveRoute(route: ActivatedRouteSnapshot): boolean {
+    //     let result = false;
+    //     if (route.children &&
+    //         route.children[0] &&
+    //         route.children[0].url &&
+    //         route.children[0].url[0] &&
+    //         route.children[0].url[0].path === 'reserve') {
+    //         result = true;
+    //     }
+    //     return result;
+    // }
 
     constructor(
         private eventService: EventDetailService,
         private errorHandler: BhmcErrorHandler,
         private router: Router) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<EventDetail> {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<EventDetail | null> {
         const id = route.params['id'];
         return this.eventService.getEventDetail(id).pipe(
             map(evt => {
-                if (EventDetailResolver.isReserveRoute(route)) {
-                    // A CanActivate guard didn't work because we don't have an event detail yet (guard ordering issue)
-                    if (evt.registrationWindow !== RegistrationWindowType.Registering) {
-                        this.errorHandler.logWarning(`Event ${id} is not in its registration window`);
-                        this.router.navigate(['/']);
-                        return of(null);
-                    }
-                }
+                // if (EventDetailResolver.isReserveRoute(route)) {
+                //     // A CanActivate guard didn't work because we don't have an event detail yet (guard ordering issue)
+                //     if (evt.registrationWindow !== RegistrationWindowType.Registering) {
+                //         this.errorHandler.logWarning(`Event ${id} is not in its registration window`);
+                //         this.router.navigate(['/']);
+                //         return of(null);
+                //     }
+                // }
                 return evt;
             }),
             catchError((err: any) => {

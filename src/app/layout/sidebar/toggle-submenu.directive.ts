@@ -1,5 +1,6 @@
 import {Directive, ElementRef, HostListener, Renderer} from '@angular/core';
 
+// tslint:disable-next-line: directive-selector
 @Directive({ selector: '[toggle-submenu]' })
 export class ToggleSubmenuDirective {
 
@@ -9,7 +10,7 @@ export class ToggleSubmenuDirective {
   ) {}
 
   @HostListener('click') onClick() {
-    let isToggled = this._el.nativeElement.parentElement.classList.contains('toggled');
+    const isToggled = this._el.nativeElement.parentElement.classList.contains('toggled');
     this._renderer.setElementClass(this._el.nativeElement.parentElement, 'toggled', !isToggled);
     if (isToggled) {
       this._renderer.setElementStyle(this._el.nativeElement.nextElementSibling, 'display', 'none');

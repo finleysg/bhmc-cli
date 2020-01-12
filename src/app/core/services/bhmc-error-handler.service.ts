@@ -20,15 +20,15 @@ export class BhmcErrorHandler extends ErrorHandler {
         this.errorSource = new Subject();
         this.lastError$ = this.errorSource.asObservable();
         this.config = configService.config;
-        if (!this.config.isLocal) {
+        // if (!this.config.isLocal) {
             Sentry.init({
                 dsn: this.config.ravenDsn
             });
-        }
+        // }
     }
 
     setUserContext(user: User): void {
-        if (this.config.isLocal) { return; }
+        // if (this.config.isLocal) { return; }
         if (user.isAuthenticated) {
             Sentry.setUser({
                 username: user.name,
@@ -38,26 +38,26 @@ export class BhmcErrorHandler extends ErrorHandler {
     }
 
     clearUserContext(): void {
-        if (this.config.isLocal) { return; }
+        // if (this.config.isLocal) { return; }
         Sentry.setUser({});
     }
 
     handleError(err: any): void {
         this.errorSource.next(err.message ? err.message : err.toString());
-        if (this.config.isLocal) {
-            super.handleError(err);
-        } else {
+        // if (this.config.isLocal) {
+        //     super.handleError(err);
+        // } else {
             Sentry.captureException(err);
-        }
+        // }
     }
 
     logError(err: any): void {
         this.errorSource.next(err.message ? err.message : err.toString());
-        if (this.config.isLocal) {
-            console.error(err.toString());
-        } else {
+        // if (this.config.isLocal) {
+        //     console.error(err.toString());
+        // } else {
             Sentry.captureException(err);
-        }
+        // }
     }
 
     logResponse(message: string, response: HttpErrorResponse) {
@@ -69,11 +69,11 @@ export class BhmcErrorHandler extends ErrorHandler {
     }
 
     logWarning(message: string): void {
-        if (this.config.isLocal) {
-            console.warn(message);
-        } else {
+        // if (this.config.isLocal) {
+        //     console.warn(message);
+        // } else {
             Sentry.captureMessage(message);
-        }
+        // }
     }
 
     logMessage(message: string): void {

@@ -13,7 +13,7 @@ export class SponsorService {
         return this.dataService.getApiRequest('sponsors').pipe(
             map(sponsors => {
                 return sponsors.map((s: any) => {
-                    return new Sponsor().fromJson(s);
+                    return new Sponsor(s);
                 });
             })
         );

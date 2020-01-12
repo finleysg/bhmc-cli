@@ -12,7 +12,7 @@ import { setTheme } from 'ngx-bootstrap';
 export class AppComponent {
 
   name = 'Bunker Hills Men\'s Club';
-  @HostBinding('class.sw-toggled') swToggle: boolean;
+  @HostBinding('class.sw-toggled') swToggle = false;
 
   constructor(private layoutService: LayoutService) {
     setTheme('bs3');

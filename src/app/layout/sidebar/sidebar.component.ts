@@ -7,6 +7,7 @@ import * as moment from 'moment';
 
 @Component({
     moduleId: module.id,
+    // tslint:disable-next-line: component-selector
     selector: 'bhmc-sidebar',
     templateUrl: 'sidebar.component.html',
     styleUrls: ['sidebar.component.css']
@@ -14,10 +15,10 @@ import * as moment from 'moment';
 
 export class SidebarComponent implements OnInit, AfterViewInit {
 
-    public user: User;
-    public isOpen: boolean;
-    public adminUrl: string;
-    public wikiUrl: string;
+    public user?: User;
+    public isOpen = false;
+    public adminUrl?: string;
+    public wikiUrl?: string;
     public currentMonth: any;
     public config: AppConfig;
 
@@ -38,7 +39,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         this._authService.currentUser$.subscribe(user => {
             this.user = user;
         });
-        let today = moment();
+        const today = moment();
         this.currentMonth = {
             year: today.year(),
             month: today.format('MMMM').toLowerCase()

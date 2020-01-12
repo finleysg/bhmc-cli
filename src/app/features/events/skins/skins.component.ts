@@ -16,13 +16,13 @@ import { PaymentComponent } from '../../../shared/payments/payment.component';
 })
 export class SkinsComponent implements OnInit {
 
-  @ViewChild(PaymentComponent, { static: false }) paymentComponent: PaymentComponent;
+  @ViewChild(PaymentComponent, { static: false }) paymentComponent?: PaymentComponent;
 
-  public eventDetail: EventDetail;
-  public originalGroup: EventRegistrationGroup;
-  public group: EventRegistrationGroup;  // This is the one bound to the user screen
-  public paymentGroup: EventRegistrationGroup; // This is the one bound to the payment modal
-  public payment: EventPayment;
+  public eventDetail: EventDetail = new EventDetail({});
+  public originalGroup: EventRegistrationGroup = new EventRegistrationGroup({});
+  public group?: EventRegistrationGroup;  // This is the one bound to the user screen
+  public paymentGroup?: EventRegistrationGroup; // This is the one bound to the payment modal
+  public payment?: EventPayment;
 
   constructor(private authService: AuthenticationService,
     private registrationService: RegistrationService,
@@ -33,9 +33,11 @@ export class SkinsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data
-      .subscribe((data: { eventDetail: EventDetail }) => {
-        this.eventDetail = data.eventDetail;
-        this.findGroup();
+      .subscribe(data => {
+        if (data.eventDetail instanceof EventDetail) {
+          this.eventDetail = data.eventDetail;
+          this.findGroup();
+        }
       });
   }
 
@@ -76,7 +78,7 @@ export class SkinsComponent implements OnInit {
 
   newFees(reg: EventRegistration): number {
     let fee = 0.0;
-    const original: EventRegistration = this.originalGroup.registrations.find(r => r.id === reg.id);
+    const original: any = this.originalGroup.registrations.find(r => r.id === reg.id);
     if (original && reg.isGreensFeePaid && !original.isGreensFeePaid) {
       fee += this.eventDetail.greensFee;
     }
@@ -93,30 +95,36 @@ export class SkinsComponent implements OnInit {
   }
 
   updatePayment(): void {
-    let subtotal = 0.0;
-    this.group.registrations.forEach(reg => {
-      subtotal += this.newFees(reg);
-    });
-    this.payment.update(subtotal);
+    if (this.group && this.payment) {
+      let subtotal = 0.0;
+      this.group.registrations.forEach(reg => {
+        subtotal += this.newFees(reg);
+      });
+      this.payment.update(subtotal);
+    }
   }
 
   openPayment(): void {
-    this.paymentGroup = cloneDeep(this.group);
-    this.paymentGroup.payment = this.payment;
-    // only submit registrations that have been touched
-    const registrations = [];
-    for (let i = 0; i < this.originalGroup.registrations.length; i++) {
-      const touched = (this.group.registrations[i].isNetSkinsFeePaid && !this.originalGroup.registrations[i].isNetSkinsFeePaid) ||
-        (this.group.registrations[i].isGrossSkinsFeePaid && !this.originalGroup.registrations[i].isGrossSkinsFeePaid) ||
-        (this.group.registrations[i].isGreensFeePaid && !this.originalGroup.registrations[i].isGreensFeePaid) ||
-        (this.group.registrations[i].isCartFeePaid && !this.originalGroup.registrations[i].isCartFeePaid);
-      if (touched) {
-        registrations.push(cloneDeep(this.group.registrations[i]));
+    if (this.group && this.payment) {
+      this.paymentGroup = cloneDeep(this.group);
+      this.paymentGroup.payment = this.payment;
+      // only submit registrations that have been touched
+      const registrations = [];
+      for (let i = 0; i < this.originalGroup.registrations.length; i++) {
+        const touched = (this.group.registrations[i].isNetSkinsFeePaid && !this.originalGroup.registrations[i].isNetSkinsFeePaid) ||
+          (this.group.registrations[i].isGrossSkinsFeePaid && !this.originalGroup.registrations[i].isGrossSkinsFeePaid) ||
+          (this.group.registrations[i].isGreensFeePaid && !this.originalGroup.registrations[i].isGreensFeePaid) ||
+          (this.group.registrations[i].isCartFeePaid && !this.originalGroup.registrations[i].isCartFeePaid);
+        if (touched) {
+          registrations.push(cloneDeep(this.group.registrations[i]));
+        }
       }
-    }
-    if (registrations.length > 0) {
-      this.paymentGroup.registrations = registrations;
-      this.paymentComponent.open();
+      if (registrations.length > 0) {
+        this.paymentGroup.registrations = registrations;
+        if (this.paymentComponent) {
+          this.paymentComponent.open();
+        }
+      }
     }
   }
 

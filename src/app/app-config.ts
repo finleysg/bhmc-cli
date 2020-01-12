@@ -1,13 +1,13 @@
 export class AppConfig {
 
-    private _year: number;
-    private _registrationId: number;
-    private _matchPlayId: number;
-    private _acceptNewMembers: boolean;
-    private _version: string;
+    private _year = 0;
+    private _registrationId = 0;
+    private _matchPlayId = 0;
+    private _acceptNewMembers = false;
+    private _version = '';
     private _isLocal: boolean;
-    private _stripePublicKey: string;
-    private _ravenDsn: string;
+    private _stripePublicKey = '';
+    private _ravenDsn = '';
     private _adminUrl = 'https://finleysg.pythonanywhere.com/admin';
     private _wikiUrl = 'https://finleysg.pythonanywhere.com/wiki';
     private _authUrl = 'https://finleysg.pythonanywhere.com/rest-auth/';
@@ -15,11 +15,11 @@ export class AppConfig {
     private _stripeUrl = 'https://dashboard.stripe.com/test/payments';
 
     constructor() {
-        // this._isLocal = window.location.hostname.indexOf('localhost') >= 0;
-        // if (this._isLocal) {
-        //     this._authUrl = 'http://localhost:8000/rest-auth/';
-        //     this._apiUrl = 'http://localhost:8000/api/';
-        // }
+        this._isLocal = window.location.hostname.indexOf('localhost') >= 0;
+        if (this._isLocal) {
+            this._authUrl = 'http://localhost:8000/rest-auth/';
+            this._apiUrl = 'http://localhost:8000/api/';
+        }
     }
 
     get year(): number {

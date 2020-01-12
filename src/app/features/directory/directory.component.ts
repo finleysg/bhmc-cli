@@ -10,9 +10,9 @@ import { forkJoin } from 'rxjs';
 })
 export class DirectoryComponent implements OnInit {
 
-    private members: PublicMember[];
-    public friends: PublicMember[];
-    public results: PublicMember[];
+    private members: PublicMember[] = [];
+    public friends: PublicMember[] = [];
+    public results: PublicMember[] = [];
     public search: any;
 
     constructor(private memberService: MemberService,

@@ -14,9 +14,9 @@ import { forkJoin } from 'rxjs';
 })
 export class MatchplayReportComponent implements OnInit {
 
-    public eventDetail: EventDetail;
-    public report: EventData[];
-    public summary: EventDataSummary;
+    public eventDetail: EventDetail = new EventDetail({});
+    public report: EventData[] = [];
+    public summary: EventDataSummary = new EventDataSummary(this.eventDetail);
     public config: AppConfig;
 
     constructor(
@@ -33,40 +33,38 @@ export class MatchplayReportComponent implements OnInit {
         this.spinnerService.show('match-play-rpt');
         this.report = [];
         this.route.data
-            .subscribe((data: {eventDetail: EventDetail}) => {
-                this.eventDetail = data.eventDetail;
-                this.summary = new EventDataSummary(this.eventDetail);
-                forkJoin(
-                    this.memberService.getMembers(),
-                    this.registerService.getGroups(this.eventDetail.id)
-                ).subscribe(
-                    results => {
-                        const members: PublicMember[] = results[0];
-                        const groups: EventRegistrationGroup[] = results[1];
-                        this.eventDetail.registrations.forEach(r => {
-                            const member = members.find((m: PublicMember) => m.id === r.memberId);
-                            if (member) { // TODO: no member would be some sort of bug
-                                const group = groups.find((g: EventRegistrationGroup) => g.id === r.groupId);
-                                if (group) {
-                                    const row = EventData.create(this.eventDetail, group, r);
-                                    row.forwardTees = member.forwardTees;
-                                    row.isNewMember = member.signupDate.year() === this.config.year;
-                                    row.isNetSignup = r.isNetSkinsFeePaid; // we used skins field to designate flight choice
-                                    row.isGrossSignup = r.isGrossSkinsFeePaid;
-                                    this.report.push(row);
-                                    this.summary.updateByRow(row, true); // isMatchplay=true
-                                } else {
-                                    console.log(`No group found for id ${r.groupId}`);
+            .subscribe(data => {
+                if (data.eventDetail instanceof EventDetail) {
+                    this.eventDetail = data.eventDetail;
+                    this.summary = new EventDataSummary(this.eventDetail);
+                    forkJoin(
+                        this.memberService.getMembers(),
+                        this.registerService.getGroups(this.eventDetail.id)
+                    ).subscribe(
+                        results => {
+                            const members: PublicMember[] = results[0];
+                            const groups: EventRegistrationGroup[] = results[1];
+                            this.eventDetail.registrations.forEach(r => {
+                                const member = members.find((m: PublicMember) => m.id === r.memberId);
+                                if (member) {
+                                    const group = groups.find((g: EventRegistrationGroup) => g.id === r.groupId);
+                                    if (group) {
+                                        const row = EventData.create(this.eventDetail, group, r);
+                                        row.forwardTees = member.forwardTees;
+                                        row.isNewMember = member.signupDate.year() === this.config.year;
+                                        row.isNetSignup = r.isNetSkinsFeePaid; // we used skins field to designate flight choice
+                                        row.isGrossSignup = r.isGrossSkinsFeePaid;
+                                        this.report.push(row);
+                                        this.summary.updateByRow(row, true); // isMatchplay=true
+                                    }
                                 }
-                            } else {
-                                console.log(`No member found for id ${r.memberId}`);
-                            }
-                        });
-                        setTimeout(() => {
-                            this.spinnerService.hide('match-play-rpt');
-                        }, 500);
-                    }
-                );
+                            });
+                            setTimeout(() => {
+                                this.spinnerService.hide('match-play-rpt');
+                            }, 500);
+                        }
+                    );
+                }
             });
     }
 

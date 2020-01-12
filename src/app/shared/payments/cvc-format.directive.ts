@@ -2,6 +2,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 import { CreditCardService } from './credit-card.service';
 
 @Directive({
+    // tslint:disable-next-line: directive-selector
     selector: '[ccCVC]'
 })
 export class CvcFormatDirective {
@@ -24,10 +25,6 @@ export class CvcFormatDirective {
     @HostListener('paste', ['$event']) onPaste(e: any) {
         this.reformatCvc(e)
     }
-
-    // @HostListener('change', ['$event']) onChange(e: any) {
-    //     this.reformatCvc(e)
-    // }
 
     @HostListener('input', ['$event']) onInput(e: any) {
         this.reformatCvc(e)

@@ -13,7 +13,7 @@ export class AnnouncementService {
         return this.dataService.getApiRequest('announcements').pipe(
             map(announcements => {
                 return announcements.map((a: any) => {
-                    return new Announcement().fromJson(a);
+                    return new Announcement(a);
                 });
             })
         );

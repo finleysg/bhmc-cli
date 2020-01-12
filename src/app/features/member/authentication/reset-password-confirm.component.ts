@@ -11,17 +11,19 @@ import { ToasterService } from 'angular2-toaster';
 export class ResetPasswordConfirmComponent implements OnInit {
 
     model: PasswordReset;
-    invalid: boolean;
-    loading: boolean;
+    invalid = false;
+    loading = false;
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private toaster: ToasterService,
-        private authService: AuthenticationService) { }
+        private authService: AuthenticationService) {
+
+        this.model = new PasswordReset();
+    }
 
     ngOnInit() {
-        this.model = new PasswordReset();
         this.model.uid = this.route.snapshot.params['uid'];
         this.model.token = this.route.snapshot.params['token'];
     }

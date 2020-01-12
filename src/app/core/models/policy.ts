@@ -1,24 +1,34 @@
+import { isEmpty } from 'lodash';
+
 export enum PolicyCategory {
-    LocalRule = <any>"Local Rules",
-    Handicaps = <any>"Handicaps and Scoring",
-    ClubPolicy = <any>"Club Policy",
-    PaymentFaq = <any>"Payment FAQs",
-    NewMember = <any>"New Member Information",
-    AboutUs = <any>"About US",
+    LocalRule = <any>'Local Rules',
+    Handicaps = <any>'Handicaps and Scoring',
+    ClubPolicy = <any>'Club Policy',
+    PaymentFaq = <any>'Payment FAQs',
+    NewMember = <any>'New Member Information',
+    AboutUs = <any>'About US',
 }
 
 export class Policy {
-    id: number;
-    category: PolicyCategory;
-    title: string;
-    description: string;
+    id = 0;
+    category: PolicyCategory = PolicyCategory.ClubPolicy;
+    title = '';
+    description = '';
 
-    fromJson(json: any): Policy {
-        this.id = json.id;
-        this.category = this.translateCategory(json.policy_type);
-        this.title = json.title;
-        this.description = json.description;
-        return this;
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const policy = this.fromJson(obj);
+            Object.assign(this, policy);
+        }
+    }
+
+    private fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.id;
+        obj.category = this.translateCategory(json.policy_type);
+        obj.title = json.title;
+        obj.description = json.description;
+        return obj;
     }
 
     translateCategory(code: string): PolicyCategory {

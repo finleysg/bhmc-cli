@@ -14,13 +14,13 @@ import { merge } from 'lodash';
 })
 export class MatchPlaySignupComponent implements OnInit {
 
-    @ViewChild(PaymentComponent, { static: false }) paymentComponent: PaymentComponent;
+    @ViewChild(PaymentComponent, { static: false }) paymentComponent?: PaymentComponent;
 
-    public registrationGroup: EventRegistrationGroup;
-    public paymentGroup: EventRegistrationGroup;
-    public eventDetail: EventDetail;
+    public registrationGroup: EventRegistrationGroup = new EventRegistrationGroup({});
+    public paymentGroup?: EventRegistrationGroup;
+    public eventDetail: EventDetail = new EventDetail({});
     public currentUser: User;
-    public application: EventDocument;
+    public application?: EventDocument;
 
     constructor(
         private route: ActivatedRoute,
@@ -28,16 +28,20 @@ export class MatchPlaySignupComponent implements OnInit {
         private eventService: EventDetailService,
         private registrationService: RegistrationService,
         private toaster: ToasterService,
-        private authService: AuthenticationService) { }
+        private authService: AuthenticationService) {
+
+        this.currentUser = this.authService.user;
+    }
 
     ngOnInit(): void {
-        this.currentUser = this.authService.user;
         this.route.data
-            .subscribe((data: { eventDetail: EventDetail }) => {
-                this.eventDetail = data.eventDetail;
-                this.application = this.eventDetail.getDocument(DocumentType.SignUp);
-                this.registrationGroup = EventRegistrationGroup.create(this.currentUser);
-                this.updatePayment();
+            .subscribe(data => {
+                if (data.eventDetail instanceof EventDetail) {
+                    this.eventDetail = data.eventDetail;
+                    this.application = this.eventDetail.getDocument(DocumentType.SignUp);
+                    this.registrationGroup = EventRegistrationGroup.create(this.currentUser);
+                    this.updatePayment();
+                }
             });
     }
 
@@ -66,7 +70,9 @@ export class MatchPlaySignupComponent implements OnInit {
                 this.paymentGroup = merge({}, group, this.registrationGroup);
                 this.paymentGroup.registrations[0] = registration;
                 this.updatePayment();
-                this.paymentComponent.open();
+                if (this.paymentComponent) {
+                    this.paymentComponent.open();
+                }
             }),
             catchError((err: string) => {
                 this.toaster.pop('error', 'Error', err);
@@ -88,7 +94,9 @@ export class MatchPlaySignupComponent implements OnInit {
                 })
             ).subscribe();
         } else {
-            this.registrationService.cancelReservation(this.paymentGroup);
+            if (this.paymentGroup) {
+                this.registrationService.cancelReservation(this.paymentGroup);
+            }
         }
     }
 }

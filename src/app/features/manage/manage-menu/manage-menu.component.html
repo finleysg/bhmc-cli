@@ -1,7 +1,7 @@
-<div class="block-header">
+<div class="block-header" *ngIf="eventDetail">
   <h2>Manage Players ({{ eventDetail.startDate.format('MMM D') }})</h2>
 </div>
-<div class="row">
+<div class="row" *ngIf="eventDetail">
   <div class="col-lg-4 col-md-6 col-sm-8 col-xs-12">
     <div class="list-group">
       <a class="list-group-item list-group-item-action text-success text-center" [routerLink]="['/manage', eventDetail.id, 'add']">Add Players</a>

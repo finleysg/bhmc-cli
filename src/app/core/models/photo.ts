@@ -1,23 +1,30 @@
-import * as moment from 'moment';
+import moment from 'moment';
+import { isEmpty } from 'lodash';
+
+export enum PhotoType {
+    DamCupTeam = <any>'Dam Cup Team',
+    DamCupPhoto = <any>'Dam Cup Photo',
+    ClubChampion = <any>'Club Champion',
+    SeniorChampion = <any>'Senior Club Champion',
+    MajorWinner = <any>'Major Winner',
+    EventPhoto = <any>'Event Photo',
+    Other = <any>'Other'
+}
 
 export class Photo {
-    id: number;
-    title: string;
-    url: string;
-    type: PhotoType;
-    year: number;
-    eventId: number;
+    id = 0;
+    title = '';
+    url = '';
+    type: PhotoType = PhotoType.Other;
+    year = 0;
+    eventId?: number;
     lastUpdate: any;
 
-    fromJson(json: any): Photo {
-        this.id = json.id;
-        this.title = json.title;
-        this.url = json.file;
-        this.eventId = json.event;
-        this.type = Photo.getPhotoType(json.document_type);
-        this.year = json.year;
-        this.lastUpdate = moment(json.last_update);
-        return this;
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const photo = this.fromJson(obj);
+            Object.assign(this, photo);
+        }
     }
 
     static getPhotoType(shortType: string): PhotoType {
@@ -38,30 +45,32 @@ export class Photo {
         return photoType;
     }
 
-    static getPhotoCode(longType: PhotoType): string {
+    static getPhotoCode(longType?: PhotoType): string {
         if (longType === PhotoType.DamCupTeam) {
             return 'DCT';
         } else if (longType === PhotoType.DamCupPhoto) {
-            return 'DCP'
+            return 'DCP';
         } else if (longType === PhotoType.ClubChampion) {
-            return 'CC'
+            return 'CC';
         } else if (longType === PhotoType.SeniorChampion) {
-            return 'SCC'
+            return 'SCC';
         } else if (longType === PhotoType.MajorWinner) {
-            return 'MW'
+            return 'MW';
         } else if (longType === PhotoType.EventPhoto) {
-            return 'EP'
+            return 'EP';
         }
         return 'O';
     }
-}
 
-export enum PhotoType {
-    DamCupTeam = <any>'Dam Cup Team',
-    DamCupPhoto = <any>'Dam Cup Photo',
-    ClubChampion = <any>'Club Champion',
-    SeniorChampion = <any>'Senior Club Champion',
-    MajorWinner = <any>'Major Winner',
-    EventPhoto = <any>'Event Photo',
-    Other = <any>'Other'
+    private fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.id;
+        obj.title = json.title;
+        obj.url = json.file;
+        obj.eventId = json.event;
+        obj.type = Photo.getPhotoType(json.document_type);
+        obj.year = json.year;
+        obj.lastUpdate = moment(json.last_update);
+        return obj;
+    }
 }

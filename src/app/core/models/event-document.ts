@@ -1,4 +1,5 @@
-import * as moment from 'moment';
+import moment from 'moment';
+import { isEmpty } from 'lodash';
 
 export enum DocumentType {
     Results = <any>'Event Results',
@@ -12,14 +13,21 @@ export enum DocumentType {
 }
 
 export class EventDocument {
-    id: number;
-    title: string;
-    url: string;
-    type: DocumentType;
-    year: number;
-    eventId: number;
-    displayFlag: boolean;
+    id = 0;
+    title = '';
+    url = '';
+    type = DocumentType.Other;
+    year = 0;
+    eventId?: number;
+    displayFlag = false;
     lastUpdate: any;
+
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const doc = this.fromJson(obj);
+            Object.assign(this, doc);
+        }
+    }
 
     static getDocumentType(shortType: string): DocumentType {
         let documentType = DocumentType.Other;
@@ -41,35 +49,35 @@ export class EventDocument {
         return documentType;
     }
 
-    static getDocumentCode(longType: DocumentType): string {
+    static getDocumentCode(longType?: DocumentType): string {
         if (longType === DocumentType.Results) {
             return 'R';
         } else if (longType === DocumentType.Teetimes) {
-            return 'T'
+            return 'T';
         } else if (longType === DocumentType.SeasonPoints) {
-            return 'P'
+            return 'P';
         } else if (longType === DocumentType.DamCup) {
-            return 'D'
+            return 'D';
         } else if (longType === DocumentType.MatchPlay) {
-            return 'M'
+            return 'M';
         } else if (longType === DocumentType.Financial) {
-            return 'F'
+            return 'F';
         } else if (longType === DocumentType.SignUp) {
-            return 'S'
+            return 'S';
         }
         return 'O';
     }
 
-    fromJson(json: any): EventDocument {
-        this.id = json.id;
-        this.title = json.title;
-        this.url = json.file;
-        this.eventId = json.event;
-        this.type = EventDocument.getDocumentType(json.document_type);
-        this.year = json.year;
-        this.lastUpdate = moment(json.last_update);
-        this.displayFlag = json.display_flag;
-        return this;
+    private fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.id;
+        obj.title = json.title;
+        obj.url = json.file;
+        obj.eventId = json.event;
+        obj.type = EventDocument.getDocumentType(json.document_type);
+        obj.year = json.year;
+        obj.lastUpdate = moment(json.last_update);
+        obj.displayFlag = json.display_flag;
+        return obj;
     }
 }
-

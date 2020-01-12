@@ -11,24 +11,25 @@ import { map } from 'rxjs/operators';
 @Injectable()
 export class EventDetailService {
 
-    private currentEventId: number;
     private signupTableSources: Map<number, BehaviorSubject<EventSignupTable>>;
     private signupTables: Map<number, Observable<EventSignupTable>>;
-    public registrationGroup: EventRegistrationGroup;
-    public currentEvent: EventDetail;
+    public registrationGroup?: EventRegistrationGroup;
+    public currentEvent?: EventDetail;
+    private currentEventId?: number;
 
-    constructor(private dataService: BhmcDataService) { }
+    constructor(private dataService: BhmcDataService) {
+        this.signupTableSources = new Map<number, BehaviorSubject<EventSignupTable>>();
+        this.signupTables = new Map<number, Observable<EventSignupTable>>();
+    }
 
     getEventDetail(id: number): Observable<EventDetail> {
         this.currentEventId = id;
         return this.dataService.getApiRequest(`events/${id}`).pipe(
             map(data => {
-                const event = new EventDetail().fromJson(data);
+                const event = new EventDetail(data);
                 const courses = this.eventCourses(event);
-                this.signupTableSources = new Map<number, BehaviorSubject<EventSignupTable>>();
-                this.signupTables = new Map<number, Observable<EventSignupTable>>();
                 courses.forEach(c => {
-                    let table = new BehaviorSubject(this.createSignupTable(event, c));
+                    const table = new BehaviorSubject(this.createSignupTable(event, c));
                     this.signupTableSources.set(c.id, table);
                     this.signupTables.set(c.id, table.asObservable());
                 });
@@ -41,28 +42,34 @@ export class EventDetailService {
         // TODO: tap instead of map?
         return this.dataService.getApiRequest(`events/${this.currentEventId}`).pipe(
             map((data: any) => {
-                const event = new EventDetail().fromJson(data);
+                const event = new EventDetail(data);
                 const courses = this.eventCourses(event);
                 courses.forEach(c => {
-                    let table = this.createSignupTable(event, c);
-                    this.signupTableSources.get(c.id).next(table);
+                    const table = this.createSignupTable(event, c);
+                    const source = this.signupTableSources.get(c.id);
+                    if (source) {
+                        source.next(table);
+                    }
                 });
                 this.currentEvent = event;
                 return;
             }));
     }
-    
+
     updateEventPortal(event: EventDetail): Observable<EventDetail> {
         const data = {
             portal: event.portalUrl
         };
         return this.dataService.postApiRequest(`events/${event.id}/portal`, data).pipe(
             map((json: any) => {
-                const evt = new EventDetail().fromJson(json);
+                const evt = new EventDetail(json);
                 const courses = this.eventCourses(evt);
                 courses.forEach(c => {
-                    let table = this.createSignupTable(evt, c);
-                    this.signupTableSources.get(c.id).next(table);
+                    const table = this.createSignupTable(evt, c);
+                    const source = this.signupTableSources.get(c.id);
+                    if (source) {
+                        source.next(table);
+                    }
                 });
                 this.currentEvent = evt;
                 return this.currentEvent;
@@ -70,13 +77,13 @@ export class EventDetailService {
         );
     }
 
-    signupTable(id: number): Observable<EventSignupTable> {
+    signupTable(id: number): Observable<EventSignupTable> | undefined {
         return this.signupTables.get(id);
     }
 
     eventCourses(eventDetail: EventDetail): any[] {
         // pull all the courses out of the existing registrations
-        let tmp = {};
+        const tmp: {[index: string]: any} = {};
         let courses: any[]  = [];
         if (eventDetail.registrations) {
             courses = eventDetail.registrations.reduce((result: any[], item: any) => {
@@ -97,7 +104,7 @@ export class EventDetailService {
 
     createSignupTable(eventDetail: EventDetail, course: any): EventSignupTable {
         // each table is a hierarchy: course --> rows --> slots
-        let table = new EventSignupTable(course.id, course.name);
+        const table = new EventSignupTable(course.id, course.name);
         if (eventDetail.eventType === EventType.League) {
             for (let h = 1; h <= eventDetail.holesPerRound; h++) {
                 const aGroups = eventDetail.registrations.filter((reg: EventRegistration) => {
@@ -112,14 +119,14 @@ export class EventDetailService {
         } else {
             if (eventDetail.registrations) {
                 // Reduce existing registrations to an associative array: groupId -> registrations
-                let groups = eventDetail.registrations.reduce(function (grouped: any, item: EventRegistration) {
-                    let key = item.groupId;
+                const groups = eventDetail.registrations.reduce(function (grouped: any, item: EventRegistration) {
+                    const key = item.groupId;
                     grouped[key] = grouped[key] || [];
                     grouped[key].push(item);
                     return grouped;
                 }, {});
                 // Push each group into a row in the table (display only for non-league events)
-                for (let prop in groups) {
+                for (const prop in groups) {
                     if (groups.hasOwnProperty(prop)) {
                         table.rows.push(RegistrationRow.create(groups[prop]));
                     }

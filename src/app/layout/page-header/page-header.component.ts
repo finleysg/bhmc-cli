@@ -5,6 +5,7 @@ import { AuthenticationService, User } from '../../core';
 
 @Component({
     moduleId: module.id,
+    // tslint:disable-next-line: component-selector
     selector: 'bhmc-header',
     templateUrl: 'page-header.component.html',
     styleUrls: ['page-header.component.css']
@@ -12,9 +13,9 @@ import { AuthenticationService, User } from '../../core';
 
 export class PageHeaderComponent implements OnInit {
 
-    isOpen: boolean = false;
-    version: string;
-    user: User;
+    isOpen = false;
+    version = '';
+    user?: User;
 
     constructor(private configService: ConfigService,
                 private authService: AuthenticationService,

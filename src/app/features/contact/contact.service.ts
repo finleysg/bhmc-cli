@@ -16,9 +16,9 @@ export class ContactService {
             map(contacts => {
                 return new Contact().fromJson(contacts[0]);
             })
-        )
+        );
     }
-    
+
     sendContactUsMessage(message: ContactMessage) {
         return this.dataService.postApiRequest('contact-us', message);
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../../../core/services/authentication.service';
 import { ToasterService } from 'angular2-toaster';
@@ -9,9 +9,9 @@ import { AppConfig } from '../../../app-config';
     moduleId: module.id,
     templateUrl: 'reset-password.component.html'
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent {
     model: any = {};
-    returningMember: boolean;
+    returningMember = false;
     loading = false;
     config: AppConfig;
 
@@ -20,11 +20,6 @@ export class ResetPasswordComponent implements OnInit {
                 private toaster: ToasterService,
                 private configService: ConfigService,
                 private authenticationService: AuthenticationService) {
-    }
-
-    ngOnInit() {
-        this.returningMember = this.authenticationService.returningMember;
-        this.authenticationService.returningMember = false;
         this.config = this.configService.config;
     }
 

@@ -10,24 +10,24 @@ import { UploadComponent } from '../../shared/upload/upload.component';
 })
 export class SeasonPointsComponent implements OnInit {
 
-    @ViewChild(UploadComponent, { static: true }) uploadComponent: UploadComponent;
+    @ViewChild(UploadComponent, { static: true }) uploadComponent?: UploadComponent;
 
     currentUser: User;
-    archives: EventDocument[];
+    archives: EventDocument[] = [];
     documentType: DocumentType = DocumentType.SeasonPoints;
 
-    currentStandingsGross: EventDocument;
-    currentStandingsNet: EventDocument;
+    currentStandingsGross?: EventDocument;
+    currentStandingsNet?: EventDocument;
 
     constructor(
         private configService: ConfigService,
         private authService: AuthenticationService,
         private documentService: DocumentService
     ) {
+        this.currentUser = this.authService.user;
     }
 
     ngOnInit(): void {
-        this.currentUser = this.authService.user;
         this.documentService.getDocuments(DocumentType.SeasonPoints)
             .subscribe(docs => {
                 const current = docs.filter(d => d.year === this.configService.config.year);
@@ -40,11 +40,15 @@ export class SeasonPointsComponent implements OnInit {
     }
 
     editGross() {
-        this.uploadComponent.open(this.currentStandingsGross, 'Gross');
+        if (this.uploadComponent) {
+            this.uploadComponent.open(this.currentStandingsGross, 'Gross');
+        }
     }
 
     editNet() {
-        this.uploadComponent.open(this.currentStandingsNet, 'Net');
+        if (this.uploadComponent) {
+            this.uploadComponent.open(this.currentStandingsNet, 'Net');
+        }
     }
 
     uploadComplete(result: EventDocument): void {

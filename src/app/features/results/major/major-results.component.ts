@@ -9,14 +9,14 @@ import { ConfigService } from '../../../app-config.service';
 })
 export class MajorResultsComponent implements OnInit {
 
-    currentYear: EventDocument[];
-    archives: EventDocument[];
-    clubChampion: Photo;
-    seniorChampion: Photo;
-    years: number[];
-    selectedYear: number;
-    thisYear: number;
-    
+    currentYear?: EventDocument[];
+    archives?: EventDocument[];
+    clubChampion?: Photo;
+    seniorChampion?: Photo;
+    years: number[] = [];
+    selectedYear = 0;
+    thisYear = 0;
+
     constructor(private configService: ConfigService,
                 private documentService: DocumentService) {
     }
@@ -25,7 +25,7 @@ export class MajorResultsComponent implements OnInit {
     ngOnInit(): void {
         this.thisYear = this.configService.config.year;
         this.loadArchiveYears();
-        this.documentService.getDocuments(DocumentType.Results, null, EventType.Major)
+        this.documentService.getDocuments(DocumentType.Results, undefined, EventType.Major)
             .subscribe(docs => {
                 this.currentYear = docs.filter(d => d.year === this.thisYear);
                 this.archives = docs.filter(d => d.year !== this.thisYear);
@@ -41,7 +41,9 @@ export class MajorResultsComponent implements OnInit {
                     }
                     return 0;
                 });
-                if (f && f.length > 0) this.clubChampion = f[0];
+                if (f && f.length > 0) {
+                    this.clubChampion = f[0];
+                }
             });
         this.documentService.getPhotos(PhotoType.SeniorChampion)
             .subscribe(pics => {
@@ -54,7 +56,9 @@ export class MajorResultsComponent implements OnInit {
                     }
                     return 0;
                 });
-                if (f && f.length > 0) this.seniorChampion = f[0];
+                if (f && f.length > 0) {
+                    this.seniorChampion = f[0];
+                }
             });
     }
 

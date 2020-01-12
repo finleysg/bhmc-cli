@@ -11,7 +11,7 @@ import { BhmcErrorHandler } from './bhmc-error-handler.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-    private currentUser: User;
+    private currentUser?: User;
 
     constructor(
         private authService: AuthenticationService,
@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
         // Store the attempted URL for redirecting
         this.authService.redirectUrl = state.url;
 
-        if (this.currentUser.isAuthenticated) { return true; }
+        if (this.currentUser && this.currentUser.isAuthenticated) { return true; }
 
         // Navigate to the login page
         this.errorHandler.logWarning(`Unauthorized user tried to reach ${state.url}`);

@@ -8,18 +8,18 @@ import { AppConfig } from '../../app-config';
 })
 export class AboutUsComponent implements OnInit {
 
-    public policies: Policy[];
+    public policies: Policy[] = [];
     public currentUser: User;
     public config: AppConfig;
 
     constructor(private policyService: PolicyService,
                 private configService: ConfigService,
                 private authService: AuthenticationService) {
+        this.config = this.configService.config;
+        this.currentUser = this.authService.user;
     }
 
     ngOnInit(): void {
-        this.currentUser = this.authService.user;
-        this.config = this.configService.config;
         this.policies = [];
         this.policyService.loadPolicies(PolicyCategory.AboutUs).subscribe(p => this.policies.push(p));
     }

@@ -4,35 +4,54 @@ import { EventRegistration } from './event-registration';
 
 // General report object for events
 export class EventData {
-    eventId: number;
-    eventName: string;
-    eventDate: string;
-    groupId: number;
-    paymentCode: string;
-    paymentDate: string;
-    course: string;
-    hole: string;
-    holeNumber: number;
-    startingOrder: string;
-    memberName: string;
-    lastName: string;
-    firstName: string;
-    memberId: number;
-    memberGhin: string;
-    email: string;
-    birthDate: string;
-    age: string;
-    isNewMember: boolean;
-    isNetSignup: boolean;
-    isGrossSignup: boolean;
-    forwardTees: boolean;
-    reserved: string;
-    eventFee: number;
-    grossSkinsFee: number;
-    netSkinsFee: number;
-    greenFee: number;
-    cartFee: number;
-    signedUpBy: string;
+    eventId = 0;
+    eventName = '';
+    eventDate = '';
+    groupId = 0;
+    paymentCode?: string;
+    paymentDate?: string;
+    course?: string;
+    hole?: string;
+    holeNumber?: number;
+    startingOrder?: string;
+    memberName?: string;
+    lastName?: string;
+    firstName?: string;
+    memberId?: number;
+    memberGhin?: string;
+    email?: string;
+    birthDate?: string;
+    age?: string;
+    isNewMember = false;
+    isNetSignup = false;
+    isGrossSignup = false;
+    forwardTees = false;
+    reserved?: string;
+    eventFee = 0;
+    grossSkinsFee = 0;
+    netSkinsFee = 0;
+    greenFee = 0;
+    cartFee = 0;
+    signedUpBy?: string;
+
+    static getWednesdayRegistrationHeader(): string {
+        // tslint:disable-next-line: max-line-length
+        return 'Team,Course,Hole,GHIN,Tee,Last Name,First Name,Full Name,Email,Signed Up By,Sign-up Date,Payment Code,Event Fee,Gross Skins,Net Skins,Green Fees,Cart Fee,Total Fees';
+    }
+
+    static getMajorRegistrationHeader(): string {
+        // tslint:disable-next-line: max-line-length
+        return 'Group,GHIN,Tee,Last Name,First Name,Full Name,Email,Signed Up By,Sign-up Date,Payment Code,Event Fee,Gross Skins,Net Skins,Green Fees,Cart Fee,Total Fees';
+    }
+
+    static getMemberRegistrationHeader(): string {
+        // tslint:disable-next-line: max-line-length
+        return 'GHIN,Last Name,First Name,Full Name,Email,Birth Date,Age,Gold Tees,Sign Up Date,New Member,Payment Code,Signup Fee,Patron Card,Total Fees';
+    }
+
+    static getMatchplayHeader(): string {
+        return 'GHIN,Last Name,First Name,Full Name,Email,Gold Tees,Sign Up Date,New Member,Payment Code,Event Fee,Gross Flight,Net Flight';
+    }
 
     get totalFees(): number {
         return this.eventFee + this.grossSkinsFee + this.netSkinsFee + this.greenFee + this.cartFee;
@@ -43,7 +62,7 @@ export class EventData {
         data.eventId = detail.id;
         data.eventName = detail.name;
         data.eventDate = detail.startDate.format('YYYY-MM-DD');
-        data.course = reg.courseName.replace(' League', '');
+        data.course = reg.courseName ? reg.courseName.replace(' League', '') : '';
         data.hole = reg.startingHoleName;
         data.holeNumber = reg.holeNumber;
         data.startingOrder = reg.startingOrder === 0 ? 'A' : 'B';
@@ -81,35 +100,23 @@ export class EventData {
         return data;
     }
 
-    static getWednesdayRegistrationHeader(): string {
-        return 'Team,Course,Hole,GHIN,Tee,Last Name,First Name,Full Name,Email,Signed Up By,Sign-up Date,Payment Code,Event Fee,Gross Skins,Net Skins,Green Fees,Cart Fee,Total Fees';
-    }
-
     getWednesdayRegistrationCsv(): string {
+        // tslint:disable-next-line: max-line-length
         return `${this.course}-${this.hole},${this.course},${this.hole},${this.memberGhin},${this.forwardTees ? 'Gold' : 'Club'},${this.lastName},${this.firstName},${this.memberName},${this.email},${this.signedUpBy},${this.reserved},${this.paymentCode},${this.eventFee},${this.grossSkinsFee},${this.netSkinsFee},${this.greenFee},${this.cartFee},${this.totalFees}`;
     }
 
-    static getMajorRegistrationHeader(): string {
-        return 'Group,GHIN,Tee,Last Name,First Name,Full Name,Email,Signed Up By,Sign-up Date,Payment Code,Event Fee,Gross Skins,Net Skins,Green Fees,Cart Fee,Total Fees';
-    }
-
     getMajorRegistrationCsv(): string {
+        // tslint:disable-next-line: max-line-length
         return `${this.groupId},${this.memberGhin},${this.forwardTees ? 'Gold' : 'Club'},${this.lastName},${this.firstName},${this.memberName},${this.email},${this.signedUpBy},${this.reserved},${this.paymentCode},${this.eventFee},${this.grossSkinsFee},${this.netSkinsFee},${this.greenFee},${this.cartFee},${this.totalFees}`;
     }
 
-    static getMemberRegistrationHeader(): string {
-        return 'GHIN,Last Name,First Name,Full Name,Email,Birth Date,Age,Gold Tees,Sign Up Date,New Member,Payment Code,Signup Fee,Patron Card,Total Fees';
-    }
-
     getMemberRegistrationCsv(): string {
+        // tslint:disable-next-line: max-line-length
         return `${this.memberGhin},${this.lastName},${this.firstName},${this.memberName},${this.email},${this.birthDate},${this.age},${this.forwardTees ? 1 : 0},${this.reserved},${this.isNewMember ? 1 : 0},${this.paymentCode},${this.eventFee},${this.greenFee},${this.totalFees}`;
     }
 
-    static getMatchplayHeader(): string {
-        return 'GHIN,Last Name,First Name,Full Name,Email,Gold Tees,Sign Up Date,New Member,Payment Code,Event Fee,Gross Flight,Net Flight';
-    }
-
     getMatchplayCsv(): string {
+        // tslint:disable-next-line: max-line-length
         return `${this.memberGhin},${this.lastName},${this.firstName},${this.memberName},${this.email},${this.forwardTees ? 1 : 0},${this.reserved},${this.isNewMember ? 1 : 0},${this.paymentCode},${this.eventFee},${this.isGrossSignup ? 1 : 0},${this.isNetSignup ? 1 : 0}`;
     }
 }

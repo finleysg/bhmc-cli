@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, RouterStateSnapshot, ActivatedRouteSnapshot, CanActivate } from '@angular/router';
-import { Observable ,  of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AuthenticationService, BhmcErrorHandler, RegistrationService } from '../../../core';
 import { map, catchError } from 'rxjs/operators';
 
@@ -13,6 +13,18 @@ export class CanReserveGuard implements CanActivate {
         private errorHandler: BhmcErrorHandler,
         private router: Router) { }
 
+    static eventIdFromUrl(url: string): number {
+        let id = 0;
+        const segments = url.split('/');
+        for (let i = 0; i < segments.length; i++) {
+            if (segments[i] === 'events') {
+                id = +segments[i + 1];
+                break;
+            }
+        }
+        return id;
+    }
+
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
 
         const eventId = CanReserveGuard.eventIdFromUrl(state.url);
@@ -20,7 +32,7 @@ export class CanReserveGuard implements CanActivate {
             this.errorHandler.logWarning(`No event id could be parsed from ${state.url}`);
             return of(false);
         }
-        
+
         return this.registrationService.isRegistered(+eventId, this.authService.user.member.id).pipe(
             map(result => {
                 if (result) {
@@ -35,17 +47,5 @@ export class CanReserveGuard implements CanActivate {
                 return of(false);
             })
         );
-    }
-
-    static eventIdFromUrl(url: string): number {
-        let id = 0;
-        const segments = url.split('/');
-        for(let i = 0; i < segments.length; i++) {
-            if (segments[i] === 'events') {
-                id = +segments[i+1];
-                break;
-            }
-        }
-        return id;
     }
 }

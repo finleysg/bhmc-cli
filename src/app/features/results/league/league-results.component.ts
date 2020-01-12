@@ -9,11 +9,11 @@ import { ConfigService } from '../../../app-config.service';
 })
 export class LeagueResultsComponent implements OnInit {
 
-    currentYear: EventDocument[];
-    archives: EventDocument[];
-    years: number[];
-    selectedYear: number;
-    thisYear: number;
+    currentYear: EventDocument[] =  [];
+    archives: EventDocument[] = [];
+    years: number[] = [];
+    selectedYear = 0;
+    thisYear = 0;
 
     constructor(private configService: ConfigService,
                 private documentService: DocumentService) {
@@ -22,7 +22,7 @@ export class LeagueResultsComponent implements OnInit {
     ngOnInit(): void {
         this.thisYear = this.configService.config.year;
         this.loadArchiveYears();
-        this.documentService.getDocuments(DocumentType.Results, null, EventType.League)
+        this.documentService.getDocuments(DocumentType.Results, undefined, EventType.League)
             .subscribe(docs => {
                 this.currentYear = docs.filter(d => d.year === this.thisYear);
                 this.archives = docs.filter(d => d.year !== this.thisYear);

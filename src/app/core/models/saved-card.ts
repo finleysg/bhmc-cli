@@ -1,9 +1,18 @@
+import { isEmpty } from 'lodash';
+
 export class SavedCard {
-    id: string;
-    brand: string;
-    last4: string;
-    expMonth: number;
-    expYear: number;
+    id = '';
+    brand = '';
+    last4 = '';
+    expMonth = 0;
+    expYear = 0;
+
+    constructor(obj: any) {
+        if (!isEmpty(obj)) {
+            const card = this.fromJson(obj);
+            Object.assign(this, card);
+        }
+    }
 
     get cardNumber(): string {
         if (this.brand === 'American Express') {
@@ -24,15 +33,16 @@ export class SavedCard {
     }
 
     get expires(): string {
-        return `${this.expMonth < 10 ? '0' : ''}${this.expMonth}/${this.expYear}`;
+        return `${this.expMonth && this.expMonth < 10 ? '0' : ''}${this.expMonth}/${this.expYear}`;
     }
 
-    fromJson(json: any): SavedCard {
-        this.id = json.stripe_id;
-        this.brand = json.brand;
-        this.last4 = json.last4;
-        this.expMonth = +json.exp_month;
-        this.expYear = +json.exp_year;
-        return this;
+    private fromJson(json: any): any {
+        const obj: {[index: string]: any} = {};
+        obj.id = json.stripe_id;
+        obj.brand = json.brand;
+        obj.last4 = json.last4;
+        obj.expMonth = +json.exp_month;
+        obj.expYear = +json.exp_year;
+        return obj;
     }
 }

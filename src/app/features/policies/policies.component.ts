@@ -10,10 +10,10 @@ import { DocumentService, EventDocument, DocumentType, PolicyService, Policy, Po
 
 export class PoliciesComponent implements OnInit {
 
-    public policies: Policy[];
-    public byLaws: EventDocument;
-    public statements: EventDocument[];
-    public policyName: string;
+    public policies: Policy[] = [];
+    public byLaws?: EventDocument;
+    public statements: EventDocument[] = [];
+    public policyName?: string;
 
     constructor(private policyService: PolicyService,
                 private documentService: DocumentService,

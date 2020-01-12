@@ -13,7 +13,7 @@ import { merge } from 'lodash';
 @Injectable()
 export class RegistrationService {
 
-    private group: EventRegistrationGroup;
+    private group?: EventRegistrationGroup;
     private registrationGroupSource: Subject<EventRegistrationGroup>;
     public registrationGroup$: Observable<EventRegistrationGroup>;
     private sessionRegistrations: number[]; // convenience collection of events registered for in the current session
@@ -27,17 +27,17 @@ export class RegistrationService {
     loadGroup(id: number): void {
         this.dataService.getApiRequest(`registration/groups/${id}`)
             .subscribe((data: any) => {
-                this.group = new EventRegistrationGroup().fromJson(data);
+                this.group = new EventRegistrationGroup(data);
                 this.registrationGroupSource.next(this.group);
             });
     }
 
     get currentGroup(): EventRegistrationGroup {
-        return this.group;
+        return this.group || new EventRegistrationGroup({});
     }
 
-    reserve(id: number, row: RegistrationRow = null): Observable<void> {
-        let payload: any = {
+    reserve(id: number, row?: RegistrationRow): Observable<void> {
+        const payload: any = {
             event_id: id
         };
         if (row) {
@@ -49,7 +49,7 @@ export class RegistrationService {
         }
         return this.dataService.postApiRequest('registration/reserve', payload).pipe(
             tap((data: any) => {
-                this.group = new EventRegistrationGroup().fromJson(data);
+                this.group = new EventRegistrationGroup(data);
                 this.registrationGroupSource.next(this.group);
             })
         );
@@ -58,10 +58,11 @@ export class RegistrationService {
     register(group: EventRegistrationGroup): Observable<string> {
         return this.dataService.postApiRequest('registration/register', {'group': group.toJson()}).pipe(
             map((data: any) => {
-                this.group = null; // start over
-                this.registrationGroupSource.next(this.group);
-                this.sessionRegistrations.push(group.eventId);
-                return new EventRegistrationGroup().fromJson(data).paymentConfirmationCode;
+                this.group = new EventRegistrationGroup({});
+                this.registrationGroupSource.next(); // start over
+                const result = new EventRegistrationGroup(data);
+                this.sessionRegistrations.push(result.eventId);
+                return result.paymentConfirmationCode || '';
             })
         );
     }
@@ -69,10 +70,11 @@ export class RegistrationService {
     registerUpdate(group: EventRegistrationGroup): Observable<string> {
         return this.dataService.putApiRequest('registration/register', {'group': group.toJson()}).pipe(
             map((data: any) => {
-                this.group = null; // start over
-                this.registrationGroupSource.next(this.group);
-                this.sessionRegistrations.push(group.eventId);
-                return new EventRegistrationGroup().fromJson(data).paymentConfirmationCode;
+                this.group = new EventRegistrationGroup({});
+                this.registrationGroupSource.next(); // start over
+                const result = new EventRegistrationGroup(data);
+                this.sessionRegistrations.push(result.eventId);
+                return result.paymentConfirmationCode || '';
             })
         );
     }
@@ -80,7 +82,7 @@ export class RegistrationService {
     cancelReservation(group: EventRegistrationGroup): Observable<void> {
         return this.dataService.postApiRequest('registration/cancel', {group_id: group.id}).pipe(
             tap(() => {
-                this.group = null;
+                this.group = new EventRegistrationGroup({});
                 this.registrationGroupSource.next(this.group);
             })
         );
@@ -112,7 +114,7 @@ export class RegistrationService {
     getGroups(eventId: number): Observable<EventRegistrationGroup[]> {
         return this.dataService.getApiRequest('registration/groups', {event_id: eventId}).pipe(
             map((groups: any[]) => {
-                return groups.map(g => new EventRegistrationGroup().fromJson(g));
+                return groups.map(g => new EventRegistrationGroup(g));
             })
         );
     }
@@ -120,33 +122,32 @@ export class RegistrationService {
     getOpenSlots(eventId: number): Observable<EventRegistration[]> {
         return this.dataService.getApiRequest('registrations', {event_id: eventId, is_open: true}).pipe(
             map((registrations: any) => {
-                return registrations.map(r => new EventRegistration().fromJson(r));
+                return registrations.map((r: any) => new EventRegistration(r));
             })
         );
     }
 
-    getRegistration(eventId: number, memberId: number): Observable<EventRegistration> {
+    getRegistration(eventId: number, memberId: number): Observable<EventRegistration | undefined> {
         return this.dataService.getApiRequest('registrations', {event_id: eventId, member_id: memberId}).pipe(
             map((registrations: any) => {
                 if (registrations.length === 1) {
-                    return new EventRegistration().fromJson(registrations[0]);
+                    return new EventRegistration(registrations[0]);
                 }
-                return null;
             })
         );
     }
 
     getRegistrationGroup(eventId: number, memberId: number): Observable<EventRegistrationGroup> {
         return this.getRegistration(eventId, memberId).pipe(
-            flatMap((reg: EventRegistration) => {
+            flatMap((reg?: EventRegistration) => {
                 if (reg) {
                     return this.dataService.getApiRequest(`registration/groups/${reg.groupId}`).pipe(
                         map((json: any) => {
-                            return new EventRegistrationGroup().fromJson(json);
+                            return new EventRegistrationGroup(json);
                         })
                     );
                 } else {
-                    return of(new EventRegistrationGroup());
+                    return of(new EventRegistrationGroup({}));
                 }
             })
         );
@@ -155,7 +156,7 @@ export class RegistrationService {
     getPayments(eventId: number): Observable<StripeCharge[]> {
         return this.dataService.getApiRequest(`registration/charges/${eventId}`).pipe(
             map((charges: any[]) => {
-                return charges.map(c => new StripeCharge().fromJson(c));
+                return charges.map(c => new StripeCharge(c));
             })
         );
     }
@@ -163,7 +164,7 @@ export class RegistrationService {
     getPayment(chargeId: string): Observable<StripeCharge> {
         return this.dataService.getApiRequest('registration/charge', {id: chargeId}).pipe(
             map((charge: any) => {
-                return new StripeCharge().fromJson(charge);
+                return new StripeCharge(charge);
             })
         );
     }
@@ -179,7 +180,7 @@ export class RegistrationService {
         };
         return this.dataService.postApiRequest('registration/reserve', payload).pipe(
             mergeMap((data: any) => {
-                const group = new EventRegistrationGroup().fromJson(data);
+                const group = new EventRegistrationGroup(data);
                 group.registrations[0] = merge({}, group.registrations[0], registration);
                 group.copyPayment(payment);
                 group.notes = 'Admin registration';
@@ -199,7 +200,7 @@ export class RegistrationService {
     updateRegistration(reg: EventRegistration): Observable<EventRegistration> {
         return this.dataService.patchApiRequest(`registrations/${reg.id}`, reg.toJson()).pipe(
             map((data: any) => {
-                return new EventRegistration().fromJson(data);
+                return new EventRegistration(data);
             })
         );
     }
@@ -207,7 +208,7 @@ export class RegistrationService {
     getSlotPayments(eventId: number): Observable<SlotPayment[]> {
         return this.dataService.getApiRequest('registration/slot-payments', {event_id: eventId}).pipe(
             map((payments: any[]) => {
-                return payments.map(p => new SlotPayment().fromJson(p));
+                return payments.map(p => new SlotPayment(p));
             })
         );
     }
@@ -215,8 +216,4 @@ export class RegistrationService {
     addSlotPayment(payment: SlotPayment): Observable<void> {
         return this.dataService.postApiRequest('registration/slot-payments', payment.toJson());
     }
-
-    // updateSlotPayment(payment: SlotPayment): Observable<void> {
-    //     return this.dataService.postApiRequest('registrations/slot-payments/' + payment.id, payment);
-    // }
 }

@@ -8,10 +8,7 @@ import { AppConfig } from '../../app-config';
 import { ConfigService } from '../../app-config.service';
 import { FormGroup } from '@angular/forms';
 import { CreditCardForm } from './credit-card.form';
-import { tap, catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-
-// import { Stripe } from 'stripe';
 
 declare const Stripe: any;
 declare const Spinner: any;
@@ -26,11 +23,11 @@ export enum ProcessingStatus {
 }
 
 class ProcessingState {
-    text: string;
-    style: string;
-    icon: string;
-    disabled: boolean;
-    complete: boolean;
+    text?: string;
+    style?: string;
+    icon?: string;
+    disabled = false;
+    complete = false;
 }
 
 class ProcessingResult {
@@ -51,20 +48,20 @@ class ProcessingResult {
 })
 export class PaymentComponent implements OnInit {
 
-    @Input() registrationGroup: EventRegistrationGroup;
-    @Input() eventDetail: EventDetail;
-    @Input() update: boolean;
+    @Input() registrationGroup?: EventRegistrationGroup;
+    @Input() eventDetail?: EventDetail;
+    @Input() update?: boolean;
     @Output() onClose = new EventEmitter<boolean>();
-    @ViewChild('paymentModal', { static: true }) paymentModal: ModalDirective;
+    @ViewChild('paymentModal', { static: true }) paymentModal?: ModalDirective;
 
-    public card: StripeCreditCard;
-    public cardForm: FormGroup;
+    public card: StripeCreditCard = new StripeCreditCard();
+    public cardForm?: FormGroup;
     public cardErrors: any;
-    public messages: ProcessingResult[];
-    public processStatus: ProcessingStatus;
-    public savedCard: SavedCard;
-    public hasSavedCard: boolean;
-    public useSavedCard: boolean;
+    public messages: ProcessingResult[] = [];
+    public processStatus: ProcessingStatus = ProcessingStatus.Pending;
+    public savedCard?: SavedCard;
+    public hasSavedCard = false;
+    public useSavedCard = false;
 
     private config: AppConfig;
     private spinner: any;
@@ -103,15 +100,15 @@ export class PaymentComponent implements OnInit {
     private toggleDisabledState() {
         if (this.cardForm) {
             const nbrControl = this.cardForm.get('number');
-            if (nbrControl && nbrControl.disabled != this.useSavedCard) {
+            if (nbrControl && nbrControl.disabled !== this.useSavedCard) {
                 this.useSavedCard ? nbrControl.disable() : nbrControl.enable();
             }
             const expControl = this.cardForm.get('expiry');
-            if (expControl && expControl.disabled != this.useSavedCard) {
+            if (expControl && expControl.disabled !== this.useSavedCard) {
                 this.useSavedCard ? expControl.disable() : expControl.enable();
             }
             const cvcControl = this.cardForm.get('cvc');
-            if (cvcControl && cvcControl.disabled != this.useSavedCard) {
+            if (cvcControl && cvcControl.disabled !== this.useSavedCard) {
                 this.useSavedCard ? cvcControl.disable() : cvcControl.enable();
             }
         }
@@ -121,8 +118,10 @@ export class PaymentComponent implements OnInit {
         this.messages.length = 0;
         this.processStatus = ProcessingStatus.Pending;
         //noinspection TypeScriptValidateTypes
-        this.paymentModal.config = { backdrop: 'static', keyboard: false };
-        this.paymentModal.show();
+        if (this.paymentModal) {
+            this.paymentModal.config = { backdrop: 'static', keyboard: false };
+            this.paymentModal.show();
+        }
     }
 
     onShown(): void {
@@ -130,13 +129,15 @@ export class PaymentComponent implements OnInit {
     }
 
     cancelPayment(): void {
-        this.paymentModal.hide();
+        if (this.paymentModal) {
+            this.paymentModal.hide();
+        }
         this.onClose.emit(false);
     }
 
     toggleSavedCard(): void {
         if (!this.cardForm) { return; }
-        if (this.useSavedCard) {
+        if (this.useSavedCard && this.savedCard) {
             this.cardForm.patchValue({
                 number: this.savedCard.cardNumber,
                 expiry: this.savedCard.expires,
@@ -154,7 +155,9 @@ export class PaymentComponent implements OnInit {
 
     processPayment(): void {
         if (this.processStatus === ProcessingStatus.Complete) {
-            this.paymentModal.hide();
+            if (this.paymentModal) {
+                this.paymentModal.hide();
+            }
             this.onClose.emit(true);
         } else {
             if (this.useSavedCard) {
@@ -176,8 +179,10 @@ export class PaymentComponent implements OnInit {
     quickPayment(): void {
         this.processStatus = ProcessingStatus.Processing;
         this.spinner.spin(this.spinnerElement);
-        this.registrationGroup.cardVerificationToken = '';  // clear token if it exists - using customer id
-        this.submitRegistration(this.registrationGroup).subscribe(
+        // tslint:disable-next-line: no-non-null-assertion
+        this.registrationGroup!.cardVerificationToken = '';  // clear token if it exists - using customer id
+        // tslint:disable-next-line: no-non-null-assertion
+        this.submitRegistration(this.registrationGroup!).subscribe(
             (conf: string) => {
                 this.successState(conf);
             },
@@ -194,8 +199,10 @@ export class PaymentComponent implements OnInit {
         this.card.createToken()
             .then((token: string) => {
                 this.processStatus = ProcessingStatus.Processing;
-                this.registrationGroup.cardVerificationToken = token;
-                return this.submitRegistration(this.registrationGroup).toPromise();
+                // tslint:disable-next-line: no-non-null-assertion
+                this.registrationGroup!.cardVerificationToken = token;
+                // tslint:disable-next-line: no-non-null-assertion
+                return this.submitRegistration(this.registrationGroup!).toPromise();
             }).then((conf: string) => {
                 this.successState(conf);
             }).catch((response: any) => {
@@ -216,7 +223,11 @@ export class PaymentComponent implements OnInit {
         this.messages.length = 0;
         this.messages.push(new ProcessingResult('Payment complete', 'text-success'));
         this.messages.push(new ProcessingResult('Confirmation #: ' + confirmation, 'text-success'));
-        this.toaster.pop('success', 'Payment Complete', `Your payment for ${this.registrationGroup.payment.total} has been processed.`);
+        this.toaster.pop(
+            'success', 
+            'Payment Complete', 
+            // tslint:disable-next-line: no-non-null-assertion
+            `Your payment for ${this.registrationGroup!.payment.total} has been processed.`);
     }
 
     errorState(message: any): void {

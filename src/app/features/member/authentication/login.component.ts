@@ -10,24 +10,20 @@ import { AppConfig } from '../../../app-config';
     templateUrl: 'login.component.html',
     styleUrls: ['login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
     model: any = {
         username: '',
         password: '',
         remember: true
     };
     loading = false;
-    returnUrl: string;
+    returnUrl?: string;
     config: AppConfig;
 
     constructor(private router: Router,
                 private toaster: ToasterService,
                 private configService: ConfigService,
                 private authenticationService: AuthenticationService) {
-    }
-
-    ngOnInit() {
-        // get return url from the auth service or default to '/'
         this.returnUrl = this.authenticationService.redirectUrl || '/';
         this.config = this.configService.config;
     }
@@ -39,7 +35,10 @@ export class LoginComponent implements OnInit {
             (err: string) => {
                 this.loading = false;
                 if (err.indexOf('disabled') > 0) {
-                    this.toaster.pop('error', 'Inactive Account', 'You\'re account is inactive. Contact the board or site admin to reactivate your account.');
+                    this.toaster.pop(
+                        'error',
+                        'Inactive Account',
+                        'You\'re account is inactive. Contact the board or site admin to reactivate your account.');
                 } else {
                     this.toaster.pop('error', 'Invalid Credentials', err);
                 }

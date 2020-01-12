@@ -1,11 +1,11 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
-import * as showdown from 'showdown';
-// const converter = new showdown.Converter();
+import showdown from 'showdown';
 
+// tslint:disable-next-line: directive-selector
 @Directive({ selector: '[markdown]' })
 export class MarkdownDirective implements OnInit {
 
-    @Input('markdown') source: string;
+    @Input('markdown') source?: string;
     private element: any;
 
     constructor(private elementRef: ElementRef) {
@@ -13,8 +13,8 @@ export class MarkdownDirective implements OnInit {
      }
 
     ngOnInit() {
-        //noinspection TypeScriptUnresolvedFunction
-        let markup = new showdown.Converter().makeHtml(this.source);
+        // tslint:disable-next-line: no-non-null-assertion
+        const markup = new showdown.Converter().makeHtml(this.source!);
         this.element.innerHTML = markup;
     }
 }
