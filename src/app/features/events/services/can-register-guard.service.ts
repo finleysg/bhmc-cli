@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RouterStateSnapshot, ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { BhmcErrorHandler, RegistrationService } from '../../../core';
+import { CanReserveGuard } from './can-reserve-guard.service';
 
 @Injectable()
 export class CanRegisterGuard implements CanActivate {
@@ -33,8 +34,7 @@ export class CanRegisterGuard implements CanActivate {
         }
 
         if (!result) {
-            // tslint:disable-next-line: no-non-null-assertion
-            const eventId = (route.parent!.url[1]) ? route.parent!.url[1].path : '';
+            const eventId = CanReserveGuard.eventIdFromUrl(state.url);
             if (eventId) {
                 this.router.navigate(['/events', eventId, 'detail']);
             } else {

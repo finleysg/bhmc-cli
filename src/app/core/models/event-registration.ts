@@ -34,6 +34,13 @@ export class EventRegistration {
         }
     }
 
+    static empty(): EventRegistration {
+        const reg = new EventRegistration({
+            id: undefined
+        });
+        return reg;
+    }
+
     get hasMember(): boolean {
         return this.memberId > 0;
     }
@@ -57,13 +64,13 @@ export class EventRegistration {
         obj.courseSetupId = json.course_setup_id ? +json.course_setup_id : 0;
         obj.holeNumber = json.hole_number;
         obj.holeId = json.hole_id;
-        obj.groupId = json.registration_group ? +json.registration_group : -1;
-        obj.memberId = json.member ? json.member.id : -1;
-        obj.memberName = json.member ? `${json.member.first_name} ${json.member.last_name}` : '';
-        obj.memberFirstName = json.member ? json.member.first_name : '';
-        obj.memberLastName = json.member ? json.member.last_name : '';
-        obj.memberGhin = json.member ? json.member.ghin : '';
-        obj.memberEmail = json.member ? json.member.email : '';
+        obj.groupId = json.registration_group ? +json.registration_group : undefined;
+        obj.memberId = json.member ? json.member.id : undefined;
+        obj.memberName = json.member ? `${json.member.first_name} ${json.member.last_name}` : undefined;
+        obj.memberFirstName = json.member ? json.member.first_name : undefined;
+        obj.memberLastName = json.member ? json.member.last_name : undefined;
+        obj.memberGhin = json.member ? json.member.ghin : undefined;
+        obj.memberEmail = json.member ? json.member.email : undefined;
         obj.forwardTees = json.member ? json.member.forward_tees : false;
         obj.slotNumber = json.slot;
         obj.startingOrder = json.starting_order;

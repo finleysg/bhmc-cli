@@ -1,19 +1,29 @@
 export enum SlotStatus {
     Available = <any>'Available',
     Reserved = <any>'Reserved',
-    Pending = <any>'Unavailable',
+    Pending = <any>'Pending',
     Unavailable = <any>'Unavailable'
 }
 
 export class RegistrationSlot {
 
-    id = 0;
-    rowName = '';
-    memberId = 0;
-    memberName = '';
-    status: SlotStatus = SlotStatus.Unavailable;
-    selected = false;
-    found = false;
+    id: number;
+    rowName: string;
+    memberId: number;
+    memberName: string;
+    status: SlotStatus;
+    selected: boolean;
+    found: boolean;
+
+    constructor() {
+        this.id = 0;
+        this.rowName = '';
+        this.memberId = 0;
+        this.memberName = '';
+        this.status = SlotStatus.Unavailable;
+        this.selected = false;
+        this.found = false;
+    }
 
     static create(rowName: string, slotId: number, memberId: number, memberName: string, status: string): RegistrationSlot {
         const newSlot = new RegistrationSlot();

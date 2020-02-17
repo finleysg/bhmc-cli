@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { User, AuthenticationService, EventDetail, RegistrationService,
-    EventDetailService, EventRegistrationGroup, EventDocument, DocumentType } from '../../../core';
+    EventDetailService, EventRegistrationGroup, EventDocument, DocumentType, EventRegistration } from '../../../core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentComponent } from '../../../shared/payments/payment.component';
 import { ToasterService } from 'angular2-toaster';
@@ -78,8 +78,8 @@ export class SeasonSignupComponent implements OnInit {
             tap(() => {
                 // preserve the registration choices made
                 const group = this.registrationService.currentGroup;
-                const registration = merge({}, group.registrations[0], this.registrationGroup.registrations[0]);
-                this.paymentGroup = merge({}, group, this.registrationGroup);
+                const registration = merge(EventRegistration.empty(), group.registrations[0], this.registrationGroup.registrations[0]);
+                this.paymentGroup = merge(EventRegistrationGroup.empty(), group, this.registrationGroup);
                 this.paymentGroup.registrations[0] = registration;
                 this.updatePayment();
                 if (this.paymentComponent) {

@@ -2,10 +2,17 @@ import { RegistrationSlot, SlotStatus } from './registration-slot';
 
 export class RegistrationRow {
 
-    holeNumber = 0;
-    holeId = 0;
-    startingOrder = 0;
-    slots: RegistrationSlot[] = [];
+    holeNumber: number;
+    holeId: number;
+    startingOrder: number;
+    slots: RegistrationSlot[];
+
+    constructor() {
+        this.holeId = 0;
+        this.holeNumber = 0;
+        this.startingOrder = 0;
+        this.slots = [];
+    }
 
     static create(registrations: any[]): RegistrationRow {
         const row = new RegistrationRow();
@@ -13,7 +20,7 @@ export class RegistrationRow {
         row.holeId = registrations[0] ? registrations[0].holeId : -1;
         row.startingOrder = registrations[0] ? registrations[0].startingOrder : -1;
         row.slots = registrations.map(reg =>
-            RegistrationSlot.create(row.name, reg.slotId, reg.memberId, reg.memberName, reg.status));
+            RegistrationSlot.create(row.name, reg.id, reg.memberId, reg.memberName, reg.status));
         return row;
     }
 
@@ -31,7 +38,7 @@ export class RegistrationRow {
         } else {
             return '';
         }
-    };
+    }
 
     isRegistered(memberId: number): boolean {
         return this.slots.some(slot => {
@@ -51,7 +58,8 @@ export class RegistrationRow {
         });
     }
 
-    get selectedSlotIds(): number[] {
-        return this.slots.filter(s => s.selected).map(s => s.id);
+    getSelectedSlotIds(): number[] {
+        const selectedSlots = this.slots.filter(s => s.selected);
+        return selectedSlots.map(s => s.id);
     }
 }

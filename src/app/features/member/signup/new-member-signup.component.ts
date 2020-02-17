@@ -133,6 +133,7 @@ export class NewMemberSignupComponent implements OnInit {
                 }
             }
         }).catch((err: any) => {
+            // TODO: should be able to recover from user/account errors
             this.toaster.pop('error', 'Account Creation Error', err);
         });
     }

@@ -27,20 +27,34 @@ export class EventRegistrationGroup {
     constructor(obj: any) {
         if (!isEmpty(obj)) {
             const group = this.fromJson(obj);
-            if (obj.registrations) {
-                group.registrations = obj['registrations'].map((o: any) => new EventRegistration(o));
+            if (obj.slots) {
+                group.registrations = obj['slots'].map((o: any) => new EventRegistration(o));
+            } else {
+                group.registrations = [];
             }
             Object.assign(this, group);
         }
     }
 
     static create(user: User): EventRegistrationGroup {
-        const group = new EventRegistrationGroup({});
-        const reg = new EventRegistration({});
-        reg.isEventFeePaid = true;
-        reg.memberId = user.member.id;
-        reg.memberName = user.name;
+        const group = new EventRegistrationGroup({
+            id: undefined
+        });
+        const reg = new EventRegistration({
+            member: {
+                id: user.member.id,
+                first_name: user.firstName,
+                last_name: user.lastName
+            },
+        });
         group.registrations.push(reg);
+        return group;
+    }
+
+    static empty(): EventRegistrationGroup {
+        const group = new EventRegistrationGroup({
+            id: undefined
+        });
         return group;
     }
 
@@ -68,16 +82,14 @@ export class EventRegistrationGroup {
         obj.id = json.id;
         obj.eventId = json.event;
         obj.courseSetupId = json.course_setup;
-        obj.registrantId = json.signed_up_by ? json.signed_up_by.id : -1;
-        obj.registrant = json.signed_up_by ? `${json.signed_up_by.first_name} ${json.signed_up_by.last_name}` : '';
+        obj.registrantId = json.signed_up_by ? json.signed_up_by.id : undefined;
+        obj.registrant = json.signed_up_by ? `${json.signed_up_by.first_name} ${json.signed_up_by.last_name}` : undefined;
         obj.startingHole = json.starting_hole;
         obj.startingOrder = json.starting_order;
         obj.notes = json.notes;
         obj.cardVerificationToken = json.card_verification_token;
         obj.paymentConfirmationCode = json.payment_confirmation_code;
-        obj.payment = {
-            total: 0
-        };
+        obj.payment = new EventPayment();
         obj.payment.total = json.payment_amount;
         if (json.payment_confirmation_timestamp) {
             obj.paymentConfirmationDate = moment(json.payment_confirmation_timestamp);

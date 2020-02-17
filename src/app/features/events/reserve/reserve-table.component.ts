@@ -83,8 +83,8 @@ export class ReserveTableComponent implements OnInit {
 
     register = (row: RegistrationRow) => {
         // The group created is saved on the service
-        const parentRoute = this.route.snapshot.parent && this.route.snapshot.parent.parent;
-        if (parentRoute) {
+        const parentRoute = this.route.snapshot.parent;
+        if (parentRoute !== null && parentRoute !== undefined) {
             const eventId = parentRoute.params['id'];
             this.registrationService.reserve(eventId, row).pipe(
                 tap(() => {

@@ -31,7 +31,6 @@ export class AuthenticationService {
         const token = this.getFromStorage('bhmc_token', true);
         this.config = this.configService.config;
         this._currentUser = new User({});
-        this._currentUser.isAuthenticated = (token !== null && token !== undefined); // temporary - stops a redirect to login
         this.currentUserSource = new BehaviorSubject(this._currentUser);
         this.currentUser$ = this.currentUserSource.asObservable();
         this.errorHandler.lastError$.subscribe(err => this.onError(err));

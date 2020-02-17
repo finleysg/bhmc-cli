@@ -16,12 +16,10 @@ export class RegistrationService {
     private group?: EventRegistrationGroup;
     private registrationGroupSource: Subject<EventRegistrationGroup>;
     public registrationGroup$: Observable<EventRegistrationGroup>;
-    private sessionRegistrations: number[]; // convenience collection of events registered for in the current session
 
     constructor(private dataService: BhmcDataService) {
         this.registrationGroupSource = new Subject<EventRegistrationGroup>();
         this.registrationGroup$ = this.registrationGroupSource.asObservable();
-        this.sessionRegistrations = [];
     }
 
     loadGroup(id: number): void {
@@ -38,14 +36,13 @@ export class RegistrationService {
 
     reserve(id: number, row?: RegistrationRow): Observable<void> {
         const payload: any = {
-            event_id: id
+            event_id: id,
         };
+        // There is no row object for majors and other non-league events
         if (row) {
-            Object.assign(payload, {
-                course_setup_hole_id: row.holeId,
-                starting_order: row.startingOrder,
-                slot_ids: row.selectedSlotIds
-            });
+            payload.course_setup_hole_id = row.holeId;
+            payload.starting_order = row.startingOrder;
+            payload.slot_ids = row.getSelectedSlotIds();
         }
         return this.dataService.postApiRequest('registration/reserve', payload).pipe(
             tap((data: any) => {
@@ -61,7 +58,6 @@ export class RegistrationService {
                 this.group = new EventRegistrationGroup({});
                 this.registrationGroupSource.next(); // start over
                 const result = new EventRegistrationGroup(data);
-                this.sessionRegistrations.push(result.eventId);
                 return result.paymentConfirmationCode || '';
             })
         );
@@ -73,7 +69,6 @@ export class RegistrationService {
                 this.group = new EventRegistrationGroup({});
                 this.registrationGroupSource.next(); // start over
                 const result = new EventRegistrationGroup(data);
-                this.sessionRegistrations.push(result.eventId);
                 return result.paymentConfirmationCode || '';
             })
         );
@@ -91,8 +86,6 @@ export class RegistrationService {
     isRegistered(eventId: number, memberId: number): Observable<boolean> {
         if (!memberId) {  // anonymous user
             return of(false);
-        } else if (this.sessionRegistrations.indexOf(eventId) >= 0) {
-            return of(true);
         } else {
             return this.dataService.getApiRequest(`registration/${eventId}/${memberId}`).pipe(
                 map((json: any) => {
