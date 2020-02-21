@@ -47,7 +47,7 @@ export class CalendarEvent {
         if (obj.rounds <= 1) {
             obj.endDate = moment(json.start_date);
         } else {
-            obj.endDate = moment(json.start_date).add(this.rounds -1, 'days');
+            obj.endDate = moment(json.start_date).add(obj.rounds - 1, 'days');
         }
         return obj;
     }
