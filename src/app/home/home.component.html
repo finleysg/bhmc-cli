@@ -26,24 +26,6 @@
                                     <p>
                                         <a class="btn btn-sm btn-primary" [routerLink]="['/member', 'login']">Login</a>
                                     </p>
-                                    <p *ngIf="newMemberRegistration">
-                                        <button class="btn btn-sm btn-success" (click)="registerOnline()">New Member Registration</button>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="lv-item" *ngIf="returningMemberRegistration">
-                            <div class="media">
-                                <div class="pull-left">
-                                    <img class="lv-img-sm" src="../../assets/img/RegisterNow.png" alt="Register now!">
-                                </div>
-                                <div class="media-body">
-                                    <div class="lv-title">Register for the {{config.year}} Golf Season</div>
-                                    <p>Registration is now open for the {{config.year}} golf season. Don't wait for the last minute!
-                                    Click the button below to register online or to download the application form.</p>
-                                    <p>
-                                        <button class="btn btn-sm btn-success" (click)="registerOnline()">Returning Member Registration</button>
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -56,10 +38,10 @@
                                         <a class="btn btn-sm btn-success" [routerLink]="['/events', a.eventId, 'detail']">{{a.eventName}}</a>
                                     </div>
                                     <div *ngIf="a.documentName">
-                                        <a class="btn btn-sm btn-info" target="_blank" [href]="a.documentUrl">{{a.documentName}}</a>
+                                        <a class="btn btn-sm btn-success" target="_blank" [href]="a.documentUrl">{{a.documentName}}</a>
                                     </div>
                                     <div *ngIf="a.externalUrlName">
-                                        <a class="btn btn-sm btn-link" target="_blank" [href]="a.externalUrl">{{a.externalUrlName}}</a>
+                                        <a class="btn btn-sm btn-success" [href]="a.externalUrl">{{a.externalUrlName}}</a>
                                     </div>
                                 </div>
                             </div>

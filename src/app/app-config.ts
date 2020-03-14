@@ -15,7 +15,7 @@ export class AppConfig {
     private _stripeUrl = 'https://dashboard.stripe.com/test/payments';
 
     constructor() {
-        this._isLocal = false; // window.location.hostname.indexOf('localhost') >= 0;
+        this._isLocal = true; // window.location.hostname.indexOf('localhost') >= 0;
         if (this._isLocal) {
             this._authUrl = 'http://localhost:8000/rest-auth/';
             this._apiUrl = 'http://localhost:8000/api/';

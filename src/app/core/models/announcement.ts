@@ -9,7 +9,7 @@ export class Announcement {
     expires: any;
     eventId?: number;
     eventName?: string;
-    membersOnly = false;
+    visibility = 'A';
     externalUrl?: string;
     externalUrlName?: string;
     documentName?: string;
@@ -21,11 +21,12 @@ export class Announcement {
             Object.assign(this, announcement);
         }
     }
+
     isVisible(isAuth: boolean): boolean {
         if (isAuth) {
-            return true;
+            return this.visibility === 'A' || this.visibility === 'M';
         }
-        return !this.membersOnly;
+        return this.visibility === 'A' || this.visibility === 'N';
     }
 
     private fromJson(json: any): any {
@@ -37,7 +38,7 @@ export class Announcement {
         obj.expires = moment(json.expires);
         obj.eventId = json.event ? json.event.id : null;
         obj.eventName = json.event ? json.event.name : null;
-        obj.membersOnly = json.members_only;
+        obj.visibility = json.visibility;
         obj.externalUrl = json.external_url;
         obj.externalUrlName = json.external_name;
         obj.documentName = json.document ? json.document.title : null;
