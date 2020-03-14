@@ -36,7 +36,7 @@ const routes: Routes = [
       { path: 'matchplay', component: MatchPlayComponent },
       { path: 'matchplay/register', canActivate: [AuthGuard, MatchPlayGuard], component: MatchPlaySignupComponent },
       { path: 'matchplay/report', canActivate: [AuthGuard], component: MatchplayReportComponent },
-      { path: 'season-signup', canActivate: [AuthGuard], component: SeasonSignupComponent },
+      { path: 'season-signup', component: SeasonSignupComponent },
       { path: 'reserve', canActivate: [AuthGuard], component: ReserveComponent, children: [
         { path: ':course', component: ReserveTableComponent }
       ]},

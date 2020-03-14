@@ -41,6 +41,9 @@ export class InterceptorError implements HttpInterceptor {
                 }
             }
             this.errorHandler.logResponse(message, err);
+            if (message === 'Invalid token.') {
+                localStorage.removeItem('bhmc_token');
+            }
         } else {
             this.errorHandler.logError(err);
             message = err.message ? err.message : err.toString();
