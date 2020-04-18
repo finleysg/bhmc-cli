@@ -42,7 +42,7 @@ export class Announcement {
         obj.externalUrl = json.external_url;
         obj.externalUrlName = json.external_name;
         obj.documentName = json.document ? json.document.title : null;
-        obj.documentUrl = json.document ? json.document.file.url : null;
+        obj.documentUrl = json.document ? json.document.file : null;
         return obj;
     }
 }
