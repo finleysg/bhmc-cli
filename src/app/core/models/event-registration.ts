@@ -86,23 +86,37 @@ export class EventRegistration {
     }
 
     toJson(): any {
-        return {
-            id: this.id,
-            registration_group: this.groupId,
-            member: {
-                id: this.memberId,
-                first_name: this.memberFirstName,
-                last_name: this.memberLastName,
-                email: this.memberEmail,
-                ghin: this.memberGhin,
-                forward_tees: this.forwardTees
-            },
-            is_event_fee_paid: this.isEventFeePaid,
-            is_gross_skins_paid: this.isGrossSkinsFeePaid,
-            is_net_skins_paid: this.isNetSkinsFeePaid,
-            is_greens_fee_paid: this.isGreensFeePaid,
-            is_cart_fee_paid: this.isCartFeePaid,
-            status: this.status
-        };
+        if (this.memberId) {
+            return {
+                id: this.id,
+                registration_group: this.groupId,
+                member: {
+                    id: this.memberId,
+                    first_name: this.memberFirstName,
+                    last_name: this.memberLastName,
+                    email: this.memberEmail,
+                    ghin: this.memberGhin,
+                    forward_tees: this.forwardTees
+                },
+                is_event_fee_paid: this.isEventFeePaid,
+                is_gross_skins_paid: this.isGrossSkinsFeePaid,
+                is_net_skins_paid: this.isNetSkinsFeePaid,
+                is_greens_fee_paid: this.isGreensFeePaid,
+                is_cart_fee_paid: this.isCartFeePaid,
+                status: this.status
+            };
+        } else {
+            return {
+                id: this.id,
+                registration_group: this.groupId,
+                member: 0,
+                is_event_fee_paid: this.isEventFeePaid,
+                is_gross_skins_paid: this.isGrossSkinsFeePaid,
+                is_net_skins_paid: this.isNetSkinsFeePaid,
+                is_greens_fee_paid: this.isGreensFeePaid,
+                is_cart_fee_paid: this.isCartFeePaid,
+                status: this.status
+            };
+        }
     }
 }
