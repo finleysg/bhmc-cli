@@ -73,7 +73,7 @@ export class EventDetail {
     constructor(obj: any) {
         if (!isEmpty(obj)) {
             const event = this.fromJson(obj);
-            if (obj.slots) {
+            if (obj.documents) {
                 event.documents = obj['documents'].map((o: any) => {
                     const doc = new EventDocument(o);
                     doc.eventId = obj.eventId;
