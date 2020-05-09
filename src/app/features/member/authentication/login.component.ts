@@ -24,7 +24,7 @@ export class LoginComponent {
                 private toaster: ToasterService,
                 private configService: ConfigService,
                 private authenticationService: AuthenticationService) {
-        this.returnUrl = this.authenticationService.redirectUrl || '/';
+        this.returnUrl = '/home';  // this.authenticationService.redirectUrl || '/';
         this.config = this.configService.config;
     }
 
