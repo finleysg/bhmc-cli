@@ -24,7 +24,7 @@
                 <li *ngIf="currentUser.isOfficer || currentUser.isProshopStaff">
                     <a class="clickable" (click)="updatePortal()">Golf Genius Portal</a>
                 </li>
-                <li *ngIf="isMajor && (currentUser.isOfficer || currentUser.isProshopStaff)">
+                <li *ngIf="currentUser.isOfficer || currentUser.isProshopStaff">
                     <a class="clickable" (click)="uploadTeetimes()">Upload Teetimes</a>
                 </li>
                 <li *ngIf="currentUser.isOfficer || currentUser.isProshopStaff">
