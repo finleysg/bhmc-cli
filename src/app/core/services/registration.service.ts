@@ -174,7 +174,8 @@ export class RegistrationService {
         return this.dataService.postApiRequest('registration/reserve', payload).pipe(
             mergeMap((data: any) => {
                 const group = new EventRegistrationGroup(data);
-                group.registrations[0] = merge({}, group.registrations[0], registration);
+                group.registrations[0].status = 'R';
+                group.registrations[0].totalFees = event.eventFee;
                 group.copyPayment(payment);
                 group.notes = 'Admin registration';
                 return this.dataService.postApiRequest('registration/register', {'group': group.toJson()});
