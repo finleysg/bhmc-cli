@@ -11,7 +11,7 @@ import { ToasterService } from 'angular2-toaster';
 })
 export class PortalComponent implements OnInit {
 
-    @Input() eventDetail?: EventDetail;
+    @Input() eventDetail!: EventDetail;
     @Output() onClose = new EventEmitter<void>();
     @ViewChild('portalModal', { static: true }) portalModal?: ModalDirective;
 
