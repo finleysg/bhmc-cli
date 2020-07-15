@@ -40,7 +40,7 @@
     "angular2-toaster": "8.0.0",
     "bootstrap": "4.4.1",
     "core-js": "2.5.3",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "material-design-iconic-font": "2.2.0",
     "moment": "2.20.0",
     "ng2-cookies": "1.0.12",
