@@ -58,34 +58,34 @@ export class EventRegistrationGroup {
         return group;
     }
 
-    // get startingHoleName(): string {
-    //     return `${this.startingHole}${this.startingOrder === 0 ? 'A' : 'B' }`;
-    // }
-
     get startingHoleName(): string {
-        switch (this.startingHole) {
-            case 1:
-                return this.startingOrder === 0 ? '3:00' : '3:09';
-            case 2:
-                return this.startingOrder === 0 ? '3:18' : '3:27';
-            case 3:
-                return this.startingOrder === 0 ? '3:36' : '3:45';
-            case 4:
-                return this.startingOrder === 0 ? '3:54' : '4:03';
-            case 5:
-                return this.startingOrder === 0 ? '4:12' : '4:21';
-            case 6:
-                return this.startingOrder === 0 ? '4:30' : '4:39';
-            case 7:
-                return this.startingOrder === 0 ? '4:48' : '4:57';
-            case 8:
-                return this.startingOrder === 0 ? '5:06' : '5:15';
-            case 9:
-                return this.startingOrder === 0 ? '5:24' : '5:33';
-            default:
-                return '';
-        }
+        return `${this.startingHole}${this.startingOrder === 0 ? 'A' : 'B' }`;
     }
+
+    // get startingHoleName(): string {
+    //     switch (this.startingHole) {
+    //         case 1:
+    //             return this.startingOrder === 0 ? '3:00' : '3:09';
+    //         case 2:
+    //             return this.startingOrder === 0 ? '3:18' : '3:27';
+    //         case 3:
+    //             return this.startingOrder === 0 ? '3:36' : '3:45';
+    //         case 4:
+    //             return this.startingOrder === 0 ? '3:54' : '4:03';
+    //         case 5:
+    //             return this.startingOrder === 0 ? '4:12' : '4:21';
+    //         case 6:
+    //             return this.startingOrder === 0 ? '4:30' : '4:39';
+    //         case 7:
+    //             return this.startingOrder === 0 ? '4:48' : '4:57';
+    //         case 8:
+    //             return this.startingOrder === 0 ? '5:06' : '5:15';
+    //         case 9:
+    //             return this.startingOrder === 0 ? '5:24' : '5:33';
+    //         default:
+    //             return '';
+    //     }
+    // }
 
     get canRegister(): boolean {
         return this.registrations && this.registrations.every(reg => reg.hasMember);
