@@ -99,8 +99,8 @@ export class EventRegistration {
         obj.forwardTees = json.member ? json.member.forward_tees : false;
         obj.slotNumber = json.slot;
         obj.startingOrder = json.starting_order;
-        obj.isEventFeePaid = json.is_event_fee_paid;
-        // obj.isEventFeePaid = !!json.member; // default to true if member is present
+        // obj.isEventFeePaid = json.is_event_fee_paid;
+        obj.isEventFeePaid = !!json.member; // default to true if member is present
         obj.isGrossSkinsFeePaid = json.is_gross_skins_paid;
         obj.isNetSkinsFeePaid = json.is_net_skins_paid;
         obj.isGreensFeePaid = json.is_greens_fee_paid;
